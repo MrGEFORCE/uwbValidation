@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>990</width>
+    <height>820</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>70</y>
+     <width>631</width>
+     <height>731</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tab_comm">
+    <attribute name="title">
+     <string>通信</string>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="tab_radar">
+    <attribute name="title">
+     <string>雷达</string>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="tab_adversarial">
+    <attribute name="title">
+     <string>对抗</string>
+    </attribute>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_ctrlTx">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>301</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Tx控制</string>
+   </property>
+   <widget class="QGroupBox" name="groupBox_IDAC">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>191</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>IDAC</string>
+    </property>
+    <widget class="QSpinBox" name="spinBox_IDAC_IP">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>50</y>
+       <width>61</width>
+       <height>30</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>20</y>
+       <width>21</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>P</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>20</y>
+       <width>21</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>N</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>21</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>I</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>21</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Q</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_IDAC_IN">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>50</y>
+       <width>61</width>
+       <height>30</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_IDAC_QP">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>90</y>
+       <width>61</width>
+       <height>30</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_IDAC_QN">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>90</y>
+       <width>61</width>
+       <height>30</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>30</y>
+      <width>81</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>衰减</string>
+    </property>
+    <widget class="QCheckBox" name="checkBox_att2db">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>61</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>2dB</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_att10db">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>61</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>10dB</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_BBBW">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>281</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>带宽</string>
+    </property>
+    <widget class="QRadioButton" name="radioButton_BBBW100M">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>71</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>100M</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_BBBW250M">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>20</y>
+       <width>71</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>250M</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_BBBW500M">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>20</y>
+       <width>71</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>500M</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="comboBox_BBGain">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>240</y>
+      <width>61</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>240</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>基带增益</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>240</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>滤波增益</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_filterGain">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>240</y>
+      <width>61</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>280</y>
+      <width>31</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DLL</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_DLL">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>280</y>
+      <width>141</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_ctrlRx">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>460</y>
+     <width>301</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Rx控制</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="listWidget_console">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>710</y>
+     <width>301</width>
+     <height>91</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_consoleClear">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>670</y>
+     <width>60</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>清空</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="horizontalSlider_freq">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>10</y>
+     <width>831</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>30</number>
+   </property>
+   <property name="maximum">
+    <number>1800</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_freq">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>121</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>频率：0.3GHz</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_runStop">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>70</y>
+     <width>60</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>启动</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_freq_2">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>30</y>
+     <width>141</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>↑ 2GHz：链路切换</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_freq_3">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>30</y>
+     <width>211</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>↑ 6GHz：链路切换/LH切换</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

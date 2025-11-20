@@ -1,0 +1,107 @@
+__pycache__
+.idea
+*.toml.user
+
+
+# 以下内容由ChatGPT生成，专门应付赛灵思的文件夹，还需根据实际情况修改
+# ---- Vivado 生成 / 构建相关 ----
+# Vivado 工具中间文件
+vivado.cache/
+vivado.runs/
+vivado.sim/
+vivado.hw/
+vivado.ip_user_files/
+
+# Vivado checkpoint /实现产物
+*.dcp
+*.ckpt
+*.lck
+
+# Bitstream / 配置 /烧录文件
+*.bit
+*.bin
+*.mcs
+*.svf
+*.image
+
+# 报告 /日志文件
+*.log
+*.jou
+*.rpt
+*.wdb
+
+# 仿真 dump 文件
+*.vcd
+*.saif
+*.tcf
+
+# netlist /综合 /布局布线产物
+*.edf
+*.edif
+*.vn
+*.vm
+
+# 临时 /工作目录
+*.debug
+*.backup.*
+*.cache
+*.sim
+*.runs
+.unisims
+
+# 操作系统 /工具杂项
+.Xil/
+.fsm_encoding.os
+webtalk.*
+vivado_pid*.str
+hs_err_pid*
+xelab.*
+xsim.*
+xvlog.*
+
+# ---- Vitis / SDK (PS 软件) 相关 ----
+# Vitis / SDK 生成的 bin 等
+*.elf
+*.elf.bak
+*.a
+*.so
+*.lib
+
+# Vitis 工程 / build 目录
+# 比如 Application Project 和 Platform Project 里的 build 输出
+*/Debug/
+*/Release/
+*/Debug*/ 
+*/Release*/
+
+# 如果你用 Vitis 生成 xclbin / xsa /平台相关文件
+*.xsa
+*.xclbin
+*.sysdef
+*.xon
+*.runs/
+
+# Vitis temp / intermediate
+.vitis/
+
+# ---- Tcl /脚本 /生成脚本 ----
+# 如果你有自动生成脚本，不忽略，但临时 /生成 tcl artifact 可以忽略
+*.jou
+*.log
+
+# ---- Device Tree / BSP / 头文件 ----
+# 视具体项目，如果你是把 device tree 生成文件放在 repo，可视情况保留或忽略
+# 比如忽略 dtb /临时 BSP 生成产物（如果可重生成）
+*.dtb
+*.dts
+
+# ---- 通用 ----
+# OS 临时文件
+*.tmp
+*.bak
+*~
+*#
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
