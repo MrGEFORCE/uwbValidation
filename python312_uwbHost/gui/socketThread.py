@@ -6,6 +6,7 @@ from PySide6.QtCore import QThread
 
 import const
 
+
 class SocketThread(QThread):
     cpltSig = QtCore.Signal(bool)
     establishSig = QtCore.Signal(bool)
@@ -16,20 +17,21 @@ class SocketThread(QThread):
         self.errorWord = r""
         self.dt = 0
         self.d = b''
-        # self.udp_local_addr = ("192.168.1.100", 5010)
-        # self.udp_remote_addr = ("192.168.1.10", 5011)
-        self.udp_local_addr = ("127.0.0.1", 5010)
-        self.udp_remote_addr = ("127.0.0.1", 5011)
+        # self.udp_local_addr = (const.UDP_LOCAL_HOST, const.UDP_LOCAL_PORT)
+        # self.udp_remote_addr = (const.UDP_REMOTE_HOST, const.UDP_REMOTE_PORT)
+        self.udp_local_addr = ("127.0.0.1", const.UDP_LOCAL_PORT)
+        self.udp_remote_addr = ("127.0.0.1", const.UDP_REMOTE_PORT)
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udp_socket.settimeout(5)
         self.receiving = False
 
     def bind_udp(self) -> None:
-        try:
-            self.udp_socket.bind(self.udp_local_addr)
-        except OSError:
-            self.establishSig.emit(False)
-            print("debug: UDP建立失败")
+        self.udp_socket.bind(self.udp_local_addr)
+        # try:
+        #     self.udp_socket.bind(self.udp_local_addr)
+        # except OSError:
+        #     self.establishSig.emit(False)
+        #     print("debug: UDP建立失败")
 
     def try_recv(self) -> bool:
         try:
@@ -50,6 +52,7 @@ class SocketThread(QThread):
                 break
             else:
                 continue
+        print(cache)
         t = time.time()
         while True:
             if not self.receiving:

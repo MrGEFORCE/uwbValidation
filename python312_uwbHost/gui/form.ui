@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>900</height>
+    <height>760</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>1000</width>
-    <height>800</height>
+    <height>500</height>
    </size>
   </property>
   <property name="font">
@@ -59,7 +59,7 @@
     <number>1800</number>
    </property>
    <property name="orientation">
-    <enum>Qt::Orientation::Horizontal</enum>
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
   <widget class="QLabel" name="label_freq_2">
@@ -75,13 +75,13 @@
     </rect>
    </property>
    <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
+    <enum>Qt::LeftToRight</enum>
    </property>
    <property name="text">
     <string>↑ 2GHz：链路切换</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_freq_3">
@@ -97,149 +97,13 @@
     <string>↑ 6GHz：链路切换/LH切换</string>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox_udp">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>70</y>
-     <width>401</width>
-     <height>141</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>UDP 连接</string>
-   </property>
-   <widget class="QSpinBox" name="spinBox_localPort">
-    <property name="geometry">
-     <rect>
-      <x>266</x>
-      <y>29</y>
-      <width>71</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>65535</number>
-    </property>
-    <property name="value">
-     <number>2</number>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_localIp">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>30</y>
-      <width>131</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>192.168.240.2</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_localIp">
-    <property name="geometry">
-     <rect>
-      <x>16</x>
-      <y>29</y>
-      <width>52</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>本机 IP</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_remoteIp">
-    <property name="geometry">
-     <rect>
-      <x>16</x>
-      <y>66</y>
-      <width>52</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>目标 IP</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_remotePort">
-    <property name="geometry">
-     <rect>
-      <x>222</x>
-      <y>66</y>
-      <width>32</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>端口</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_remoteIp">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>67</y>
-      <width>131</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>192.168.240.1</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox_remotePort">
-    <property name="geometry">
-     <rect>
-      <x>266</x>
-      <y>66</y>
-      <width>71</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>65535</number>
-    </property>
-    <property name="value">
-     <number>1</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_localPort">
-    <property name="geometry">
-     <rect>
-      <x>222</x>
-      <y>29</y>
-      <width>32</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>端口</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_connect">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>100</y>
-      <width>101</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>连接</string>
-    </property>
-   </widget>
-  </widget>
   <widget class="QTabWidget" name="tabWidget_ctrl">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>220</y>
-     <width>401</width>
-     <height>391</height>
+     <y>70</y>
+     <width>501</width>
+     <height>351</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -385,9 +249,9 @@
         <property name="geometry">
          <rect>
           <x>240</x>
-          <y>10</y>
+          <y>160</y>
           <width>121</width>
-          <height>141</height>
+          <height>111</height>
          </rect>
         </property>
         <property name="title">
@@ -397,7 +261,7 @@
          <property name="geometry">
           <rect>
            <x>12</x>
-           <y>45</y>
+           <y>30</y>
            <width>62</width>
            <height>30</height>
           </rect>
@@ -410,7 +274,7 @@
          <property name="geometry">
           <rect>
            <x>12</x>
-           <y>92</y>
+           <y>70</y>
            <width>72</width>
            <height>30</height>
           </rect>
@@ -425,7 +289,7 @@
          <rect>
           <x>10</x>
           <y>160</y>
-          <width>351</width>
+          <width>221</width>
           <height>111</height>
          </rect>
         </property>
@@ -552,10 +416,10 @@
        <widget class="QGroupBox" name="groupBox_4">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>10</y>
-          <width>121</width>
-          <height>141</height>
+          <x>380</x>
+          <y>160</y>
+          <width>81</width>
+          <height>121</height>
          </rect>
         </property>
         <property name="title">
@@ -565,7 +429,7 @@
          <property name="geometry">
           <rect>
            <x>12</x>
-           <y>45</y>
+           <y>30</y>
            <width>62</width>
            <height>30</height>
           </rect>
@@ -578,7 +442,7 @@
          <property name="geometry">
           <rect>
            <x>12</x>
-           <y>92</y>
+           <y>70</y>
            <width>72</width>
            <height>30</height>
           </rect>
@@ -598,7 +462,7 @@
          </rect>
         </property>
         <property name="title">
-         <string>IDAC</string>
+         <string>IDAC LB-&gt;1  HB-&gt;TIA</string>
         </property>
         <widget class="QLabel" name="label_19">
          <property name="geometry">
@@ -626,7 +490,7 @@
           <string>N</string>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_R_IDAC_IP">
+        <widget class="QSpinBox" name="spinBox_R_IDAC1_IP">
          <property name="geometry">
           <rect>
            <x>35</x>
@@ -636,7 +500,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_R_IDAC_IN">
+        <widget class="QSpinBox" name="spinBox_R_IDAC1_IN">
          <property name="geometry">
           <rect>
            <x>120</x>
@@ -646,7 +510,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_R_IDAC_QP">
+        <widget class="QSpinBox" name="spinBox_R_IDAC1_QP">
          <property name="geometry">
           <rect>
            <x>35</x>
@@ -656,7 +520,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QSpinBox" name="spinBox_R_IDAC_QN">
+        <widget class="QSpinBox" name="spinBox_R_IDAC1_QN">
          <property name="geometry">
           <rect>
            <x>120</x>
@@ -698,8 +562,8 @@
          <rect>
           <x>10</x>
           <y>160</y>
-          <width>351</width>
-          <height>151</height>
+          <width>361</width>
+          <height>121</height>
          </rect>
         </property>
         <property name="title">
@@ -708,7 +572,7 @@
         <widget class="QLabel" name="label_23">
          <property name="geometry">
           <rect>
-           <x>12</x>
+           <x>210</x>
            <y>32</y>
            <width>64</width>
            <height>30</height>
@@ -721,7 +585,7 @@
         <widget class="QComboBox" name="comboBox_R_BBGain">
          <property name="geometry">
           <rect>
-           <x>120</x>
+           <x>280</x>
            <y>30</y>
            <width>75</width>
            <height>30</height>
@@ -755,7 +619,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>70</y>
+           <y>30</y>
            <width>100</width>
            <height>30</height>
           </rect>
@@ -768,7 +632,7 @@
          <property name="geometry">
           <rect>
            <x>120</x>
-           <y>70</y>
+           <y>30</y>
            <width>75</width>
            <height>30</height>
           </rect>
@@ -796,7 +660,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>110</y>
+           <y>70</y>
            <width>100</width>
            <height>30</height>
           </rect>
@@ -809,7 +673,7 @@
          <property name="geometry">
           <rect>
            <x>120</x>
-           <y>110</y>
+           <y>70</y>
            <width>75</width>
            <height>30</height>
           </rect>
@@ -833,6 +697,152 @@
           </property>
          </item>
         </widget>
+        <widget class="QLabel" name="label_30">
+         <property name="geometry">
+          <rect>
+           <x>210</x>
+           <y>70</y>
+           <width>64</width>
+           <height>30</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TIA增益</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="comboBox_R_TIAGain">
+         <property name="geometry">
+          <rect>
+           <x>280</x>
+           <y>70</y>
+           <width>75</width>
+           <height>30</height>
+          </rect>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>30dB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>24dB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>18dB</string>
+          </property>
+         </item>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_IDAC_5">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>10</y>
+          <width>221</width>
+          <height>141</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>IDAC LB-&gt;2  HB-&gt;FIL</string>
+        </property>
+        <widget class="QLabel" name="label_26">
+         <property name="geometry">
+          <rect>
+           <x>35</x>
+           <y>31</y>
+           <width>16</width>
+           <height>30</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>P</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_27">
+         <property name="geometry">
+          <rect>
+           <x>120</x>
+           <y>31</y>
+           <width>16</width>
+           <height>30</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>N</string>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="spinBox_R_IDAC2_IP">
+         <property name="geometry">
+          <rect>
+           <x>35</x>
+           <y>66</y>
+           <width>75</width>
+           <height>30</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="spinBox_R_IDAC2_IN">
+         <property name="geometry">
+          <rect>
+           <x>120</x>
+           <y>66</y>
+           <width>75</width>
+           <height>30</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="spinBox_R_IDAC2_QP">
+         <property name="geometry">
+          <rect>
+           <x>35</x>
+           <y>103</y>
+           <width>75</width>
+           <height>30</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QSpinBox" name="spinBox_R_IDAC2_QN">
+         <property name="geometry">
+          <rect>
+           <x>120</x>
+           <y>103</y>
+           <width>75</width>
+           <height>30</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_28">
+         <property name="geometry">
+          <rect>
+           <x>11</x>
+           <y>103</y>
+           <width>16</width>
+           <height>30</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Q</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_29">
+         <property name="geometry">
+          <rect>
+           <x>11</x>
+           <y>66</y>
+           <width>16</width>
+           <height>30</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>I</string>
+         </property>
+        </widget>
        </widget>
       </widget>
      </item>
@@ -843,8 +853,8 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>620</y>
-     <width>401</width>
+     <y>430</y>
+     <width>251</width>
      <height>66</height>
     </rect>
    </property>
@@ -867,7 +877,7 @@
    <widget class="QRadioButton" name="radioButton_BBBW250M">
     <property name="geometry">
      <rect>
-      <x>139</x>
+      <x>90</x>
       <y>31</y>
       <width>76</width>
       <height>24</height>
@@ -880,7 +890,7 @@
    <widget class="QRadioButton" name="radioButton_BBBW500M">
     <property name="geometry">
      <rect>
-      <x>268</x>
+      <x>170</x>
       <y>31</y>
       <width>76</width>
       <height>24</height>
@@ -898,9 +908,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>740</y>
-     <width>401</width>
-     <height>141</height>
+     <y>550</y>
+     <width>501</width>
+     <height>191</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -914,7 +924,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>700</y>
+     <y>510</y>
      <width>100</width>
      <height>31</height>
     </rect>
@@ -927,7 +937,7 @@
    <property name="geometry">
     <rect>
      <x>118</x>
-     <y>700</y>
+     <y>510</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -939,8 +949,8 @@
   <widget class="QPushButton" name="pushButton_consoleClear">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>700</y>
+     <x>430</x>
+     <y>510</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -952,10 +962,10 @@
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>530</x>
      <y>70</y>
-     <width>831</width>
-     <height>811</height>
+     <width>731</width>
+     <height>671</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -974,7 +984,7 @@
     <widget class="QPushButton" name="pushButton_runStop">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>200</x>
        <y>80</y>
        <width>121</width>
        <height>30</height>
