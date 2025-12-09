@@ -224,7 +224,7 @@
      <rect>
       <x>240</x>
       <y>100</y>
-      <width>101</width>
+      <width>121</width>
       <height>30</height>
      </rect>
     </property>
@@ -249,7 +249,7 @@
     </sizepolicy>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab_tx">
     <attribute name="title">
@@ -971,19 +971,6 @@
     <attribute name="title">
      <string>通信</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton_runStop">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>80</y>
-       <width>121</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>启动/停止</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="tab_radar">
     <attribute name="title">

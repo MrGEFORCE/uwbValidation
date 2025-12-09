@@ -30,10 +30,10 @@ class Widget(QWidget):
         self.socketThread = SocketThread(self)
 
         self.ui.horizontalSlider_freq.valueChanged.connect(self.horizontal_slider_freq_value_changed_call_back)
-        self.ui.pushButton_runStop.clicked.connect(self.run_stop_button_clicked_call_back)
         self.ui.pushButton_consoleClear.clicked.connect(self.ui.listWidget_console.clear)
         self.ui.pushButton_txConfigSend.clicked.connect(self.on_tx_config_send_clicked)
         self.ui.pushButton_rxConfigSend.clicked.connect(self.on_rx_config_send_clicked)
+        self.ui.pushButton_connect.clicked.connect(self.start_udp_connection)
 
         self.socketThread.establishSig.connect(self.thread_socket_establish_signal_call_back)
         self.socketThread.cpltSig.connect(self.thread_socket_cplt_signal_call_back)
@@ -57,17 +57,21 @@ class Widget(QWidget):
             self.socketThread.start()
 
     def start_udp_connection(self) -> None:
-        self.socket_thread.configure(
-            remote_host=self.ui.lineEdit_remoteIp.text(),
-            remote_port=self.ui.spinBox_remotePort.value(),
-            bind_host=self.ui.lineEdit_localIp.text(),
-            bind_port=self.ui.spinBox_localPort.value(),
-        )
+        # 配置 UDP 地址
+        local_ip = self.ui.lineEdit_localIp.text()
+        local_port = self.ui.spinBox_localPort.value()
+        remote_ip = self.ui.lineEdit_remoteIp.text()
+        remote_port = self.ui.spinBox_remotePort.value()
+        
+        self.socketThread.udp_local_addr = (local_ip, local_port)
+        self.socketThread.udp_remote_addr = (remote_ip, remote_port)
+        
         self.append_console_message("开始建立 UDP 连接...")
-        if self.socket_thread.isRunning():
+        if self.socketThread.isRunning():
             # 若线程仍处于 Qt 层运行状态，则无需重复启动
             return
-        self.socket_thread.start()
+        self.socketThread.bind_udp()
+        self.socketThread.start()
 
     def console_log(self, t: str) -> None:
         self.ui.listWidget_console.addItem(t + " - " + time.ctime())
@@ -126,26 +130,26 @@ class Widget(QWidget):
         params = {}
 
         # Bank6 参数
-        check_att2db = getattr(self.ui, "checkBox_att2db", None)
+        check_att2db = getattr(self.ui, "checkBox_T_att2db", None)
         params['att2db'] = check_att2db.isChecked() if check_att2db else False
 
-        check_att10db = getattr(self.ui, "checkBox_att10db", None)
+        check_att10db = getattr(self.ui, "checkBox_T_att10db", None)
         params['att10db'] = check_att10db.isChecked() if check_att10db else False
 
-        spinbox_ip = getattr(self.ui, "spinBox_IDAC_IP", None)
+        spinbox_ip = getattr(self.ui, "spinBox_T_IDAC_IP", None)
         params['idac_ip'] = spinbox_ip.value() if spinbox_ip else 0
 
-        spinbox_in = getattr(self.ui, "spinBox_IDAC_IN", None)
+        spinbox_in = getattr(self.ui, "spinBox_T_IDAC_IN", None)
         params['idac_in'] = spinbox_in.value() if spinbox_in else 0
 
-        spinbox_qp = getattr(self.ui, "spinBox_IDAC_QP", None)
+        spinbox_qp = getattr(self.ui, "spinBox_T_IDAC_QP", None)
         params['idac_qp'] = spinbox_qp.value() if spinbox_qp else 0
 
         # Bank7 参数
         params['bandwidth'] = self._get_selected_bandwidth()
         params['bb_gain'] = self._get_selected_bb_gain()
 
-        spinbox_qn = getattr(self.ui, "spinBox_IDAC_QN", None)
+        spinbox_qn = getattr(self.ui, "spinBox_T_IDAC_QN", None)
         params['idac_qn'] = spinbox_qn.value() if spinbox_qn else 0
 
         # Bank8 参数
@@ -235,14 +239,14 @@ class Widget(QWidget):
 
     def _get_selected_bb_gain(self) -> str:
         """返回当前基带增益文字，默认 '0dB'。"""
-        combo = getattr(self.ui, "comboBox_BBGain", None)
+        combo = getattr(self.ui, "comboBox_T_BBGain", None)
         if combo is None:
             return "0dB"
         return combo.currentText() or "0dB"
 
     def _get_selected_filter_gain(self) -> str:
         """返回当前滤波器增益文字，默认 '0dB'。"""
-        combo = getattr(self.ui, "comboBox_filterGain", None)
+        combo = getattr(self.ui, "comboBox_T_filterGain", None)
         if combo is None:
             return "0dB"
         return combo.currentText() or "0dB"
@@ -253,7 +257,12 @@ class Widget(QWidget):
         self.ui.listWidget_console.scrollToBottom()
 
     def closeEvent(self, event) -> None:
-        self.stop_udp_connection()
+        # 停止 UDP 连接
+        if self.socketThread.isRunning():
+            self.socketThread.receiving = False
+            self.socketThread.wait()  # 等待线程结束
+        if self.socketThread.udp_socket:
+            self.socketThread.udp_socket.close()
         super().closeEvent(event)
 
 
