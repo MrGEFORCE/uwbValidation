@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>760</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -40,7 +40,7 @@
   <widget class="QSlider" name="horizontalSlider_freq">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>140</x>
      <y>18</y>
      <width>1131</width>
      <height>18</height>
@@ -68,7 +68,7 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>260</x>
      <y>40</y>
      <width>135</width>
      <height>21</height>
@@ -87,7 +87,7 @@
   <widget class="QLabel" name="label_freq_3">
    <property name="geometry">
     <rect>
-     <x>500</x>
+     <x>510</x>
      <y>40</y>
      <width>194</width>
      <height>21</height>
@@ -102,8 +102,8 @@
     <rect>
      <x>10</x>
      <y>70</y>
-     <width>501</width>
-     <height>351</height>
+     <width>271</width>
+     <height>571</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -113,7 +113,7 @@
     </sizepolicy>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab_tx">
     <attribute name="title">
@@ -248,9 +248,9 @@
        <widget class="QGroupBox" name="groupBox">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>160</y>
-          <width>121</width>
+          <x>10</x>
+          <y>280</y>
+          <width>221</width>
           <height>111</height>
          </rect>
         </property>
@@ -299,7 +299,7 @@
         <widget class="QLabel" name="label_5">
          <property name="geometry">
           <rect>
-           <x>12</x>
+           <x>10</x>
            <y>32</y>
            <width>64</width>
            <height>30</height>
@@ -307,6 +307,9 @@
          </property>
          <property name="text">
           <string>基带增益</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
         <widget class="QComboBox" name="comboBox_T_BBGain">
@@ -319,7 +322,7 @@
           </rect>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <item>
           <property name="text">
@@ -353,6 +356,9 @@
          </property>
          <property name="text">
           <string>滤波增益</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
         <widget class="QComboBox" name="comboBox_T_filterGain">
@@ -413,45 +419,6 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QGroupBox" name="groupBox_4">
-        <property name="geometry">
-         <rect>
-          <x>380</x>
-          <y>160</y>
-          <width>81</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <property name="title">
-         <string>衰减</string>
-        </property>
-        <widget class="QCheckBox" name="checkBox_R_att2db">
-         <property name="geometry">
-          <rect>
-           <x>12</x>
-           <y>30</y>
-           <width>62</width>
-           <height>30</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>2dB</string>
-         </property>
-        </widget>
-        <widget class="QCheckBox" name="checkBox_R_att10db">
-         <property name="geometry">
-          <rect>
-           <x>12</x>
-           <y>70</y>
-           <width>72</width>
-           <height>30</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>10dB</string>
-         </property>
-        </widget>
-       </widget>
        <widget class="QGroupBox" name="groupBox_IDAC_4">
         <property name="geometry">
          <rect>
@@ -561,9 +528,9 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>160</y>
-          <width>361</width>
-          <height>121</height>
+          <y>310</y>
+          <width>221</width>
+          <height>191</height>
          </rect>
         </property>
         <property name="title">
@@ -572,8 +539,8 @@
         <widget class="QLabel" name="label_23">
          <property name="geometry">
           <rect>
-           <x>210</x>
-           <y>32</y>
+           <x>40</x>
+           <y>112</y>
            <width>64</width>
            <height>30</height>
           </rect>
@@ -581,12 +548,15 @@
          <property name="text">
           <string>基带增益</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
         </widget>
         <widget class="QComboBox" name="comboBox_R_BBGain">
          <property name="geometry">
           <rect>
-           <x>280</x>
-           <y>30</y>
+           <x>120</x>
+           <y>110</y>
            <width>75</width>
            <height>30</height>
           </rect>
@@ -626,6 +596,9 @@
          </property>
          <property name="text">
           <string>一级滤波增益</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
         <widget class="QComboBox" name="comboBox_R_filterGain1">
@@ -668,6 +641,9 @@
          <property name="text">
           <string>二级滤波增益</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
         </widget>
         <widget class="QComboBox" name="comboBox_R_filterGain2">
          <property name="geometry">
@@ -700,8 +676,8 @@
         <widget class="QLabel" name="label_30">
          <property name="geometry">
           <rect>
-           <x>210</x>
-           <y>70</y>
+           <x>40</x>
+           <y>150</y>
            <width>64</width>
            <height>30</height>
           </rect>
@@ -709,12 +685,15 @@
          <property name="text">
           <string>TIA增益</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
         </widget>
         <widget class="QComboBox" name="comboBox_R_TIAGain">
          <property name="geometry">
           <rect>
-           <x>280</x>
-           <y>70</y>
+           <x>120</x>
+           <y>150</y>
            <width>75</width>
            <height>30</height>
           </rect>
@@ -742,8 +721,8 @@
        <widget class="QGroupBox" name="groupBox_IDAC_5">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>10</y>
+          <x>10</x>
+          <y>160</y>
           <width>221</width>
           <height>141</height>
          </rect>
@@ -853,9 +832,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>430</y>
-     <width>251</width>
-     <height>66</height>
+     <y>650</y>
+     <width>271</width>
+     <height>72</height>
     </rect>
    </property>
    <property name="title">
@@ -864,10 +843,10 @@
    <widget class="QRadioButton" name="radioButton_BBBW100M">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>31</y>
-      <width>76</width>
-      <height>24</height>
+      <x>12</x>
+      <y>35</y>
+      <width>67</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="text">
@@ -877,10 +856,10 @@
    <widget class="QRadioButton" name="radioButton_BBBW250M">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>31</y>
-      <width>76</width>
-      <height>24</height>
+      <x>96</x>
+      <y>35</y>
+      <width>67</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="text">
@@ -890,10 +869,10 @@
    <widget class="QRadioButton" name="radioButton_BBBW500M">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>31</y>
-      <width>76</width>
-      <height>24</height>
+      <x>181</x>
+      <y>35</y>
+      <width>67</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="text">
@@ -908,9 +887,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>550</y>
-     <width>501</width>
-     <height>191</height>
+     <y>800</y>
+     <width>1261</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -920,37 +899,11 @@
     </sizepolicy>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_txConfigSend">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>510</y>
-     <width>100</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TX配置发送</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_rxConfigSend">
-   <property name="geometry">
-    <rect>
-     <x>118</x>
-     <y>510</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>RX配置发送</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_consoleClear">
    <property name="geometry">
     <rect>
-     <x>430</x>
-     <y>510</y>
+     <x>200</x>
+     <y>760</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -962,10 +915,10 @@
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>300</x>
      <y>70</y>
-     <width>731</width>
-     <height>671</height>
+     <width>971</width>
+     <height>721</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -981,11 +934,284 @@
     <attribute name="title">
      <string>通信</string>
     </attribute>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>951</width>
+       <height>281</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>接收端</string>
+     </property>
+     <widget class="QTextEdit" name="textEdit_commR">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>501</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_freq_4">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>151</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>接收到的文字消息：</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_freq_5">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>60</y>
+        <width>151</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>接收到的图像：</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_commImgR">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>40</y>
+        <width>421</width>
+        <height>231</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-width: 3px;border-style: solid;border-color: black;</string>
+      </property>
+      <property name="text">
+       <string>pic</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_commRunStop">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>141</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>启动/停止接收</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>350</y>
+       <width>951</width>
+       <height>321</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>发送端</string>
+     </property>
+     <widget class="QLabel" name="label_commImgT">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>40</y>
+        <width>421</width>
+        <height>231</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-width: 3px;border-style: solid;border-color: black;</string>
+      </property>
+      <property name="text">
+       <string>pic</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_freq_6">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>60</y>
+        <width>151</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>要发送的图像：</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_freq_7">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>151</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>要发送的文字消息：</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="textEdit_commT">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>501</width>
+        <height>171</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_commImgT">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>280</y>
+        <width>141</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发送图像</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_commTextT">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>280</y>
+        <width>141</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>发送文字</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_commImgSelect">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>280</y>
+        <width>141</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>选择图像</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_commR">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>10</y>
+       <width>151</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>当前为接收模式</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButton_commT">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>330</y>
+       <width>151</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>当前为发送模式</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_radar">
+    <attribute name="title">
+     <string>雷达</string>
+    </attribute>
     <widget class="QPushButton" name="pushButton_runStop">
      <property name="geometry">
       <rect>
-       <x>200</x>
-       <y>80</y>
+       <x>820</x>
+       <y>40</y>
        <width>121</width>
        <height>30</height>
       </rect>
@@ -995,15 +1221,49 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="tab_radar">
-    <attribute name="title">
-     <string>雷达</string>
-    </attribute>
-   </widget>
    <widget class="QWidget" name="tab_adversarial">
     <attribute name="title">
      <string>对抗</string>
     </attribute>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_4">
+   <property name="geometry">
+    <rect>
+     <x>1300</x>
+     <y>80</y>
+     <width>171</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>debug</string>
+   </property>
+   <widget class="QPushButton" name="pushButton_rxConfigSend">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>90</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RX配置发送</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_txConfigSend">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>100</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TX配置发送</string>
+    </property>
    </widget>
   </widget>
  </widget>

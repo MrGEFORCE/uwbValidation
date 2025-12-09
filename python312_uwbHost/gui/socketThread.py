@@ -26,16 +26,15 @@ class SocketThread(QThread):
         self.receiving = False
 
     def bind_udp(self) -> None:
-        self.udp_socket.bind(self.udp_local_addr)
-        # try:
-        #     self.udp_socket.bind(self.udp_local_addr)
-        # except OSError:
-        #     self.establishSig.emit(False)
-        #     print("debug: UDP建立失败")
+        try:
+            self.udp_socket.bind(self.udp_local_addr)
+        except OSError:
+            self.establishSig.emit(False)
+            print("debug: UDP建立失败")
 
     def try_recv(self) -> bool:
         try:
-            self.d, addr = self.udp_socket.recvfrom(const.ETHERNET_BUFFER_LEN)
+            self.d, addr = self.udp_socket.recvfrom(const.UDP_ETH_BUFFER_LEN)
         except TimeoutError:
             return False
         except ConnectionResetError:  # 对面关机
@@ -52,7 +51,6 @@ class SocketThread(QThread):
                 break
             else:
                 continue
-        print(cache)
         t = time.time()
         while True:
             if not self.receiving:

@@ -2,16 +2,7 @@ import struct
 import numpy as np
 
 import const
-
-TxRegsAddr = {
-    0: 0x05,
-    1: 0x06,
-    2: 0x07,
-    3: 0x08,
-    4: 0x09,
-    5: 0x0A,
-    6: 0x0B
-}
+import p312.supportFuncs as supportFuncs
 
 DLLTable = {
     6: 0xFFFBEF00,
@@ -239,6 +230,7 @@ class RegsABC:
     def __init__(self):
         self.regs: np.ndarray | None = None
         self.refTable: dict = {}
+        self.outerClassIndicator: bytes = b'\xFF'
 
     def gen_regs(self) -> bool:
         ...
@@ -246,20 +238,27 @@ class RegsABC:
     def gen_cmd(self) -> bytes:
         b = b''
         for i in range(len(self.refTable)):
-            b += const.CMD_OUTER_CLASS_T + struct.pack(">BI", self.refTable[i], self.regs[i])
+            b += self.outerClassIndicator + struct.pack(">BI", self.refTable[i], self.regs[i])
         return b
 
     def print(self) -> None:
         for i in range(len(self.refTable)):
-            print("addr: {}, hex:{}, bin:{}".format(str(hex(self.refTable[i]))[2:], str(hex(self.regs[i]))[2:], str(bin(self.regs[i]))[2:]))
+            if self.regs[i] == 0:
+                print("addr: {}, 0".format(str(hex(self.refTable[i]))[2:]))
+            else:
+                print("addr: {}, hex:{}, bin:{}".format(str(hex(self.refTable[i]))[2:], "0x" + supportFuncs.to_hex_format(self.regs[i], 8), "0b" + supportFuncs.to_bin_format(self.regs[i], 32)))
+        print()
 
 
 class TxRegs(RegsABC):
     def __init__(self):
-        super().__init__()
+        super(TxRegs, self).__init__()
         # reg
         self.regs = np.zeros([const.REG_TX_NUMS], dtype=np.uint32)
-        self.refTable = TxRegsAddr
+        self.refTable = {}
+        for i in range(const.REG_TX_NUMS):
+            self.refTable[i] = i + 5
+        self.outerClassIndicator = const.CMD_OUTER_CLASS_T
 
         # external config
         self.idac = IDAC()
@@ -313,19 +312,20 @@ class TxRegs(RegsABC):
 
 class RxRegs(RegsABC):
     def __init__(self):
-        super().__init__()
+        super(RxRegs, self).__init__()
         self.regs = np.zeros([const.REG_RX_NUMS], dtype=np.uint32)
         self.refTable = {}
         for i in range(const.REG_RX_NUMS):
             self.refTable[i] = i
+        self.outerClassIndicator = const.CMD_OUTER_CLASS_R
 
         # external config
         self.idac1 = IDAC()
         self.idac2 = IDAC()
-        self.att2 = False
-        self.att10 = False
         self.bbGain = 0
         self.bbBandwidth = 0
+        self.fil1Gain = 0
+        self.fil2Gain = 0
         self.HBFlag = False
         self.tiaGain = 0
 
@@ -339,7 +339,8 @@ class RxRegs(RegsABC):
         self.regs[7] = 0b00010011000000010001000100010001
 
     def gen_regs(self) -> bool:
-        self.regs[:] = 0
+        self.regs[:7] = 0
+        self.regs[8:] = 0
         # range validation
         if self.idac1.range_validation(10):
             return True
@@ -352,11 +353,11 @@ class RxRegs(RegsABC):
             self.regs[0] = (1 << 24) + (self.pga.R << 16) + (self.pga.P << 8) + self.pga.C
 
             # bank 1
-            self.filter2.gen_filter(self.bbGain, self.bbBandwidth, False, 2)
+            self.filter2.gen_filter(self.fil2Gain, self.bbBandwidth, False, 2)
             self.regs[1] = (1 << 28) + (self.filter2.R1 << 24) + (self.filter2.P2 << 20) + (self.filter2.P1 << 16) + (self.filter2.C2 << 8) + self.filter2.C1
 
             # bank 2
-            self.filter1.gen_filter(self.bbGain, self.bbBandwidth, False, 1)
+            self.filter1.gen_filter(self.fil1Gain, self.bbBandwidth, False, 1)
             self.regs[2] = (1 << 28) + (self.filter1.R1 << 24) + (self.filter1.P2 << 20) + (self.filter1.P1 << 16) + (self.filter1.C2 << 8) + self.filter1.C1
 
             # bank 3
@@ -407,11 +408,11 @@ class RxRegs(RegsABC):
             self.regs[12] = ((self.idac2.QN & 0xFF) << 24) + ((self.idac2.QP & 0xFF) << 16) + ((self.idac2.IN & 0xFF) << 8) + (self.idac2.IP & 0xFF)
 
             # bank D
-            self.filter2.gen_filter(self.bbGain, self.bbBandwidth, False, 2)
+            self.filter2.gen_filter(self.fil2Gain, self.bbBandwidth, False, 2)
             self.regs[13] = (1 << 28) + (self.filter2.R1 << 24) + (self.filter2.P2 << 20) + (self.filter2.P1 << 16) + (self.filter2.C2 << 8) + self.filter2.C1
 
             # bank E
-            self.filter1.gen_filter(self.bbGain, self.bbBandwidth, False, 1)
+            self.filter1.gen_filter(self.fil1Gain, self.bbBandwidth, False, 1)
             self.regs[14] += (self.filter1.C2 << 8) + self.filter1.C1
 
             # bank F
