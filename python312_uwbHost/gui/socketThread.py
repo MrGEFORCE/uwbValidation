@@ -6,6 +6,7 @@ from PySide6.QtCore import QThread
 
 import const
 
+
 class SocketThread(QThread):
     cpltSig = QtCore.Signal(bool)
     establishSig = QtCore.Signal(bool)
@@ -16,10 +17,10 @@ class SocketThread(QThread):
         self.errorWord = r""
         self.dt = 0
         self.d = b''
-        # self.udp_local_addr = ("192.168.1.100", 5010)
-        # self.udp_remote_addr = ("192.168.1.10", 5011)
-        self.udp_local_addr = ("127.0.0.1", 5010)
-        self.udp_remote_addr = ("127.0.0.1", 5011)
+        # self.udp_local_addr = (const.UDP_LOCAL_HOST, const.UDP_LOCAL_PORT)
+        # self.udp_remote_addr = (const.UDP_REMOTE_HOST, const.UDP_REMOTE_PORT)
+        self.udp_local_addr = ("127.0.0.1", const.UDP_LOCAL_PORT)
+        self.udp_remote_addr = ("127.0.0.1", const.UDP_REMOTE_PORT)
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udp_socket.settimeout(5)
         self.receiving = False
@@ -33,7 +34,7 @@ class SocketThread(QThread):
 
     def try_recv(self) -> bool:
         try:
-            self.d, addr = self.udp_socket.recvfrom(const.ETHERNET_BUFFER_LEN)
+            self.d, addr = self.udp_socket.recvfrom(const.UDP_ETH_BUFFER_LEN)
         except TimeoutError:
             return False
         except ConnectionResetError:  # 对面关机

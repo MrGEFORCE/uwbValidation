@@ -2,6 +2,9 @@ __pycache__
 .idea
 *.toml.user
 
+cmake-*
+
+
 
 # 以下内容由ChatGPT生成，专门应付赛灵思的文件夹，还需根据实际情况修改
 # ---- Vivado 生成 / 构建相关 ----
