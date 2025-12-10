@@ -40,6 +40,13 @@ class IDAC:
             return True
         return False
 
+    def repel_validation(self) -> bool:
+        if self.IP * self.IN != 0:
+            return True
+        if self.QP * self.QN != 0:
+            return True
+        return False
+
 
 class PGA:
     PgaWordR = {
@@ -282,6 +289,9 @@ class TxRegs(RegsABC):
         # range validation
         if self.idac.range_validation(9):
             return True
+        if self.idac.repel_validation():
+            print("debug: IDAC has non-zero value in both P or N")
+            return True
 
         # bank 6
         self.regs[1] += 1 if self.att2 else 0
@@ -320,6 +330,7 @@ class RxRegs(RegsABC):
         self.outerClassIndicator = const.CMD_OUTER_CLASS_R
 
         # external config
+        self.freq = 0
         self.idac1 = IDAC()
         self.idac2 = IDAC()
         self.bbGain = 0
@@ -345,6 +356,12 @@ class RxRegs(RegsABC):
         if self.idac1.range_validation(10):
             return True
         if self.idac2.range_validation(9):
+            return True
+        if self.idac1.repel_validation():
+            print("debug: IDAC has non-zero value in both P or N")
+            return True
+        if self.idac2.repel_validation():
+            print("debug: IDAC has non-zero value in both P or N")
             return True
 
         # bank 0
@@ -382,8 +399,8 @@ class RxRegs(RegsABC):
             # bank 6
             self.regs[6] = ((self.idac1.QN & 0xFF) << 24) + ((self.idac1.QP & 0xFF) << 16) + ((self.idac1.IN & 0xFF) << 8) + (self.idac1.IP & 0xFF)
         else:
-            # bank 8 多相位时钟？
-            pass
+            # bank 8
+            self.regs[8] = DLLTable[round(self.freq * 1e-9)]
 
             # bank 9 idac1 复用 IDAC TIA
             self.regs[9] = ((self.idac1.QN & 0xFF) << 24) + ((self.idac1.QP & 0xFF) << 16) + ((self.idac1.IN & 0xFF) << 8) + (self.idac1.IP & 0xFF)
@@ -420,6 +437,3 @@ class RxRegs(RegsABC):
             self.regs[15] = (1 << 24) + (self.pga.R << 16) + (self.pga.P << 8) + self.pga.C
 
         return False
-
-# if __name__ == '__main__':
-#     ins = TxRegs()

@@ -1,20 +1,25 @@
 import os
 import sys
 import time
+import copy
 import platform
-import functools
 import numpy as np
 import pyqtgraph as pg
 
-from PySide6 import QtGui
 from PySide6.QtCore import Qt
+from PySide6 import QtGui, QtCore
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog, QComboBox
 
+import lmx
 import regs
 import const
 import uiConfig
 import funcComm
+import funcRadar
+import funcInterference
 import socketThread
+import chirpParameters
+import p312.graph as graph
 import p312.supportFuncs as supportFuncs
 
 from ui_form import Ui_Widget
@@ -33,14 +38,29 @@ class Widget(QWidget):
         self.runningMode: const.FuncMode = const.FuncMode.ModeComm
         self.isRunning = False
         self.funcComm = funcComm.FuncComm()
+        self.funcRadar = funcRadar.FuncRadar()
+        self.funcInter = funcInterference.FuncInter()
+        self.lmx = lmx.LMX()
         self.bytesData = b''
         self.txRegs = regs.TxRegs()
         self.rxRegs = regs.RxRegs()
         self.socketThread = socketThread.SocketThread(self)
 
+        # plot
+        self.plotWidget_rangeProfile, self.plotDataItem_rangeProfile = graph.init_plot(self.ui.verticalLayout_rangeProfile)
+        graph.init_plot_axis(self.plotWidget_rangeProfile)
+        self.rangeMark = pg.TargetItem(pos=(10, 0), size=30, symbol='arrow_down', movable=False, pen='#00FF00')
+        self.rangeMark.setLabel("")
+        self.plotWidget_rangeProfile.addItem(self.rangeMark)
+        self.plotWidget_rdMap, self.imageItem_rdMap = graph.init_img_plot(self.ui.verticalLayout_rdMap, 'range', 'm', 'doppler', 'm/s')
+        self.plotWidget_interSpec, self.plotDataItem_interSpec = graph.init_plot(self.ui.verticalLayout_interSpec)
+        graph.init_plot_axis(self.plotWidget_interSpec)
+        self.interMark = pg.TargetItem(pos=(10, 0), size=30, symbol='arrow_down', movable=False, pen='#00FF00')
+        self.interMark.setLabel("")
+        self.plotWidget_interSpec.addItem(self.interMark)
+
         # widget signals and slots
         self.ui.horizontalSlider_freq.valueChanged.connect(self.horizontal_slider_freq_value_changed_cb)
-        self.ui.pushButton_runStop.clicked.connect(self.run_stop_button_clicked_cb)
         self.ui.pushButton_consoleClear.clicked.connect(self.ui.listWidget_console.clear)
         self.ui.pushButton_txConfigSend.clicked.connect(self.btn_tx_config_send_clicked_cb)
         self.ui.pushButton_rxConfigSend.clicked.connect(self.btn_rx_config_send_clicked_cb)
@@ -54,8 +74,17 @@ class Widget(QWidget):
         self.ui.pushButton_commRunStop.clicked.connect(self.btn_comm_recv_run_stop_cb)
 
         # radar
+        self.ui.pushButton_radarRunStop.clicked.connect(self.btn_radar_run_stop_clicked_cb)
+        self.ui.pushButton_radarValidateParams.clicked.connect(self.btn_radar_validate_params_clicked_cb)
+        self.ui.pushButton_radarProcessParamsApply.clicked.connect(self.btn_radar_process_params_apply_clicked_cb)
+        self.ui.spinBox_radarParamDecimal.valueChanged.connect(self.radar_show_params)
 
         # interference
+        self.ui.horizontalSlider_inter.valueChanged.connect(self.horizontal_slider_inter_freq_value_changed_cb)
+        self.ui.pushButton_interScan.clicked.connect(self.btn_inter_scan_cb)
+        self.ui.pushButton_interRunStop.clicked.connect(self.btn_inter_run_stop_cb)
+        self.funcInter.scanSig.connect(self.func_inter_scan_cb)
+        self.funcInter.cpltSig.connect(self.func_inter_cplt_cb)
 
         # thread signals and slots
         self.socketThread.establishSig.connect(self.thread_socket_establish_signal_call_back)
@@ -66,8 +95,15 @@ class Widget(QWidget):
         uiConfig.set_comm_default(self.defaultParams[const.FuncMode.ModeComm.value])
         uiConfig.set_radar_default(self.defaultParams[const.FuncMode.ModeRadar.value])
         uiConfig.set_inter_default(self.defaultParams[const.FuncMode.ModeInter.value])
-        self.tab_changed_cb(self.ui.tabWidget.currentIndex())
         self.horizontal_slider_freq_value_changed_cb()
+        self.ui.comboBox_radarTxAnt.addItems([str(i + 1) for i in range(const.ANT_TX_NUMS)])
+        self.ui.comboBox_radarRxAnt.addItems([str(i + 1) for i in range(const.ANT_RX_NUMS)])
+        cnt = 16
+        while cnt < const.SAMPLE_INTERVAL_MAX:
+            self.ui.comboBox_radarSampleInterval.addItem(str(cnt))
+            cnt += 16
+        self.ui.comboBox_radarSampleInterval.setCurrentIndex(4)
+        self.tab_changed_cb(self.ui.tabWidget.currentIndex())
 
     def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
         if event.key() == Qt.Key.Key_F8:
@@ -77,6 +113,10 @@ class Widget(QWidget):
     @property
     def freq(self) -> float:
         return self.ui.horizontalSlider_freq.value() * 1e7
+
+    @property
+    def interFreq(self) -> float:
+        return self.ui.horizontalSlider_inter.value() * 1e7
 
     @property
     def bb_bw(self) -> int:
@@ -95,12 +135,8 @@ class Widget(QWidget):
     def horizontal_slider_freq_value_changed_cb(self) -> None:
         self.ui.label_freq.setText("频率：{:.2f}GHz".format(self.ui.horizontalSlider_freq.value() / 100))
 
-    def run_stop_button_clicked_cb(self) -> None:
-        if self.socketThread.isRunning():
-            self.socketThread.receiving = False
-        else:
-            self.socketThread.receiving = True
-            self.socketThread.start()
+    def horizontal_slider_inter_freq_value_changed_cb(self) -> None:
+        self.ui.label_interFreq.setText("频率：{:.2f}GHz".format(self.ui.horizontalSlider_inter.value() / 100))
 
     def btn_tx_config_send_clicked_cb(self) -> None:
         if self.get_tx_params():
@@ -109,8 +145,7 @@ class Widget(QWidget):
             return
         self.txRegs.print()
         cmd = self.txRegs.gen_cmd()
-        chk = supportFuncs.check_sum(cmd)
-        b = const.cfg.CTRL_HEAD + cmd + chk + const.cfg.CTRL_TAIL
+        b = const.cfg.CTRL_HEAD + cmd + supportFuncs.check_sum(cmd) + const.cfg.CTRL_TAIL
         self.socketThread.udp_socket.sendto(b, self.socketThread.udp_remote_addr)
 
     def btn_rx_config_send_clicked_cb(self) -> None:
@@ -120,8 +155,7 @@ class Widget(QWidget):
             return
         self.rxRegs.print()
         cmd = self.rxRegs.gen_cmd()
-        chk = supportFuncs.check_sum(cmd)
-        b = const.cfg.CTRL_HEAD + cmd + chk + const.cfg.CTRL_TAIL
+        b = const.cfg.CTRL_HEAD + cmd + supportFuncs.check_sum(cmd) + const.cfg.CTRL_TAIL
         self.socketThread.udp_socket.sendto(b, self.socketThread.udp_remote_addr)
 
     def tab_changed_cb(self, idx: int) -> None:
@@ -152,6 +186,8 @@ class Widget(QWidget):
         self.combobox_match_index(self.ui.comboBox_R_filterGain2, self.defaultParams[idx].rFil2Gain)
         self.combobox_match_index(self.ui.comboBox_R_BBGain, self.defaultParams[idx].rBbGain)
         self.combobox_match_index(self.ui.comboBox_R_TIAGain, self.defaultParams[idx].rTiaGain)
+        if idx == const.FuncMode.ModeRadar.value:
+            self.btn_radar_validate_params_clicked_cb()
 
     def radio_btn_comm_mode_toggled_cb(self, status: bool) -> None:
         self.funcComm.rMode = status
@@ -163,6 +199,7 @@ class Widget(QWidget):
         if self.funcComm.set_img(filePath[0]):
             print("debug: get img error")
             return
+        self.funcComm.tPicID += 1
         scaledPix = self.funcComm.tPixmap.scaled(self.ui.label_commImgT.width(), self.ui.label_commImgT.height(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         self.ui.label_commImgT.setPixmap(scaledPix)
         self.ui.label_commImgT.setScaledContents(False)
@@ -173,15 +210,15 @@ class Widget(QWidget):
         if not self.funcComm.imgSelected:
             print("debug: img not selected")
             return
-        b = self.funcComm.get_img_code()
-        self.socketThread.udp_socket.sendto(b, self.socketThread.udp_remote_addr)
+        b = self.gen_tr_code() + self.funcComm.gen_img_code() + self.lmx.gen_clk_code()
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def btn_comm_send_text_cb(self) -> None:
         if self.funcComm.rMode:
             return
         self.funcComm.set_text(self.ui.textEdit_commT.toPlainText())
-        b = self.funcComm.get_text_code()
-        self.socketThread.udp_socket.sendto(b, self.socketThread.udp_remote_addr)
+        b = self.gen_tr_code() + self.funcComm.gen_text_code() + self.lmx.gen_clk_code()
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def btn_comm_recv_run_stop_cb(self) -> None:
         if not self.funcComm.rMode:
@@ -189,8 +226,7 @@ class Widget(QWidget):
         if self.isRunning:
             self.isRunning = False
             self.socketThread.receiving = False
-            for i in range(const.FuncMode.ModeCount.value):
-                self.ui.tabWidget.setTabEnabled(i, True)
+            self.lock_tab(status=True)
             self.ui.radioButton_commT.setEnabled(True)
             self.ui.radioButton_commR.setEnabled(True)
             self.console_log("通信模式：停止接收")
@@ -200,17 +236,72 @@ class Widget(QWidget):
             self.socketThread.receiving = True
             self.socketThread.start()
             # 工作于接收状态的芯片不可再用于发射，所有页面和模式切换全部锁住，直到用户手动停止
-            for i in range(const.FuncMode.ModeCount.value):
-                if i == const.FuncMode.ModeComm.value:
-                    continue
-                self.ui.tabWidget.setTabEnabled(i, False)
+            self.lock_tab(allow=const.FuncMode.ModeComm.value)
             self.ui.radioButton_commT.setEnabled(False)
             self.ui.radioButton_commR.setEnabled(False)
             self.console_log("通信模式：开始接收")
 
-    def thread_socket_establish_signal_call_back(self, signal: bool) -> None:
-        if not signal:
-            self.console_log("网口设置错误或未连接下位机，UDP未建立！")
+    def btn_radar_run_stop_clicked_cb(self) -> None:
+        if self.isRunning:
+            self.isRunning = False
+            self.socketThread.receiving = False
+            self.lock_tab(status=True)
+            self.console_log("雷达模式：停止")
+            b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        else:
+            if self.btn_radar_validate_params_clicked_cb():
+                return
+            self.isRunning = True
+            self.funcRadar.resize()
+            self.socketThread.receiving = True
+            self.socketThread.start()
+            self.lock_tab(allow=const.FuncMode.ModeRadar.value)
+            self.console_log("雷达模式：启动")
+            b = self.gen_tr_code() + self.funcRadar.gen_radar_code() + self.lmx.gen_clk_code()
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+
+    def btn_radar_validate_params_clicked_cb(self) -> bool:
+        if self.radar_get_params():
+            return True
+        if self.radar_validate_params():
+            return True
+        self.radar_show_params()
+        return False
+
+    def btn_radar_process_params_apply_clicked_cb(self) -> None:
+        cp_backup = copy.deepcopy(self.funcRadar.cp)
+        try:
+            self.funcRadar.cp.rangeFFTSize = int(self.ui.lineEdit_radarRangeFFTSize.text())
+            self.funcRadar.cp.dopplerFFTSize = int(self.ui.lineEdit_radarDopplerFFTSize.text())
+        except (ValueError, TypeError):
+            self.console_log("雷达参数获取出错，格式不正确")
+            self.funcRadar.cp = cp_backup
+        if self.radar_validate_params():
+            return
+        self.radar_show_params()
+
+    def btn_inter_scan_cb(self) -> None:
+        self.funcInter.start_scan()
+        self.console_log("对抗模式：开始扫频")
+
+    def btn_inter_run_stop_cb(self) -> None:
+        if self.isRunning:
+            self.isRunning = False
+            self.lock_tab(status=True)
+            self.console_log("对抗模式：停止干扰")
+            self.ui.horizontalSlider_inter.setEnabled(True)
+            b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        else:
+            self.isRunning = True
+            self.lock_tab(allow=const.FuncMode.ModeInter.value)
+            self.console_log("对抗模式：启动干扰")
+            self.funcInter.interFreqGHz = self.interFreq * 1e-9
+            self.ui.horizontalSlider_inter.setEnabled(False)
+            self.ui.horizontalSlider_freq.setValue(self.interFreq * 1e-7)
+            b = self.gen_tr_code() + self.funcInter.gen_inter_code() + self.lmx.gen_clk_code()
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     @staticmethod
     def combobox_match_index(box: QComboBox, value: int) -> int:
@@ -225,31 +316,109 @@ class Widget(QWidget):
         self.ui.listWidget_console.addItem(t + " - " + time.ctime())
         self.ui.listWidget_console.setCurrentRow(self.ui.listWidget_console.count() - 1)
 
-    def thread_socket_cplt_signal_call_back(self, status: bool) -> None:
+    def thread_socket_establish_signal_call_back(self, signal: bool) -> None:
+        if not signal:
+            self.console_log("网口设置错误或未连接下位机，UDP未建立！")
+
+    def thread_socket_cplt_signal_call_back(self) -> None:
         print(self.bytesData)
 
         if self.runningMode == const.FuncMode.ModeComm:
-            ret, idx = self.funcComm.unpack(self.bytesData)
-            if ret:
+            if self.funcComm.unpack(self.bytesData):
                 print("debug: comm unpack error")
                 return
-            if idx == self.funcComm.INFO_IMG:
+            if self.funcComm.currentType == const.DataTypes.COMM_IMG:
                 scaledPix = self.funcComm.rPixmap.scaled(self.ui.label_commImgR.width(), self.ui.label_commImgR.height(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                 self.ui.label_commImgR.setPixmap(scaledPix)
                 self.ui.label_commImgR.setScaledContents(False)
-            if idx == self.funcComm.INFO_TEXT:
+            if self.funcComm.currentType == const.DataTypes.COMM_TXT:
                 self.ui.textEdit_commR.setText(self.funcComm.rText)
         elif self.runningMode == const.FuncMode.ModeRadar:
-            pass
+            if self.funcRadar.unpack(self.bytesData):
+                print("debug: radar unpack error")
+                return
+            self.funcRadar.process()
+            # range profile
+            self.plotDataItem_rangeProfile.setData(self.funcRadar.rangeAxis, np.abs(self.funcRadar.rangeProfile[0, :]))
+            argmax = np.argmax(np.abs(self.funcRadar.rangeProfile[0, :]))
+            self.rangeMark.setLabel("range: {:.2f}m".format(self.funcRadar.rangeAxis[argmax]))
+            self.rangeMark.setPos(self.funcRadar.rangeAxis[argmax], np.abs(self.funcRadar.rangeProfile[0, argmax]))
+            # rd map
+            self.imageItem_rdMap.setImage(self.funcRadar.rdMap, autoLevels=False)
+            self.imageItem_rdMap.setRect(QtCore.QRectF(-self.funcRadar.cp.vMax_m_s, 0, self.funcRadar.cp.vMax_m_s, self.funcRadar.cp.dMax_m))
         elif self.runningMode == const.FuncMode.ModeInter:
             pass
         else:
             print("debug: unknown running mode")
 
-        # if self.frameData.unpack(self.bytesData):
-        #     self.frame_info_update()
-        #     print("debug: ", self.frameData.errMsg)
-        #     return
+    def func_inter_scan_cb(self) -> None:
+        self.ui.horizontalSlider_freq.setValue(int(self.funcInter.scanFreqGHz * 1e2))
+        self.lock_tab(allow=const.FuncMode.ModeInter.value)
+
+    def func_inter_cplt_cb(self) -> None:
+        self.lock_tab(status=True)
+        self.plotDataItem_interSpec.setData(self.funcInter.freqAxis, self.funcInter.fullSpec)
+        self.interMark.setLabel("freq: {:.2f}GHz".format(self.funcInter.freqAxis[self.funcInter.argmax]))
+        self.interMark.setPos(self.funcInter.freqAxis[self.funcInter.argmax], self.funcInter.fullSpec[self.funcInter.argmax])
+        self.ui.label_interRecommandFreq.setText("自动分析信号频点：{:.2f}GHz".format(self.funcInter.freqAxis[self.funcInter.argmax]))
+        self.console_log("对抗模式：扫频完成，已生成推荐值")
+
+    def radar_get_params(self) -> bool:
+        cp_backup = copy.deepcopy(self.funcRadar.cp)
+        try:
+            self.funcRadar.cp.staticClutterRemoval = self.ui.checkBox_radarSCR.isChecked()
+            self.funcRadar.cp.startFrequency_MHz = self.freq * 1e-6
+            self.funcRadar.cp.bandWidth_MHz = float(self.ui.lineEdit_radarBw.text())
+            Tc = float(self.ui.lineEdit_radarTc.text())
+            self.funcRadar.cp.rampTime_us = float(self.ui.lineEdit_radarRampTime.text())
+            self.funcRadar.cp.idleTime_us = Tc - self.funcRadar.cp.rampTime_us
+            self.funcRadar.cp.periodicity_ms = float(self.ui.lineEdit_radarPeriodicity.text())
+            self.funcRadar.cp.ADCPoints = int(self.ui.lineEdit_radarADCPoints.text())
+            self.funcRadar.sampleInterval = int(self.ui.comboBox_radarSampleInterval.currentText())
+            self.funcRadar.cp.sampleRate_ksps = const.SAMPLE_RATE_MAX_MSPS * 1e3 / int(self.ui.comboBox_radarSampleInterval.currentText())
+            self.funcRadar.cp.ADCDelay_us = float(self.ui.lineEdit_radarADCDelay.text())
+            self.funcRadar.cp.chirpLoops = int(self.ui.lineEdit_radarChirps.text())
+            self.funcRadar.cp.antTDM = int(self.ui.comboBox_radarTxAnt.currentText())
+            self.funcRadar.cp.rx = int(self.ui.comboBox_radarRxAnt.currentText())
+            self.funcRadar.cp.rangeFFTSize = int(self.ui.lineEdit_radarRangeFFTSize.text())
+            self.funcRadar.cp.dopplerFFTSize = int(self.ui.lineEdit_radarDopplerFFTSize.text())
+        except (ValueError, TypeError):
+            self.console_log("雷达参数获取出错，格式不正确")
+            self.funcRadar.cp = cp_backup
+            return True
+        return False
+
+    def radar_validate_params(self) -> bool:
+        ret = self.funcRadar.validate_params()
+        if ret == chirpParameters.CP_ERR:
+            self.console_log(self.funcRadar.cp.errMsg)
+        else:
+            self.console_log("参数验证通过")
+        return ret
+
+    def radar_show_params(self) -> None:
+        if self.funcRadar.cp.errFlag == chirpParameters.CP_ERR:
+            return
+        decimal = self.ui.spinBox_radarParamDecimal.value()
+        self.ui.lineEdit_radarSlope.setText(f"{self.funcRadar.cp.slope_MHzus:.{decimal}f}")
+        self.ui.lineEdit_radarDResFreq.setText(f"{2 * self.funcRadar.cp.dRes_m * self.funcRadar.cp.slope_MHzus * 10 / 3:.{decimal}f}")
+        self.ui.lineEdit_radarDRes.setText(f"{self.funcRadar.cp.dRes_m:.{decimal}f}")
+        self.ui.lineEdit_radarDResCompute.setText(f"{self.funcRadar.cp.dResCompute_m:.{decimal}f}")
+        self.ui.lineEdit_radarDMax.setText(f"{self.funcRadar.cp.dMax_m:.{decimal}f}")
+        self.ui.lineEdit_radarADCBandwidth.setText(f"{self.funcRadar.cp.ADCBandWidth_MHz:.{decimal}f}")
+        self.ui.lineEdit_radarDopplerSampleRate.setText(f"{self.funcRadar.cp.dopplerSampleRate_sps:.{decimal}f}")
+        self.ui.lineEdit_radarVRes.setText(f"{self.funcRadar.cp.vRes_m_s:.{decimal}f}")
+        self.ui.lineEdit_radarVResCompute.setText(f"{self.funcRadar.cp.vResCompute_m_s:.{decimal}f}")
+        self.ui.lineEdit_radarVMax.setText(f"{self.funcRadar.cp.vMax_m_s:.{decimal}f}")
+
+    def gen_tr_code(self) -> bytes:
+        if self.get_tx_params():
+            return b''
+        if self.get_rx_params():
+            return b''
+        self.txRegs.gen_regs()
+        self.rxRegs.gen_regs()
+        return self.txRegs.gen_cmd() + self.rxRegs.gen_cmd()
 
     def get_tx_params(self) -> bool:
         self.txRegs.HBFlag = self.HBFlag
@@ -272,6 +441,7 @@ class Widget(QWidget):
         self.rxRegs.fil1Gain = int(self.ui.comboBox_R_filterGain1.currentText()[:-2])
         self.rxRegs.fil2Gain = int(self.ui.comboBox_R_filterGain2.currentText()[:-2])
         self.rxRegs.tiaGain = int(self.ui.comboBox_R_TIAGain.currentText()[:-2])
+        self.rxRegs.freq = self.freq
         self.rxRegs.idac1.IP = self.ui.spinBox_R_IDAC1_IP.value()
         self.rxRegs.idac1.IN = self.ui.spinBox_R_IDAC1_IN.value()
         self.rxRegs.idac1.QP = self.ui.spinBox_R_IDAC1_QP.value()
@@ -281,6 +451,12 @@ class Widget(QWidget):
         self.rxRegs.idac2.QP = self.ui.spinBox_R_IDAC2_QP.value()
         self.rxRegs.idac2.QN = self.ui.spinBox_R_IDAC2_QN.value()
         return False
+
+    def lock_tab(self, allow: int = -1, status: bool = False) -> None:
+        for i in range(const.FuncMode.ModeCount.value):
+            if i == allow:
+                continue
+            self.ui.tabWidget.setTabEnabled(i, status)
 
     def closeEvent(self, event) -> None:
         self.socketThread.terminate()
