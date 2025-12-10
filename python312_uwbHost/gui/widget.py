@@ -72,6 +72,7 @@ class Widget(QWidget):
         self.ui.pushButton_commImgT.clicked.connect(self.btn_comm_send_img_cb)
         self.ui.pushButton_commTextT.clicked.connect(self.btn_comm_send_text_cb)
         self.ui.pushButton_commRunStop.clicked.connect(self.btn_comm_recv_run_stop_cb)
+        self.funcComm.packSig.connect(self.func_comm_send_cb)
 
         # radar
         self.ui.pushButton_radarRunStop.clicked.connect(self.btn_radar_run_stop_clicked_cb)
@@ -210,14 +211,14 @@ class Widget(QWidget):
         if not self.funcComm.imgSelected:
             print("debug: img not selected")
             return
-        b = self.gen_tr_code() + self.funcComm.gen_img_code() + self.lmx.gen_clk_code()
-        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        self.funcComm.gen_img_code()
+        self.funcComm.start_send()
 
     def btn_comm_send_text_cb(self) -> None:
         if self.funcComm.rMode:
             return
         self.funcComm.set_text(self.ui.textEdit_commT.toPlainText())
-        b = self.gen_tr_code() + self.funcComm.gen_text_code() + self.lmx.gen_clk_code()
+        b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcComm.gen_text_code()
         self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def btn_comm_recv_run_stop_cb(self) -> None:
@@ -258,7 +259,7 @@ class Widget(QWidget):
             self.socketThread.start()
             self.lock_tab(allow=const.FuncMode.ModeRadar.value)
             self.console_log("雷达模式：启动")
-            b = self.gen_tr_code() + self.funcRadar.gen_radar_code() + self.lmx.gen_clk_code()
+            b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcRadar.gen_radar_code()
             self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def btn_radar_validate_params_clicked_cb(self) -> bool:
@@ -300,7 +301,7 @@ class Widget(QWidget):
             self.funcInter.interFreqGHz = self.interFreq * 1e-9
             self.ui.horizontalSlider_inter.setEnabled(False)
             self.ui.horizontalSlider_freq.setValue(self.interFreq * 1e-7)
-            b = self.gen_tr_code() + self.funcInter.gen_inter_code() + self.lmx.gen_clk_code()
+            b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcInter.gen_inter_code()
             self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     @staticmethod
@@ -361,7 +362,13 @@ class Widget(QWidget):
         self.interMark.setLabel("freq: {:.2f}GHz".format(self.funcInter.freqAxis[self.funcInter.argmax]))
         self.interMark.setPos(self.funcInter.freqAxis[self.funcInter.argmax], self.funcInter.fullSpec[self.funcInter.argmax])
         self.ui.label_interRecommandFreq.setText("自动分析信号频点：{:.2f}GHz".format(self.funcInter.freqAxis[self.funcInter.argmax]))
+        self.ui.horizontalSlider_inter.setValue(self.funcInter.freqAxis[self.funcInter.argmax] * 1e2)
+        self.ui.horizontalSlider_freq.setValue(self.funcInter.freqAxis[self.funcInter.argmax] * 1e2)
         self.console_log("对抗模式：扫频完成，已生成推荐值")
+
+    def func_comm_send_cb(self) -> None:
+        b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcComm.sendPacks[self.funcComm.tPicPointer]
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def radar_get_params(self) -> bool:
         cp_backup = copy.deepcopy(self.funcRadar.cp)

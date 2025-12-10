@@ -2835,10 +2835,10 @@
       </sizepolicy>
      </property>
      <property name="minimum">
-      <number>600</number>
+      <number>650</number>
      </property>
      <property name="maximum">
-      <number>1800</number>
+      <number>1750</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -2854,7 +2854,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>频率：6GHz</string>
+      <string>频率：6.5GHz</string>
      </property>
     </widget>
    </widget>

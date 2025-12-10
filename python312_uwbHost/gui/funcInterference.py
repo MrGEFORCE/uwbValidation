@@ -17,7 +17,7 @@ class interParamsID(enum.Enum):
 
 
 def gen_c_cmd_ref_table() -> None:
-    h = "enum chirpParamsID\n{\n"
+    h = "enum interParamsID\n{\n"
     for item in interParamsID:
         h += "\t" + item.name + " = "
         h += "0x" + supportFuncs.compensate_to_n_word(str(hex(item.value)[2:].upper()), 2)
@@ -41,7 +41,7 @@ class FuncInter(QWidget, funcABC.FuncABC):
         self.scanFreqGHz = 0
         self.interFreqGHz = 0
 
-        self.freqAxis = np.arange(6, 18, (18 - 6) / (const.INTER_SPAN_POINTS * const.INTER_SPAN_NUMS))
+        self.freqAxis = np.arange(6.5, 17.5, (17.5 - 6.5) / (const.INTER_SPAN_POINTS * const.INTER_SPAN_NUMS))
         self.fullSpec = np.zeros([const.INTER_SPAN_POINTS * const.INTER_SPAN_NUMS], dtype=float)
         self.argmax = 0
 

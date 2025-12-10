@@ -1,17 +1,28 @@
 import struct
 
+from PySide6 import QtCore
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QWidget
 
 import const
 import funcABC
 
 
-class FuncComm(funcABC.FuncABC):
+class FuncComm(QWidget, funcABC.FuncABC):
+    packSig = QtCore.Signal(bool)
+
     def __init__(self):
         super(FuncComm, self).__init__()
         self.rMode = True
         self.imgSelected = False
         self.currentType = const.DataTypes.COMM_TXT.value
+
+        self.sendTimer = QTimer()
+        self.sendTimer.setInterval(500)
+        self.sendTimer.timeout.connect(self.timer_send_timeout_cb)
+        self.sendPackNums = 0
+        self.sendPacks = []
 
         self.tText = ""
         self.tPixmap = QPixmap()
@@ -27,28 +38,33 @@ class FuncComm(funcABC.FuncABC):
         self.rPicH = 0
         self.rPicW = 0
 
+    def timer_send_timeout_cb(self) -> None:
+        self.tPicPointer += 1
+        if self.tPicPointer >= self.sendPackNums:
+            self.sendTimer.stop()
+        else:
+            self.packSig.emit(True)
+
+    def start_send(self) -> None:
+        self.sendTimer.start()
+        self.tPicPointer = 0
+
     def set_img(self, file_path: str) -> bool:
         self.tPixmap = QPixmap(file_path)
         self.imgSelected = True
         return False
 
-    def gen_img_code(self) -> bytes:
+    def gen_img_code(self) -> None:
         if not self.imgSelected:
-            return b''
+            return
 
-        # 一些压缩
+        # 做一些压缩
         [self.tPicH, self.tPicW] = self.tPixmap.size()
-
-        b = const.CMD_OUTER_CLASS_FUNC_COMM
-        b += struct.pack("<B", const.DataTypes.COMM_IMG.value)
-        b += struct.pack("<I", self.tPicID)
-        b += const.CMD_OUTER_CLASS_FUNC_COMM
-        b += struct.pack("<B", const.DataTypes.COMM_IMG_SIZE.value)
-        b += struct.pack("<HH", self.tPicH, self.tPicW)
+        b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", const.DataTypes.COMM_IMG.value, self.tPicID)
+        b += const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BHH", const.DataTypes.COMM_IMG_SIZE.value, self.tPicH, self.tPicW)
         # 发送时，需要临时把雷达模式设置成发送状态，状态可以瞬间切换
         # 这里写图片编码程序，可能需要将其转化为一个较小的size，采用一些压缩技术再发送，接收那边也是，写对应的解包算法
-        self.tPicPointer += 0  # size
-        return b
+        # 如果文件很大，还要设计算法将其分包，放到self.sendPacks里面分批发送，并且self.sendPacks中已经是准备好的每次要发的字节
 
     def set_text(self, s: str) -> None:
         self.tText = s
@@ -56,7 +72,9 @@ class FuncComm(funcABC.FuncABC):
     def gen_text_code(self) -> bytes:
         if self.tText == "":
             return b''
-        return self.tText.encode(encoding='utf-8')
+        b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", const.DataTypes.COMM_TXT.value, 0)
+        b += self.tText.encode(encoding='utf-8')
+        return b
 
     def unpack(self, b: bytes) -> bool:
         if self.unpack_header(b[:const.cfg.HEADER_SIZE], len(b)):

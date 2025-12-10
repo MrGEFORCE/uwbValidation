@@ -11,16 +11,16 @@ import p312.supportFuncs as supportFuncs
 
 
 class chirpParamsID(enum.Enum):
-    TxNums = 0
-    RxNums = 1
-    BW = 2
-    chirps = 3
-    rampTime = 4
-    Tc = 5
-    ADCDelay = 6
-    periodicity = 7
-    points = 8
-    sampleInterval = 9
+    radarTxNums = 0
+    radarRxNums = 1
+    radarBW = 2
+    radarChirps = 3
+    radarRampTime = 4
+    radarTc = 5
+    radarADCDelay = 6
+    radarPeriodicity = 7
+    radarPoints = 8
+    radarSampleInterval = 9
 
 
 def gen_c_cmd_ref_table() -> None:
@@ -52,16 +52,16 @@ class FuncRadar(funcABC.FuncABC):
         self.rdMap = np.ndarray([64, 256], dtype=float)
 
     def gen_radar_code(self) -> bytes:
-        b = const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.TxNums.value, self.cp.antTDM)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.RxNums.value, self.cp.rx)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<Bf", chirpParamsID.BW.value, self.cp.bandWidth_MHz)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.chirps.value, self.cp.chirpLoops)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.rampTime.value, self.cp.rampTime_us)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.Tc.value, self.cp.Tc_us)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.ADCDelay.value, self.cp.ADCDelay_us)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.periodicity.value, self.cp.periodicity_ms)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.points.value, self.cp.ADCPoints)
-        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.sampleInterval.value, self.sampleInterval)
+        b = const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.radarTxNums.value, self.cp.antTDM)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.radarRxNums.value, self.cp.rx)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<Bf", chirpParamsID.radarBW.value, self.cp.bandWidth_MHz)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.radarChirps.value, self.cp.chirpLoops)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<Bf", chirpParamsID.radarRampTime.value, self.cp.rampTime_us)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<Bf", chirpParamsID.radarTc.value, self.cp.Tc_us)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<Bf", chirpParamsID.radarADCDelay.value, self.cp.ADCDelay_us)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<Bf", chirpParamsID.radarPeriodicity.value, self.cp.periodicity_ms)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.radarPoints.value, self.cp.ADCPoints)
+        b += const.CMD_OUTER_CLASS_FUNC_RADAR + struct.pack("<BI", chirpParamsID.radarSampleInterval.value, self.sampleInterval)
         return b
 
     def validate_params(self) -> bool:
