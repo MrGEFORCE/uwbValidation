@@ -1,8 +1,0 @@
-set_property IOSTANDARD LVCMOS18 [get_ports clk]
-set_property IOSTANDARD LVCMOS18 [get_ports rst_n]
-set_property IOSTANDARD LVCMOS18 [get_ports spi_csn]
-set_property IOSTANDARD LVCMOS18 [get_ports spi_miso]
-set_property IOSTANDARD LVCMOS18 [get_ports spi_mosi]
-set_property IOSTANDARD LVCMOS18 [get_ports spi_rstn]
-set_property IOSTANDARD LVCMOS18 [get_ports spi_sclk]
-set_property IOSTANDARD LVCMOS18 [get_ports start_write]
