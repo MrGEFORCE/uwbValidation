@@ -107,7 +107,7 @@ class Widget(QWidget):
         self.tab_changed_cb(self.ui.tabWidget.currentIndex())
 
     def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
-        if event.key() == Qt.Key.Key_F8:
+        if event.key() == Qt.Key.Key_C:
             self.setFixedSize(1480 if self.sizeFlag else 1280, 900)
             self.sizeFlag = not self.sizeFlag
 
