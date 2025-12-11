@@ -928,7 +928,7 @@
     </sizepolicy>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab_comm">
     <attribute name="title">
@@ -1039,6 +1039,19 @@
       </property>
       <property name="text">
        <string>启动/停止接收</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_commClear">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>30</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>清空</string>
       </property>
      </widget>
     </widget>

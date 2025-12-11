@@ -2,11 +2,13 @@ import os
 import sys
 import time
 import copy
+import struct
 import platform
 import numpy as np
 import pyqtgraph as pg
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QImage, QPixmap
 from PySide6 import QtGui, QtCore
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog, QComboBox
 
@@ -72,6 +74,7 @@ class Widget(QWidget):
         self.ui.pushButton_commImgT.clicked.connect(self.btn_comm_send_img_cb)
         self.ui.pushButton_commTextT.clicked.connect(self.btn_comm_send_text_cb)
         self.ui.pushButton_commRunStop.clicked.connect(self.btn_comm_recv_run_stop_cb)
+        self.ui.pushButton_commClear.clicked.connect(self.btn_comm_recv_clear_cb)
         self.funcComm.packSig.connect(self.func_comm_send_cb)
 
         # radar
@@ -206,24 +209,37 @@ class Widget(QWidget):
         self.ui.label_commImgT.setScaledContents(False)
 
     def btn_comm_send_img_cb(self) -> None:
-        if self.funcComm.rMode:
-            return
+        if not const.COMM_LOOP_TEST:
+            if self.funcComm.rMode:
+                self.console_log("当前选择为接收模式，无法发送！")
+                return
         if not self.funcComm.imgSelected:
             print("debug: img not selected")
             return
         self.funcComm.gen_img_code()
         self.funcComm.start_send()
+        b = self.gen_tr_code() + self.lmx.gen_clk_code()
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        if const.COMM_LOOP_TEST:
+            if not self.isRunning:
+                self.btn_comm_recv_run_stop_cb()
 
     def btn_comm_send_text_cb(self) -> None:
-        if self.funcComm.rMode:
-            return
+        if not const.COMM_LOOP_TEST:
+            if self.funcComm.rMode:
+                self.console_log("当前选择为接收模式，无法发送！")
+                return
         self.funcComm.set_text(self.ui.textEdit_commT.toPlainText())
         b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcComm.gen_text_code()
         self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        if const.COMM_LOOP_TEST:
+            if not self.isRunning:
+                self.btn_comm_recv_run_stop_cb()
 
     def btn_comm_recv_run_stop_cb(self) -> None:
-        if not self.funcComm.rMode:
-            return
+        if not const.COMM_LOOP_TEST:
+            if not self.funcComm.rMode:
+                return
         if self.isRunning:
             self.isRunning = False
             self.socketThread.receiving = False
@@ -231,6 +247,8 @@ class Widget(QWidget):
             self.ui.radioButton_commT.setEnabled(True)
             self.ui.radioButton_commR.setEnabled(True)
             self.console_log("通信模式：停止接收")
+            b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
         else:
             self.runningMode = const.FuncMode.ModeComm
             self.isRunning = True
@@ -241,6 +259,12 @@ class Widget(QWidget):
             self.ui.radioButton_commT.setEnabled(False)
             self.ui.radioButton_commR.setEnabled(False)
             self.console_log("通信模式：开始接收")
+            b = self.gen_tr_code() + self.lmx.gen_clk_code() + const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", funcComm.commParamsID.commRecv.value, 0)
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+
+    def btn_comm_recv_clear_cb(self) -> None:
+        self.ui.textEdit_commR.clear()
+        self.funcComm.rText = ""
 
     def btn_radar_run_stop_clicked_cb(self) -> None:
         if self.isRunning:
@@ -285,6 +309,7 @@ class Widget(QWidget):
     def btn_inter_scan_cb(self) -> None:
         self.funcInter.start_scan()
         self.console_log("对抗模式：开始扫频")
+        self.lock_tab(allow=const.FuncMode.ModeInter.value)
 
     def btn_inter_run_stop_cb(self) -> None:
         if self.isRunning:
@@ -301,7 +326,7 @@ class Widget(QWidget):
             self.funcInter.interFreqGHz = self.interFreq * 1e-9
             self.ui.horizontalSlider_inter.setEnabled(False)
             self.ui.horizontalSlider_freq.setValue(self.interFreq * 1e-7)
-            b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcInter.gen_inter_code()
+            b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcInter.gen_inter_code_jamming()
             self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     @staticmethod
@@ -322,17 +347,19 @@ class Widget(QWidget):
             self.console_log("网口设置错误或未连接下位机，UDP未建立！")
 
     def thread_socket_cplt_signal_call_back(self) -> None:
-        print(self.bytesData)
-
         if self.runningMode == const.FuncMode.ModeComm:
             if self.funcComm.unpack(self.bytesData):
                 print("debug: comm unpack error")
                 return
-            if self.funcComm.currentType == const.DataTypes.COMM_IMG:
-                scaledPix = self.funcComm.rPixmap.scaled(self.ui.label_commImgR.width(), self.ui.label_commImgR.height(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            if self.funcComm.currentType == "img":
+                img = self.funcComm.rPicCanvas.convert("RGB")
+                w, h = img.size
+                qImg = QImage(img.tobytes(), w, h, w * 3, QImage.Format.Format_BGR888)
+                pix = QPixmap.fromImage(qImg)
+                scaledPix = pix.scaled(self.ui.label_commImgR.width(), self.ui.label_commImgR.height(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                 self.ui.label_commImgR.setPixmap(scaledPix)
                 self.ui.label_commImgR.setScaledContents(False)
-            if self.funcComm.currentType == const.DataTypes.COMM_TXT:
+            if self.funcComm.currentType == "txt":
                 self.ui.textEdit_commR.setText(self.funcComm.rText)
         elif self.runningMode == const.FuncMode.ModeRadar:
             if self.funcRadar.unpack(self.bytesData):
@@ -354,7 +381,8 @@ class Widget(QWidget):
 
     def func_inter_scan_cb(self) -> None:
         self.ui.horizontalSlider_freq.setValue(int(self.funcInter.scanFreqGHz * 1e2))
-        self.lock_tab(allow=const.FuncMode.ModeInter.value)
+        b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcInter.gen_inter_code_scan()
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def func_inter_cplt_cb(self) -> None:
         self.lock_tab(status=True)
@@ -367,7 +395,8 @@ class Widget(QWidget):
         self.console_log("对抗模式：扫频完成，已生成推荐值")
 
     def func_comm_send_cb(self) -> None:
-        b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcComm.sendPacks[self.funcComm.tPicPointer]
+        print("main:", self.funcComm.tPicPointer)
+        b = self.funcComm.sendPacks[self.funcComm.tPicPointer]
         self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def radar_get_params(self) -> bool:
@@ -397,10 +426,7 @@ class Widget(QWidget):
 
     def radar_validate_params(self) -> bool:
         ret = self.funcRadar.validate_params()
-        if ret == chirpParameters.CP_ERR:
-            self.console_log(self.funcRadar.cp.errMsg)
-        else:
-            self.console_log("参数验证通过")
+        self.console_log(self.funcRadar.cp.errMsg)  # 正确结果也会展示
         return ret
 
     def radar_show_params(self) -> None:

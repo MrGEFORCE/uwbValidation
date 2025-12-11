@@ -22,7 +22,7 @@ class SocketThread(QThread):
         self.udp_local_addr = ("127.0.0.1", const.UDP_LOCAL_PORT)
         self.udp_remote_addr = ("127.0.0.1", const.UDP_REMOTE_PORT)
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.udp_socket.settimeout(5)
+        self.udp_socket.settimeout(None)
         self.receiving = False
 
     def bind_udp(self) -> None:
@@ -35,19 +35,18 @@ class SocketThread(QThread):
     def try_recv(self) -> bool:
         try:
             self.d, addr = self.udp_socket.recvfrom(const.UDP_ETH_BUFFER_LEN)
-        except TimeoutError:
-            return False
         except ConnectionResetError:  # 对面关机
-            return False
-        return True
+            return True
+        return False
 
     def run(self) -> None:
         cache = b''
         while True:
-            if not self.try_recv():
+            if self.try_recv():
                 continue
             if self.d[:const.cfg.MW_SIZE] == const.cfg.START_MAGIC_WORD:
-                cache = self.d
+                self.main_thread.bytesData = self.d
+                self.cpltSig.emit(True)
                 break
             else:
                 continue
@@ -55,13 +54,14 @@ class SocketThread(QThread):
         while True:
             if not self.receiving:
                 return
-            if not self.try_recv():
+            if self.try_recv():
                 return
             if self.d[:const.cfg.MW_SIZE] == const.cfg.START_MAGIC_WORD:
                 self.dt = "{:.3f}ms".format((time.time() - t) * 1000)
                 t = time.time()
-                self.main_thread.bytesData = cache
+                self.main_thread.bytesData = cache + self.d
                 self.cpltSig.emit(True)
-                cache = self.d
+                cache = b''
             else:
                 cache += self.d
+            time.sleep(0.05)

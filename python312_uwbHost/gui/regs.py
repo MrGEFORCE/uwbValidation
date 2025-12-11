@@ -246,7 +246,7 @@ class RegsABC:
         b = b''
         for i in range(len(self.refTable)):
             b += self.outerClassIndicator + struct.pack(">BI", self.refTable[i], self.regs[i])
-        self.print()
+        # self.print()
         return b
 
     def print(self) -> None:

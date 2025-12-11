@@ -11,9 +11,11 @@ import p312.supportFuncs as supportFuncs
 
 
 class interParamsID(enum.Enum):
-    interFreqMHz = 0
-    interSpanMHz = 1
-    interSpanPoints = 2
+    interScanFreqMHz = 0
+    interScanSpanMHz = 1
+    interScanPoints = 2
+    interJammingFreqMHz = 3
+    interJammingSpanMHz = 4
 
 
 def gen_c_cmd_ref_table() -> None:
@@ -45,10 +47,15 @@ class FuncInter(QWidget, funcABC.FuncABC):
         self.fullSpec = np.zeros([const.INTER_SPAN_POINTS * const.INTER_SPAN_NUMS], dtype=float)
         self.argmax = 0
 
-    def gen_inter_code(self) -> bytes:
-        b = const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interFreqMHz.value, self.interFreqGHz * 1e3)
-        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interSpanMHz.value, const.INTER_SPAN_GHZ * 1e3)
-        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<BI", interParamsID.interSpanPoints.value, const.INTER_SPAN_POINTS)
+    def gen_inter_code_scan(self) -> bytes:
+        b = const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interScanFreqMHz.value, self.scanFreqGHz * 1e3)
+        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interScanSpanMHz.value, const.INTER_SPAN_GHZ * 1e3)
+        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<BI", interParamsID.interScanPoints.value, const.INTER_SPAN_POINTS)
+        return b
+
+    def gen_inter_code_jamming(self) -> bytes:
+        b = const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interJammingFreqMHz.value, self.interFreqGHz * 1e3)
+        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interJammingSpanMHz.value, const.INTER_SPAN_GHZ * 1e3)
         return b
 
     def timer_scan_timeout_cb(self) -> None:

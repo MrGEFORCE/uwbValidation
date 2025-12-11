@@ -306,6 +306,9 @@ class Ui_Widget(object):
         self.pushButton_commRunStop = QPushButton(self.groupBox_2)
         self.pushButton_commRunStop.setObjectName(u"pushButton_commRunStop")
         self.pushButton_commRunStop.setGeometry(QRect(10, 30, 141, 30))
+        self.pushButton_commClear = QPushButton(self.groupBox_2)
+        self.pushButton_commClear.setObjectName(u"pushButton_commClear")
+        self.pushButton_commClear.setGeometry(QRect(170, 30, 81, 31))
         self.groupBox_3 = QGroupBox(self.tab_comm)
         self.groupBox_3.setObjectName(u"groupBox_3")
         self.groupBox_3.setGeometry(QRect(10, 350, 951, 321))
@@ -757,7 +760,7 @@ class Ui_Widget(object):
         self.comboBox_R_filterGain1.setCurrentIndex(0)
         self.comboBox_R_filterGain2.setCurrentIndex(0)
         self.comboBox_R_TIAGain.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -834,6 +837,7 @@ class Ui_Widget(object):
         self.label_freq_5.setText(QCoreApplication.translate("Widget", u"\u63a5\u6536\u5230\u7684\u56fe\u50cf\uff1a", None))
         self.label_commImgR.setText(QCoreApplication.translate("Widget", u"pic", None))
         self.pushButton_commRunStop.setText(QCoreApplication.translate("Widget", u"\u542f\u52a8/\u505c\u6b62\u63a5\u6536", None))
+        self.pushButton_commClear.setText(QCoreApplication.translate("Widget", u"\u6e05\u7a7a", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("Widget", u"\u53d1\u9001\u7aef", None))
         self.label_commImgT.setText(QCoreApplication.translate("Widget", u"pic", None))
         self.label_freq_6.setText(QCoreApplication.translate("Widget", u"\u8981\u53d1\u9001\u7684\u56fe\u50cf\uff1a", None))

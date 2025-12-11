@@ -1,13 +1,18 @@
 #include <asio.hpp>
 #include <cstdio>
 #include <protocol.h>
+#include <tlv.h>
 
 using asio::ip::udp;
 
 protocol_t pro;
 
+uint8_t protocol_buf[1024];
+
 int main() {
-    protocol_init(&pro);
+    protocol_init(&pro, protocol_buf, 1024);
+    // 该c++工程不做tlv，这里只是参考一下内存大小以便和go对照
+    // tlv_init();
 
     try {
         asio::io_context io;
@@ -20,10 +25,7 @@ int main() {
         while (true) {
             size_t len = sock.receive_from(asio::buffer(protocol_buf), remote);
 
-            std::printf("Recv %zu bytes from %s:%u  =>  ",
-                        len,
-                        remote.address().to_string().c_str(),
-                        remote.port());
+            std::printf("Recv %zu bytes from %s:%u  =>  ", len, remote.address().to_string().c_str(), remote.port());
 
             // 打印前8字节
             size_t n = (len < 8) ? len : 8;
