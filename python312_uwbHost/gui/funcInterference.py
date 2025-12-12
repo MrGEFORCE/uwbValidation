@@ -36,7 +36,8 @@ class FuncInter(QWidget, funcABC.FuncABC):
         super(FuncInter, self).__init__()
 
         self.inScan = False
-        self.scanCount = 0
+        self.receivedData = True
+        self.scanCount = -1
         self.scanTimer = QTimer()
         self.scanTimer.setInterval(500)
         self.scanTimer.timeout.connect(self.timer_scan_timeout_cb)
@@ -59,13 +60,14 @@ class FuncInter(QWidget, funcABC.FuncABC):
         return b
 
     def timer_scan_timeout_cb(self) -> None:
+        if not self.receivedData:
+            print("debug: in inter previous scan data not received")
         self.scanCount += 1
         if self.scanCount < const.INTER_SPAN_NUMS:
-            self.scanFreqGHz = 6 + const.INTER_SPAN_GHZ * (self.scanCount + 1)
+            self.receivedData = False
+            self.scanFreqGHz = 6.5 + const.INTER_SPAN_GHZ * self.scanCount
             self.scanSig.emit(True)
         else:
-            self.cpltSig.emit(True)
-            self.argmax = np.argmax(self.fullSpec)
             self.stop_scan()
 
     def stop_scan(self) -> None:
@@ -73,14 +75,29 @@ class FuncInter(QWidget, funcABC.FuncABC):
         self.inScan = False
 
     def start_scan(self) -> None:
+        self.fullSpec = np.zeros([const.INTER_SPAN_POINTS * const.INTER_SPAN_NUMS], dtype=float)
         self.scanTimer.start()
         self.inScan = True
-        self.scanCount = 0
+        self.scanCount = -1
 
     def unpack(self, b: bytes) -> bool:
-        if self.unpack_header(b[:const.cfg.HEADER_SIZE], len(b)):
+        if self.unpack_header(b[const.cfg.MW_SIZE:const.cfg.HEADER_SIZE], len(b)):
             return True
-        # unpack
+        self.receivedData = True
+        b = b[const.cfg.HEADER_SIZE:]
+        for i in range(self.header.tlvNums):
+            [t, l] = struct.unpack("<II", b[:const.cfg.TL_SIZE])
+            b = b[const.cfg.TL_SIZE:]
+            if t == const.DataTypes.INTER_SPEC.value:
+                unpack_res = struct.unpack("<" + "f" * const.INTER_SPAN_POINTS, b[:l])
+                self.fullSpec[self.scanCount * const.INTER_SPAN_POINTS:(self.scanCount + 1) * const.INTER_SPAN_POINTS] = unpack_res[:]
+                if self.scanCount + 1 >= const.INTER_SPAN_NUMS:
+                    self.argmax = np.argmax(self.fullSpec)
+                    self.cpltSig.emit(True)
+            else:
+                print("in comm: unknown tlv ")
+                return True
+            b = b[l:]
         return False
 
 

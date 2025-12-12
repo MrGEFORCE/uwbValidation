@@ -120,7 +120,6 @@ func (t *tlvHandler) tlv_send_header() {
 			tlv.header.DataLen += tlv.dataLens[i] // 到send header前需要准备好对应的数据长度，将其更新在tlv.dataLens[i]中
 		}
 	}
-	tlv.header.OuterClass = CMD_OUTER_CLASS_FUNC_COMM
 	Tlv_to_bytes(&tlv.header)
 }
 
@@ -133,11 +132,20 @@ func (t *tlvHandler) tlv_send_comm() {
 }
 
 func (t *tlvHandler) tlv_send_radar_if() {
-
+	fmt.Println("tlv：雷达模式->发送IF数据")
+	tlv.tl.T = uint32(RADAR_IF)
+	tlv.tl.L = tlv.dataLens[RADAR_IF]
+	Tlv_to_bytes(&tlv.tl)
+	// 剩下内容直接去radar里面自己发送，接收端采用complete模式，断帧没关系
 }
 
 func (t *tlvHandler) tlv_send_inter_scan_spec() {
-
+	fmt.Println("tlv：对抗模式->发送扫频结果")
+	tlv.tl.T = uint32(INTER_SPEC)
+	tlv.tl.L = tlv.dataLens[INTER_SPEC]
+	Tlv_to_bytes(&tlv.tl)
+	copy(tlvBuf[tlvBufLen:], unsafe.Slice((*byte)(unsafe.Pointer(&interBuf[0])), tlv.dataLens[INTER_SPEC]))
+	tlvBufLen += tlv.dataLens[INTER_SPEC]
 }
 
 func Tlv_to_bytes[T any](v *T) {
@@ -150,5 +158,5 @@ func Tlv_to_bytes[T any](v *T) {
 func Tlv_append_bytes(b []byte, size uint32) {
 	copy(tlvBuf[tlvBufLen:tlvBufLen+size], b[:size])
 	tlvBufLen += size
-	fmt.Println(tlvBufLen)
+	//fmt.Println(tlvBufLen)
 }

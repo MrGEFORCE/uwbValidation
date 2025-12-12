@@ -54,10 +54,10 @@ class Widget(QWidget):
         self.rangeMark = pg.TargetItem(pos=(10, 0), size=30, symbol='arrow_down', movable=False, pen='#00FF00')
         self.rangeMark.setLabel("")
         self.plotWidget_rangeProfile.addItem(self.rangeMark)
-        self.plotWidget_rdMap, self.imageItem_rdMap = graph.init_img_plot(self.ui.verticalLayout_rdMap, 'range', 'm', 'doppler', 'm/s')
+        self.plotWidget_rdMap, self.imageItem_rdMap = graph.init_img_plot(self.ui.verticalLayout_rdMap, 'doppler', 'm/s', 'range', 'm')
         self.plotWidget_interSpec, self.plotDataItem_interSpec = graph.init_plot(self.ui.verticalLayout_interSpec)
         graph.init_plot_axis(self.plotWidget_interSpec)
-        self.interMark = pg.TargetItem(pos=(10, 0), size=30, symbol='arrow_down', movable=False, pen='#00FF00')
+        self.interMark = pg.TargetItem(pos=(0, 0), size=30, symbol='arrow_down', movable=False, pen='#00FF00')
         self.interMark.setLabel("")
         self.plotWidget_interSpec.addItem(self.interMark)
 
@@ -243,6 +243,7 @@ class Widget(QWidget):
         if self.isRunning:
             self.isRunning = False
             self.socketThread.receiving = False
+            self.socketThread.terminate()
             self.lock_tab(status=True)
             self.ui.radioButton_commT.setEnabled(True)
             self.ui.radioButton_commR.setEnabled(True)
@@ -253,6 +254,7 @@ class Widget(QWidget):
             self.runningMode = const.FuncMode.ModeComm
             self.isRunning = True
             self.socketThread.receiving = True
+            self.socketThread.set_instant_mode()
             self.socketThread.start()
             # 工作于接收状态的芯片不可再用于发射，所有页面和模式切换全部锁住，直到用户手动停止
             self.lock_tab(allow=const.FuncMode.ModeComm.value)
@@ -270,6 +272,7 @@ class Widget(QWidget):
         if self.isRunning:
             self.isRunning = False
             self.socketThread.receiving = False
+            self.socketThread.terminate()
             self.lock_tab(status=True)
             self.console_log("雷达模式：停止")
             b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
@@ -277,9 +280,11 @@ class Widget(QWidget):
         else:
             if self.btn_radar_validate_params_clicked_cb():
                 return
+            self.runningMode = const.FuncMode.ModeRadar
             self.isRunning = True
             self.funcRadar.resize()
             self.socketThread.receiving = True
+            self.socketThread.set_complete_mode()
             self.socketThread.start()
             self.lock_tab(allow=const.FuncMode.ModeRadar.value)
             self.console_log("雷达模式：启动")
@@ -299,6 +304,7 @@ class Widget(QWidget):
         try:
             self.funcRadar.cp.rangeFFTSize = int(self.ui.lineEdit_radarRangeFFTSize.text())
             self.funcRadar.cp.dopplerFFTSize = int(self.ui.lineEdit_radarDopplerFFTSize.text())
+            self.funcRadar.cp.staticClutterRemoval = self.ui.checkBox_radarSCR.isChecked()
         except (ValueError, TypeError):
             self.console_log("雷达参数获取出错，格式不正确")
             self.funcRadar.cp = cp_backup
@@ -308,8 +314,12 @@ class Widget(QWidget):
 
     def btn_inter_scan_cb(self) -> None:
         self.funcInter.start_scan()
+        self.runningMode = const.FuncMode.ModeInter
         self.console_log("对抗模式：开始扫频")
         self.lock_tab(allow=const.FuncMode.ModeInter.value)
+        self.socketThread.receiving = True
+        self.socketThread.set_instant_mode()
+        self.socketThread.start()
 
     def btn_inter_run_stop_cb(self) -> None:
         if self.isRunning:
@@ -320,6 +330,7 @@ class Widget(QWidget):
             b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
             self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
         else:
+            self.runningMode = const.FuncMode.ModeInter
             self.isRunning = True
             self.lock_tab(allow=const.FuncMode.ModeInter.value)
             self.console_log("对抗模式：启动干扰")
@@ -363,8 +374,12 @@ class Widget(QWidget):
                 self.ui.textEdit_commR.setText(self.funcComm.rText)
         elif self.runningMode == const.FuncMode.ModeRadar:
             if self.funcRadar.unpack(self.bytesData):
-                print("debug: radar unpack error")
+                if self.socketThread.receiving:
+                    print("debug: radar unpack error")
                 return
+            self.ui.label_radarFrameCount.setText("帧计数 {}".format(self.funcRadar.header.frame))
+            self.ui.label_radarFrameDelay.setText("延迟 {} 帧".format(self.funcRadar.header.delay))
+            self.ui.label_radarDt.setText("帧间隔 {}".format(self.socketThread.dt))
             self.funcRadar.process()
             # range profile
             self.plotDataItem_rangeProfile.setData(self.funcRadar.rangeAxis, np.abs(self.funcRadar.rangeProfile[0, :]))
@@ -372,10 +387,13 @@ class Widget(QWidget):
             self.rangeMark.setLabel("range: {:.2f}m".format(self.funcRadar.rangeAxis[argmax]))
             self.rangeMark.setPos(self.funcRadar.rangeAxis[argmax], np.abs(self.funcRadar.rangeProfile[0, argmax]))
             # rd map
-            self.imageItem_rdMap.setImage(self.funcRadar.rdMap, autoLevels=False)
-            self.imageItem_rdMap.setRect(QtCore.QRectF(-self.funcRadar.cp.vMax_m_s, 0, self.funcRadar.cp.vMax_m_s, self.funcRadar.cp.dMax_m))
+            self.imageItem_rdMap.setImage(self.funcRadar.rdMap.T)
+            self.imageItem_rdMap.setRect(QtCore.QRectF(0, -self.funcRadar.cp.vMax_m_s, self.funcRadar.cp.dMax_m, 2 * self.funcRadar.cp.vMax_m_s))
         elif self.runningMode == const.FuncMode.ModeInter:
-            pass
+            if self.funcInter.unpack(self.bytesData):
+                print("debug: radar unpack error")
+                return
+            self.plotDataItem_interSpec.setData(self.funcInter.freqAxis, self.funcInter.fullSpec)
         else:
             print("debug: unknown running mode")
 
@@ -385,6 +403,8 @@ class Widget(QWidget):
         self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def func_inter_cplt_cb(self) -> None:
+        self.socketThread.receiving = False
+        self.socketThread.terminate()
         self.lock_tab(status=True)
         self.plotDataItem_interSpec.setData(self.funcInter.freqAxis, self.funcInter.fullSpec)
         self.interMark.setLabel("freq: {:.2f}GHz".format(self.funcInter.freqAxis[self.funcInter.argmax]))

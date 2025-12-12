@@ -5,11 +5,11 @@ import (
 	"net"
 )
 
-var buf = make([]byte, 2048)
+var proBuf = make([]byte, 2048)
 var pro = Protocol{}
 
 func main() {
-	pro.Init(buf)
+	pro.Init(proBuf)
 	tlv.Tlv_init()
 	addr := net.UDPAddr{
 		Port: 5011,
@@ -22,7 +22,7 @@ func main() {
 	defer conn.Close()
 	fmt.Printf("UDP server listening on %v...\n", addr)
 	for {
-		n, remoteAddr, err := conn.ReadFromUDP(buf)
+		n, remoteAddr, err := conn.ReadFromUDP(proBuf)
 		if err != nil {
 			fmt.Println("read error:", err)
 			continue

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"fmt"
+	"math"
 )
 
 const (
@@ -31,6 +32,7 @@ const (
 	radarPeriodicity    = 7
 	radarPoints         = 8
 	radarSampleInterval = 9
+	radarStartFreq      = 10
 
 	interScanFreqMHz    = 0
 	interScanSpanMHz    = 1
@@ -45,15 +47,17 @@ type CommInfo struct {
 }
 
 type RadarConfig struct {
-	TxAnt       int
-	RxAnt       int
-	Bandwidth   float32
-	Chirps      int
-	RampTime    float32
-	Tc          float32
-	ADCDelay    float32
-	Periodicity float32
-	ADCPoints   int
+	TxAnt          uint32
+	RxAnt          uint32
+	Bandwidth      float32
+	Chirps         uint32
+	RampTime       float32
+	Tc             float32
+	ADCDelay       float32
+	Periodicity    float32
+	ADCPoints      uint32
+	sampleInterval uint32
+	startFreq      float32
 }
 
 type InterConfig struct {
@@ -97,6 +101,8 @@ func (p *Protocol) Init(buffer []byte) {
 func u32(b []byte) uint32 { return binary.LittleEndian.Uint32(b) }
 func u16(b []byte) uint16 { return binary.LittleEndian.Uint16(b) }
 
+func f32(b []byte) float32 { return math.Float32frombits(binary.LittleEndian.Uint32(b)) }
+
 func (p *Protocol) classT(id uint8, ptr []byte) {
 	p.TxRegs[id-5] = u32(ptr)
 }
@@ -129,23 +135,27 @@ func (p *Protocol) classComm(id uint8, ptr []byte) bool {
 func (p *Protocol) classRadar(id uint8, ptr []byte) {
 	switch id {
 	case radarTxNums:
-		p.Radar.TxAnt = int(u32(ptr))
+		p.Radar.TxAnt = u32(ptr)
 	case radarRxNums:
-		p.Radar.RxAnt = int(u32(ptr))
+		p.Radar.RxAnt = u32(ptr)
 	case radarBW:
-		p.Radar.Bandwidth = float32(u32(ptr))
+		p.Radar.Bandwidth = f32(ptr)
 	case radarChirps:
-		p.Radar.Chirps = int(u32(ptr))
+		p.Radar.Chirps = u32(ptr)
 	case radarRampTime:
-		p.Radar.RampTime = float32(u32(ptr))
+		p.Radar.RampTime = f32(ptr)
 	case radarTc:
-		p.Radar.Tc = float32(u32(ptr))
+		p.Radar.Tc = f32(ptr)
 	case radarADCDelay:
-		p.Radar.ADCDelay = float32(u32(ptr))
+		p.Radar.ADCDelay = f32(ptr)
 	case radarPeriodicity:
-		p.Radar.Periodicity = float32(u32(ptr))
+		p.Radar.Periodicity = f32(ptr)
 	case radarPoints:
-		p.Radar.ADCPoints = int(u32(ptr))
+		p.Radar.ADCPoints = u32(ptr)
+	case radarSampleInterval:
+		p.Radar.sampleInterval = u32(ptr)
+	case radarStartFreq:
+		p.Radar.startFreq = f32(ptr)
 	}
 }
 
@@ -153,11 +163,11 @@ func (p *Protocol) classInter(id uint8, ptr []byte) {
 	switch id {
 	case interScanFreqMHz:
 		fmt.Println("\t收到小类：扫频频率")
-		p.Inter.scanFreqMHz = float32(u32(ptr))
+		p.Inter.scanFreqMHz = f32(ptr)
 		p.CurrentMode = ModeInterScan
 	case interScanSpanMHz:
 		fmt.Println("\t收到小类：扫频频率跨度")
-		p.Inter.scanSpanMHz = float32(u32(ptr))
+		p.Inter.scanSpanMHz = f32(ptr)
 		p.CurrentMode = ModeInterScan
 	case interScanPoints:
 		fmt.Println("\t收到小类：扫频数据点")
@@ -165,11 +175,11 @@ func (p *Protocol) classInter(id uint8, ptr []byte) {
 		p.CurrentMode = ModeInterScan
 	case interJammingFreqMHz:
 		fmt.Println("\t收到小类：干扰频率")
-		p.Inter.jammingFreqMHz = float32(u32(ptr))
+		p.Inter.jammingFreqMHz = f32(ptr)
 		p.CurrentMode = ModeInterJamming
 	case interJammingSpanMHz:
 		fmt.Println("\t收到小类：干扰频率跨度")
-		p.Inter.jammingSpanMHz = float32(u32(ptr))
+		p.Inter.jammingSpanMHz = f32(ptr)
 		p.CurrentMode = ModeInterJamming
 	}
 }

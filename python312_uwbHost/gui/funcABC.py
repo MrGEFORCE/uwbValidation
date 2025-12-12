@@ -16,7 +16,11 @@ class FuncABC:
         self.header = Header()
 
     def unpack_header(self, b: bytes, length: int) -> bool:
-        res = struct.unpack("<BBBBIHH", b)
+        try:
+            res = struct.unpack("<BBBBIHH", b)
+        except struct.error:
+            print("in func abc: unpack error")
+            return True
         self.header.delay = res[0]
         self.header.tlvNums = res[1]
         self.header.outerClass = res[2]

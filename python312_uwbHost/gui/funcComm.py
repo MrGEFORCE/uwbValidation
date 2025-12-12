@@ -65,7 +65,6 @@ class FuncComm(QWidget, funcABC.FuncABC):
         self.rPicTotal = 0
         self.rPicID = 0
         self.rPicIdPrev = -1
-        self.ry = 0
 
         # plot
         self.rPicCanvas = Image
@@ -96,24 +95,25 @@ class FuncComm(QWidget, funcABC.FuncABC):
         scale = const.COMM_IMG_MAX_LEN / max(w, h)
         self.tPicW, self.tPicH = int(w * scale), int(h * scale)
         img = img.resize((self.tPicW, self.tPicH), Image.Resampling.BILINEAR)
-        slice_height = int(600 / self.tPicW)
+        slice_height = int(const.COMM_IMG_PACK_PIX / self.tPicW)
         self.sendPackNums = int(np.ceil(self.tPicH / slice_height))
         self.sendPacks.clear()
         desc = struct.pack("<IHH", self.tPicID, self.tPicW, self.tPicH)
         for i in range(self.sendPackNums):
             y0 = i * slice_height
             y1 = min((i + 1) * slice_height, self.tPicH)
-            print(y1-y0)
             crop = img.crop((0, y0, self.tPicW, y1))
             buf = io.BytesIO()
             crop.save(buf, format='PNG')
             png_bytes = buf.getvalue()
-            t = desc + struct.pack("<HH", i, self.sendPackNums) + png_bytes
-            t = struct.pack("<HH", 1, len(t)) + t  # 0->txt, 1->img
-            b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", 0, len(t)) + t
-            self.sendPacks.append(b)
+            # [具体内容] = [u32 ID] + [u16宽] + [u16高] + [u16序号] + [u16总包数] + [u16 y起始坐标]  这部分给上位机用
+            t = desc + struct.pack("<HHH", i, self.sendPackNums, y0) + png_bytes
             # [u16类别 0->文 1->图] + [u16长度] + [具体内容]
-        print("pack total nums:", self.sendPackNums)
+            t = struct.pack("<HH", 1, len(t)) + t  # 0->txt, 1->img 这部分也给上位机用，放最后再打包是因为后面长度不一样，算好后最后加入
+            b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", 0, len(t)) + t
+            # 给下位机用的在外面，本class中不负责
+            self.sendPacks.append(b)
+            print(len(b))
 
     def set_text(self, s: str) -> None:
         self.tText = s + '\n'
@@ -141,24 +141,19 @@ class FuncComm(QWidget, funcABC.FuncABC):
                     self.rText += b[:pkLen].decode()
                     self.currentType = "txt"
                 else:
-                    [self.rPicID, self.rPicW, self.rPicH, self.rPicCount, self.rPicTotal] = struct.unpack("<IHHHH", b[:12])
-                    print(self.rPicID, self.rPicW, self.rPicH, self.rPicCount, self.rPicTotal)
+                    [self.rPicID, self.rPicW, self.rPicH, self.rPicCount, self.rPicTotal, y] = struct.unpack("<IHHHHH", b[:14])
+                    # print(self.rPicID, self.rPicW, self.rPicH, self.rPicCount, self.rPicTotal, y)
                     if self.rPicIdPrev != self.rPicID:
-                        print("new ID")
+                        print("find new ID")
                         self.rPicIdPrev = self.rPicID
                         self.rPicCanvas = Image.new("RGBA", (self.rPicW, self.rPicH))
-                        self.ry = 0
-                    pngCode = b[12:]
+                    pngCode = b[14:]
                     crop_img = Image.open(io.BytesIO(pngCode))
-                    slice_height = crop_img.height
-                    print("slice_height", slice_height)
-                    print("self.ry", self.ry)
-                    print()
-                    self.rPicCanvas.paste(crop_img, (0, self.ry))
-                    self.ry += slice_height
+                    self.rPicCanvas.paste(crop_img, (0, y))
                     self.currentType = "img"
-                    if self.rPicCount == self.rPicTotal:
-                        print("debug: 接收完成")
+                    if self.rPicCount + 1 == self.rPicTotal:
+                        # print("debug: 接收完成")
+                        pass
             else:
                 print("in comm: unknown tlv ")
                 return True

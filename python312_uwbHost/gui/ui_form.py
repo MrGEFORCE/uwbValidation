@@ -760,7 +760,7 @@ class Ui_Widget(object):
         self.comboBox_R_filterGain1.setCurrentIndex(0)
         self.comboBox_R_filterGain2.setCurrentIndex(0)
         self.comboBox_R_TIAGain.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
