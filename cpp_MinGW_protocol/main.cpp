@@ -7,10 +7,10 @@ using asio::ip::udp;
 
 protocol_t pro;
 
-uint8_t protocol_buf[1024];
+uint8_t protocol_buf[2048];
 
 int main() {
-    protocol_init(&pro, protocol_buf, 1024);
+    protocol_init(&pro, protocol_buf, 2048);
     // 该c++工程不做tlv，这里只是参考一下内存大小以便和go对照
     // tlv_init();
 

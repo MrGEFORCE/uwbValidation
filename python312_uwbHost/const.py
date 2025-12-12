@@ -4,6 +4,9 @@ import numpy as np
 
 import p312.pConfig as pConfig
 
+# [C -> little] [GO -> big] [RF Soc -> big]
+GLOBAL_PROTO_ENDIAN = '<'
+
 
 class FuncMode(enum.Enum):
     ModeComm = 0
@@ -24,8 +27,8 @@ cfg.DARK_THEME = True
 cfg.HEADER_SIZE = 20
 cfg.TL_SIZE = 8
 
-cfg.CTRL_HEAD = struct.pack("<I", 0x12345678)
-cfg.CTRL_TAIL = struct.pack("<I", 0x87654321)
+cfg.CTRL_HEAD = struct.pack(GLOBAL_PROTO_ENDIAN + "I", 0x12345678)
+cfg.CTRL_TAIL = struct.pack(GLOBAL_PROTO_ENDIAN + "I", 0x87654321)
 
 UDP_ETH_BUFFER_LEN = 4096
 UDP_LOCAL_HOST = "192.168.240.2"

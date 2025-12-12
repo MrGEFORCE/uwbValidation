@@ -39,37 +39,21 @@ static void protocol_class_lmx(protocol_t *p, uint8_t id, void *ptr) {
 }
 
 static bool protocol_class_comm(protocol_t *p, uint8_t id, void *ptr) {
-    bool ret = false;
     switch (id) {
-        case commSendTxt:
-            print_info("\t收到小类：发送文字\n");
+        case commPack:
+            print_info("\t收到小类：发送内容\n");
             p->comm.packLen = *((uint32_t *) ptr);
             memmove(p->comm.buf, ptr + 4, p->comm.packLen);
             p->currentMode = ModeCommT;
-            ret = true;// 注意！commSendTxt后面一定是被发送的内容！return ture之后直接退出最外层的protocol处理，直接转到发送
-            break;
-        case commImgID:
-            print_info("\t收到小类：图片ID\n");
-            p->comm.picID = *((uint32_t *) ptr);
-            break;
-        case commImgSize:
-            print_info("\t收到小类：图片大小\n");
-            p->comm.picH = *((uint16_t *) ptr);
-            p->comm.picW = *((uint16_t *) ptr + 2);
-            break;
-        case commImgPackLen:
-            print_info("\t收到小类：图片包大小\n");
-            p->comm.packLen = *((uint32_t *) ptr);
-            memmove(p->comm.buf, ptr + 4, p->comm.packLen);
-            p->currentMode = ModeCommT;
-            ret = true;// 注意！commImgPackLen后面一定是被发送的内容！return ture之后直接退出最外层的protocol处理，直接转到发送
+            return true;// 注意！commSendTxt后面一定是被发送的内容！return ture之后直接退出最外层的protocol处理，直接转到发送
         case commRecv:
             print_info("\t收到小类：接收模式\n");
             p->currentMode = ModeCommR;
+            break;
         default:
             break;
     }
-    return ret;
+    return false;
 }
 
 static void protocol_class_radar(protocol_t *p, uint8_t id, void *ptr) {
@@ -103,6 +87,9 @@ static void protocol_class_radar(protocol_t *p, uint8_t id, void *ptr) {
             break;
         case radarSampleInterval:
             p->sampleInterval = (int) *((uint32_t *) ptr);
+            break;
+        case radarFreq:
+            p->cp.data.floatData.t.startFrequency_MHz = *((float *) ptr);
             break;
         default:
             break;
@@ -213,6 +200,12 @@ bool protocol_process(protocol_t *p, int size) {
             return false;
         }
         ptr += 6;
+    }
+
+    if (p->currentMode == ModeRadar) {
+        p->cp.data.floatData.t.idleTime_us = p->cp.data.floatData.t.Tc_us - p->cp.data.floatData.t.rampTime_us;
+        p->cp.data.floatData.t.sampleRate_ksps = SAMPLE_RATE_MAX_MSPS / p->sampleInterval * 1e3;
+        compute_and_validate(&p->cp);
     }
 
     return false;

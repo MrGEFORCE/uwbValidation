@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#define SAMPLE_RATE_MAX_MSPS (153.6)
+
 enum MajorType {
     CMD_OUTER_CLASS_T,
     CMD_OUTER_CLASS_R,
@@ -29,11 +31,8 @@ enum WorkMode {
 };
 
 enum commParamsID {
-    commSendTxt = 0x00,
-    commImgID = 0x01,
-    commImgSize = 0x02,
-    commImgPackLen = 0x03,
-    commRecv = 0x04,
+    commPack = 0x00,
+    commRecv = 0x01,
 };
 
 enum chirpParamsID {
@@ -47,6 +46,7 @@ enum chirpParamsID {
     radarPeriodicity = 0x07,
     radarPoints = 0x08,
     radarSampleInterval = 0x09,
+    radarFreq = 0x0A,
 };
 
 enum interParamsID {
@@ -58,9 +58,6 @@ enum interParamsID {
 };
 
 typedef struct comm_t {
-    uint32_t picID;
-    uint16_t picH;
-    uint16_t picW;
     uint32_t packLen;
     uint8_t buf[2048];
 } comm_t;

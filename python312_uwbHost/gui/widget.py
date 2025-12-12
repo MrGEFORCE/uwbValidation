@@ -149,7 +149,7 @@ class Widget(QWidget):
             return
         self.txRegs.print()
         cmd = self.txRegs.gen_cmd()
-        b = const.cfg.CTRL_HEAD + cmd + supportFuncs.check_sum(cmd) + const.cfg.CTRL_TAIL
+        b = const.cfg.CTRL_HEAD + cmd + supportFuncs.check_sum(cmd, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL
         self.socketThread.udp_socket.sendto(b, self.socketThread.udp_remote_addr)
 
     def btn_rx_config_send_clicked_cb(self) -> None:
@@ -159,7 +159,7 @@ class Widget(QWidget):
             return
         self.rxRegs.print()
         cmd = self.rxRegs.gen_cmd()
-        b = const.cfg.CTRL_HEAD + cmd + supportFuncs.check_sum(cmd) + const.cfg.CTRL_TAIL
+        b = const.cfg.CTRL_HEAD + cmd + supportFuncs.check_sum(cmd, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL
         self.socketThread.udp_socket.sendto(b, self.socketThread.udp_remote_addr)
 
     def tab_changed_cb(self, idx: int) -> None:
@@ -219,7 +219,7 @@ class Widget(QWidget):
         self.funcComm.gen_img_code()
         self.funcComm.start_send()
         b = self.gen_tr_code() + self.lmx.gen_clk_code()
-        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
         if const.COMM_LOOP_TEST:
             if not self.isRunning:
                 self.btn_comm_recv_run_stop_cb()
@@ -231,7 +231,7 @@ class Widget(QWidget):
                 return
         self.funcComm.set_text(self.ui.textEdit_commT.toPlainText())
         b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcComm.gen_text_code()
-        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
         if const.COMM_LOOP_TEST:
             if not self.isRunning:
                 self.btn_comm_recv_run_stop_cb()
@@ -249,7 +249,7 @@ class Widget(QWidget):
             self.ui.radioButton_commR.setEnabled(True)
             self.console_log("通信模式：停止接收")
             b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
-            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
         else:
             self.runningMode = const.FuncMode.ModeComm
             self.isRunning = True
@@ -261,8 +261,8 @@ class Widget(QWidget):
             self.ui.radioButton_commT.setEnabled(False)
             self.ui.radioButton_commR.setEnabled(False)
             self.console_log("通信模式：开始接收")
-            b = self.gen_tr_code() + self.lmx.gen_clk_code() + const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", funcComm.commParamsID.commRecv.value, 0)
-            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+            b = self.gen_tr_code() + self.lmx.gen_clk_code() + const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack(">BI", funcComm.commParamsID.commRecv.value, 0)
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def btn_comm_recv_clear_cb(self) -> None:
         self.ui.textEdit_commR.clear()
@@ -276,7 +276,7 @@ class Widget(QWidget):
             self.lock_tab(status=True)
             self.console_log("雷达模式：停止")
             b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
-            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
         else:
             if self.btn_radar_validate_params_clicked_cb():
                 return
@@ -289,7 +289,7 @@ class Widget(QWidget):
             self.lock_tab(allow=const.FuncMode.ModeRadar.value)
             self.console_log("雷达模式：启动")
             b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcRadar.gen_radar_code()
-            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def btn_radar_validate_params_clicked_cb(self) -> bool:
         if self.radar_get_params():
@@ -328,7 +328,7 @@ class Widget(QWidget):
             self.console_log("对抗模式：停止干扰")
             self.ui.horizontalSlider_inter.setEnabled(True)
             b = const.CMD_OUTER_CLASS_STOP + b'\x00' * 5
-            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
         else:
             self.runningMode = const.FuncMode.ModeInter
             self.isRunning = True
@@ -338,7 +338,7 @@ class Widget(QWidget):
             self.ui.horizontalSlider_inter.setEnabled(False)
             self.ui.horizontalSlider_freq.setValue(self.interFreq * 1e-7)
             b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcInter.gen_inter_code_jamming()
-            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+            self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     @staticmethod
     def combobox_match_index(box: QComboBox, value: int) -> int:
@@ -400,9 +400,9 @@ class Widget(QWidget):
     def func_inter_scan_cb(self) -> None:
         self.ui.horizontalSlider_freq.setValue(int(self.funcInter.scanFreqGHz * 1e2))
         b = self.gen_tr_code() + self.lmx.gen_clk_code() + self.funcInter.gen_inter_code_scan()
-        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
-    def func_inter_cplt_cb(self) -> None:
+    def func_inter_cplt_cb(self, status: bool) -> None:
         self.socketThread.receiving = False
         self.socketThread.terminate()
         self.lock_tab(status=True)
@@ -412,12 +412,11 @@ class Widget(QWidget):
         self.ui.label_interRecommandFreq.setText("自动分析信号频点：{:.2f}GHz".format(self.funcInter.freqAxis[self.funcInter.argmax]))
         self.ui.horizontalSlider_inter.setValue(self.funcInter.freqAxis[self.funcInter.argmax] * 1e2)
         self.ui.horizontalSlider_freq.setValue(self.funcInter.freqAxis[self.funcInter.argmax] * 1e2)
-        self.console_log("对抗模式：扫频完成，已生成推荐值")
+        self.console_log("对抗模式：扫频完成，已生成推荐值" if status else "对抗模式：扫频完成，出现异常")
 
     def func_comm_send_cb(self) -> None:
-        print("main:", self.funcComm.tPicPointer)
         b = self.funcComm.sendPacks[self.funcComm.tPicPointer]
-        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
+        self.socketThread.udp_socket.sendto(const.cfg.CTRL_HEAD + b + supportFuncs.check_sum(b, const.GLOBAL_PROTO_ENDIAN) + const.cfg.CTRL_TAIL, self.socketThread.udp_remote_addr)
 
     def radar_get_params(self) -> bool:
         cp_backup = copy.deepcopy(self.funcRadar.cp)

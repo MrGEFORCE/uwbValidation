@@ -54,6 +54,7 @@ class SocketThread(QThread):
                 return False
             else:
                 print("debug: in socket thread", TimeoutError)
+                return True
         except ConnectionResetError:  # 对面关机
             return True
         return False

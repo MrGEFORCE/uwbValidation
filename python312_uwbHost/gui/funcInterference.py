@@ -35,6 +35,10 @@ class FuncInter(QWidget, funcABC.FuncABC):
     def __init__(self):
         super(FuncInter, self).__init__()
 
+        self.noRecvTimer = QTimer()
+        self.noRecvTimer.setInterval(500)
+        self.noRecvTimer.timeout.connect(self.timer_no_recv_timeout_cb)
+
         self.inScan = False
         self.receivedData = True
         self.scanCount = -1
@@ -49,14 +53,14 @@ class FuncInter(QWidget, funcABC.FuncABC):
         self.argmax = 0
 
     def gen_inter_code_scan(self) -> bytes:
-        b = const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interScanFreqMHz.value, self.scanFreqGHz * 1e3)
-        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interScanSpanMHz.value, const.INTER_SPAN_GHZ * 1e3)
-        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<BI", interParamsID.interScanPoints.value, const.INTER_SPAN_POINTS)
+        b = const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack(const.GLOBAL_PROTO_ENDIAN + "Bf", interParamsID.interScanFreqMHz.value, self.scanFreqGHz * 1e3)
+        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack(const.GLOBAL_PROTO_ENDIAN + "Bf", interParamsID.interScanSpanMHz.value, const.INTER_SPAN_GHZ * 1e3)
+        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack(const.GLOBAL_PROTO_ENDIAN + "BI", interParamsID.interScanPoints.value, const.INTER_SPAN_POINTS)
         return b
 
     def gen_inter_code_jamming(self) -> bytes:
-        b = const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interJammingFreqMHz.value, self.interFreqGHz * 1e3)
-        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack("<Bf", interParamsID.interJammingSpanMHz.value, const.INTER_SPAN_GHZ * 1e3)
+        b = const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack(const.GLOBAL_PROTO_ENDIAN + "Bf", interParamsID.interJammingFreqMHz.value, self.interFreqGHz * 1e3)
+        b += const.CMD_OUTER_CLASS_FUNC_INTER + struct.pack(const.GLOBAL_PROTO_ENDIAN + "Bf", interParamsID.interJammingSpanMHz.value, const.INTER_SPAN_GHZ * 1e3)
         return b
 
     def timer_scan_timeout_cb(self) -> None:
@@ -70,9 +74,14 @@ class FuncInter(QWidget, funcABC.FuncABC):
         else:
             self.stop_scan()
 
+    def timer_no_recv_timeout_cb(self) -> None:
+        self.cpltSig.emit(False)
+        self.noRecvTimer.stop()
+
     def stop_scan(self) -> None:
         self.scanTimer.stop()
         self.inScan = False
+        self.noRecvTimer.start()
 
     def start_scan(self) -> None:
         self.fullSpec = np.zeros([const.INTER_SPAN_POINTS * const.INTER_SPAN_NUMS], dtype=float)
@@ -94,6 +103,7 @@ class FuncInter(QWidget, funcABC.FuncABC):
                 if self.scanCount + 1 >= const.INTER_SPAN_NUMS:
                     self.argmax = np.argmax(self.fullSpec)
                     self.cpltSig.emit(True)
+                    self.noRecvTimer.stop()
             else:
                 print("in comm: unknown tlv ")
                 return True

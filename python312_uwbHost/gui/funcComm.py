@@ -15,12 +15,8 @@ import p312.supportFuncs as supportFuncs
 
 
 class commParamsID(enum.Enum):
-    commSendTxt = 0
-    commImgID = 1
-    commImgSize = 2
-    commImgPackCount = 3
-    commImgPackLen = 4
-    commRecv = 5
+    commPack = 0
+    commRecv = 1
 
 
 def gen_c_cmd_ref_table() -> None:
@@ -110,10 +106,9 @@ class FuncComm(QWidget, funcABC.FuncABC):
             t = desc + struct.pack("<HHH", i, self.sendPackNums, y0) + png_bytes
             # [u16类别 0->文 1->图] + [u16长度] + [具体内容]
             t = struct.pack("<HH", 1, len(t)) + t  # 0->txt, 1->img 这部分也给上位机用，放最后再打包是因为后面长度不一样，算好后最后加入
-            b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", 0, len(t)) + t
-            # 给下位机用的在外面，本class中不负责
+            b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack(const.GLOBAL_PROTO_ENDIAN + "BI", 0, len(t)) + t
             self.sendPacks.append(b)
-            print(len(b))
+            # print("debug: pack len", len(b))
 
     def set_text(self, s: str) -> None:
         self.tText = s + '\n'
@@ -123,7 +118,7 @@ class FuncComm(QWidget, funcABC.FuncABC):
             return b''
         t = self.tText.encode(encoding='utf-8')
         t = struct.pack("<HH", 0, len(t)) + t  # 0->txt, 1->img
-        b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack("<BI", 0, len(t))
+        b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack(const.GLOBAL_PROTO_ENDIAN + "BI", 0, len(t))
         b += t
         return b
 
@@ -144,7 +139,7 @@ class FuncComm(QWidget, funcABC.FuncABC):
                     [self.rPicID, self.rPicW, self.rPicH, self.rPicCount, self.rPicTotal, y] = struct.unpack("<IHHHHH", b[:14])
                     # print(self.rPicID, self.rPicW, self.rPicH, self.rPicCount, self.rPicTotal, y)
                     if self.rPicIdPrev != self.rPicID:
-                        print("find new ID")
+                        # print("debug: find new ID")
                         self.rPicIdPrev = self.rPicID
                         self.rPicCanvas = Image.new("RGBA", (self.rPicW, self.rPicH))
                     pngCode = b[14:]
