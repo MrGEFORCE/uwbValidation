@@ -4,17 +4,21 @@ __pycache__
 
 cmake-*
 build
-
-
+.analytics
+C_armgcc_uwb/.metadata
+C_armgcc_uwb/*_system
+C_armgcc_uwb/rf_adda_loop/_ide
+C_armgcc_uwb/RemoteSystemsTempFiles
 
 # 以下内容由ChatGPT生成，专门应付赛灵思的文件夹，还需根据实际情况修改
 # ---- Vivado 生成 / 构建相关 ----
 # Vivado 工具中间文件
-vivado.cache/
-vivado.runs/
-vivado.sim/
-vivado.hw/
-vivado.ip_user_files/
+
+verilog_uwb/rf27dr_adda_vivado/rf27dr_adda_vivado.cache/
+verilog_uwb/rf27dr_adda_vivado/rf27dr_adda_vivado.runs/
+verilog_uwb/rf27dr_adda_vivado/rf27dr_adda_vivado.sim/
+verilog_uwb/rf27dr_adda_vivado/rf27dr_adda_vivado.hw/
+verilog_uwb/rf27dr_adda_vivado/rf27dr_adda_vivado.ip_user_files/
 
 # Vivado checkpoint /实现产物
 *.dcp
@@ -87,11 +91,6 @@ xvlog.*
 
 # Vitis temp / intermediate
 .vitis/
-
-# ---- Tcl /脚本 /生成脚本 ----
-# 如果你有自动生成脚本，不忽略，但临时 /生成 tcl artifact 可以忽略
-*.jou
-*.log
 
 # ---- Device Tree / BSP / 头文件 ----
 # 视具体项目，如果你是把 device tree 生成文件放在 repo，可视情况保留或忽略
