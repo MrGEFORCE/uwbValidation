@@ -26,8 +26,8 @@ cfg.DARK_THEME = True
 cfg.HEADER_SIZE = 20
 cfg.TL_SIZE = 8
 
-cfg.CTRL_HEAD = struct.pack(">I", 0x12345678)
-cfg.CTRL_TAIL = struct.pack(">I", 0x87654321)
+cfg.CTRL_HEAD = struct.pack("<I", 0x12345678)
+cfg.CTRL_TAIL = struct.pack("<I", 0x87654321)
 
 UDP_ETH_BUFFER_LEN = 1024
 UDP_LOCAL_HOST = "192.168.1.1"
