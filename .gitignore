@@ -2,6 +2,7 @@ __pycache__
 .idea
 *.toml.user
 
+.history
 CMakeFiles
 cmake-*
 build
