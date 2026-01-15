@@ -16,8 +16,10 @@ class FuncABC:
         self.header = Header()
 
     def unpack_header(self, b: bytes, length: int) -> bool:
+        print(f"解包头部 - 数据长度: {length}, 头部数据: {b!r}")
+        print(f"头部十六进制: {' '.join(f'{b:02x}' for b in b)}")
         try:
-            res = struct.unpack("<BBBBIHH", b)
+            res = struct.unpack(">BBBBIHH", b)
         except struct.error:
             print("in func abc: unpack error")
             return True

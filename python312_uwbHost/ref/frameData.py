@@ -29,7 +29,7 @@ class FrameData:
 
     def unpack_header(self, data: bytes) -> None:
         self.header.start_magic_word = data[:const.cfg.MW_SIZE]
-        info = struct.unpack("<HHHI", data[const.cfg.MW_SIZE:const.cfg.HEADER_SIZE])
+        info = struct.unpack(">HHHI", data[const.cfg.MW_SIZE:const.cfg.HEADER_SIZE])
         self.header.frame = info[0]
         self.header.delay = info[1]
         self.header.tlv_nums = info[2]
@@ -46,7 +46,7 @@ class FrameData:
 
         data = data[const.cfg.HEADER_SIZE:]
         try:
-            unpack_res = struct.unpack("<" + "i" * self.cp.chirpLoops * self.cp.rx * self.cp.ADCPoints, data)
+            unpack_res = struct.unpack(">" + "i" * self.cp.chirpLoops * self.cp.rx * self.cp.ADCPoints, data)
         except struct.error:
             self.errMsg = r"解析错误"
             return True

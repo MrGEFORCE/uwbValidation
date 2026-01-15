@@ -82,16 +82,8 @@ class FuncRadar(funcABC.FuncABC):
             b = b[const.cfg.TL_SIZE:]
             if t == const.DataTypes.RADAR_IF.value:
                 try:
+                    # 修改为16位有符号整数 (h)，因为雷达数据是16位有符号格式
                     unpack_res = struct.unpack("<" + "h" * self.cp.chirpLoops * self.cp.rx * self.cp.antTDM * self.cp.ADCPoints * 2, b[:l])
-                    # res = set(list(map(lambda x: x if x not in (1234, 5678) else None, unpack_res)))
-                    # res.remove(None)
-                    # print(res)
-                    # try:
-                    #     idxes = list(map(lambda x: unpack_res.index(x), res))
-                    #     print("error index:", idxes)
-                    # except ValueError:
-                    #     pass
-
                 except struct.error:
                     print("in radar: unpack error")
                     return True
@@ -102,7 +94,6 @@ class FuncRadar(funcABC.FuncABC):
                         part = unpack_res[bias + a * self.cp.ADCPoints * 2:bias + (a + 1) * self.cp.ADCPoints * 2]
                         self.raw[c, a, :].real = part[0::2]
                         self.raw[c, a, :].imag = part[1::2]
-                print(self.raw[0, 0, :10])
             else:
                 print("in radar: unknown tlv")
                 return True
