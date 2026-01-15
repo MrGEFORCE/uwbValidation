@@ -2919,7 +2919,7 @@
       <height>121</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_IF"/>
+    <layout class="QVBoxLayout" name="verticalLayout_IF1"/>
    </widget>
    <widget class="QLabel" name="label_43">
     <property name="geometry">
@@ -2931,14 +2931,14 @@
      </rect>
     </property>
     <property name="text">
-     <string>IF</string>
+     <string>IF R1</string>
     </property>
    </widget>
    <widget class="QSpinBox" name="spinBox_r1">
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>320</y>
+      <y>490</y>
       <width>111</width>
       <height>30</height>
      </rect>
@@ -2954,7 +2954,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>280</y>
+      <y>450</y>
       <width>191</width>
       <height>30</height>
      </rect>
@@ -2967,7 +2967,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>360</y>
+      <y>530</y>
       <width>111</width>
       <height>30</height>
      </rect>
@@ -2986,7 +2986,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>320</y>
+      <y>490</y>
       <width>51</width>
       <height>30</height>
      </rect>
@@ -2999,13 +2999,37 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>360</y>
+      <y>530</y>
       <width>51</width>
       <height>30</height>
      </rect>
     </property>
     <property name="text">
      <string>R2</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>320</y>
+      <width>411</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_IF2"/>
+   </widget>
+   <widget class="QLabel" name="label_49">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>280</y>
+      <width>191</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IF R2</string>
     </property>
    </widget>
   </widget>

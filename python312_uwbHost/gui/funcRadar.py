@@ -78,8 +78,6 @@ class FuncRadar(funcABC.FuncABC):
         b = b[const.cfg.HEADER_SIZE:]
         for i in range(self.header.tlvNums):
             [t, l] = struct.unpack("<II", b[:const.cfg.TL_SIZE])
-            print(f"{t:x},{const.DataTypes.RADAR_IF.value:x}")
-            print(f"{l:x}")
             b = b[const.cfg.TL_SIZE:]
             if t == const.DataTypes.RADAR_IF.value:
                 try:
@@ -96,14 +94,15 @@ class FuncRadar(funcABC.FuncABC):
                 except struct.error:
                     print("in radar: unpack error")
                     return True
-
                 for c in range(self.cp.chirpLoops):
-                    bias = c * self.cp.rx * self.cp.antTDM * self.cp.ADCPoints * 2
-                    for a in range(self.cp.rx * self.cp.antTDM):
-                        part = unpack_res[bias + a * self.cp.ADCPoints * 2:bias + (a + 1) * self.cp.ADCPoints * 2]
-                        self.raw[c, a, :].real = part[0::2]
-                        self.raw[c, a, :].imag = part[1::2]
-                print(self.raw[0, 0, :10])
+                    bias_c = c * self.cp.antTDM * self.cp.ADCPoints * 2 * self.cp.rx
+                    for tx in range(self.cp.antTDM):
+                        bias_t = bias_c + tx * self.cp.ADCPoints * 2 * self.cp.rx
+                        for r in range(self.cp.rx):
+                            bias_r = bias_t + r
+                            part = unpack_res[bias_r:bias_r + self.cp.ADCPoints * 2 * self.cp.rx: self.cp.rx]
+                            self.raw[c, tx * self.cp.rx + r, :].real = part[0::2]
+                            self.raw[c, tx * self.cp.rx + r, :].imag = part[1::2]
             else:
                 print("in radar: unknown tlv")
                 return True
@@ -127,7 +126,6 @@ class FuncRadar(funcABC.FuncABC):
         self.radarCube = np.fft.fft(self.radarCube, n=self.cp.rangeFFTSize)
         # 这一步之后radarCube的shape和dtype从raw的u16变为complex
         if self.cp.staticClutterRemoval:
-            print("SCR")
             self.radarCube -= self.radarCube.mean(0)
         self.rangeProfile = self.radarCube[0, :, :]
         self.rdMap = np.abs(np.fft.fftshift(np.fft.fft(self.radarCube[:, 0, :], n=self.cp.dopplerFFTSize, axis=0), axes=0))

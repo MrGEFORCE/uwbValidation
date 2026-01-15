@@ -115,18 +115,18 @@ func radarProcessOnce(p *Protocol) {
 			targets[t].v = targetsLimit[t].vMin
 		}
 	}
-	radarBufLen = 0
-	ants := int(p.Radar.TxAnt * p.Radar.RxAnt)
 	Fs := SAMPLE_RATE_MAX_MSPS / float64(p.Radar.sampleInterval) * 1e6
 	oneChirp := make([]byte, p.Radar.ADCPoints*4)
 	amp := 1500. / float64(targetNums)
 
 	for k := 0; k < int(p.Radar.Chirps); k++ {
+		// DC
 		for j := 0; j < int(p.Radar.ADCPoints); j++ {
 			off := j * 4
 			binary.LittleEndian.PutUint16(oneChirp[off:], 2048)
 			binary.LittleEndian.PutUint16(oneChirp[off+2:], 2048)
 		}
+		// signal gen
 		for t := 0; t < targetNums; t++ {
 			IF := 2e12 * float64(p.Radar.Bandwidth/p.Radar.RampTime) * targets[t].r / c0
 			chirp_p := float64(k) * 4. * math.Pi * targets[t].v * float64(p.Radar.Tc) * 1e-6 / (c0 / (float64(p.Radar.startFreq) * 1e6))
@@ -141,11 +141,20 @@ func radarProcessOnce(p *Protocol) {
 				binary.LittleEndian.PutUint16(oneChirp[off+2:], uint16(Q))
 			}
 		}
-		for a := 0; a < ants; a++ {
-			dst := radarBufLen + a*int(p.Radar.ADCPoints)*4
-			copy(radarBuf[dst:dst+int(p.Radar.ADCPoints)*4], oneChirp)
+		// make memory
+		chirpStart := k * int(p.Radar.TxAnt) * int(p.Radar.RxAnt) * int(p.Radar.ADCPoints) * 2 * 2
+		for tx := 0; tx < int(p.Radar.TxAnt); tx++ {
+			for j := 0; j < int(p.Radar.ADCPoints); j++ {
+				basis := chirpStart + 2*2*int(p.Radar.RxAnt)*j
+				for rx := 0; rx < int(p.Radar.RxAnt); rx++ {
+					// copy I
+					copy(radarBuf[basis+rx*2:basis+rx*2+2], oneChirp[j*4:j*4+2]) // once u16
+					// copy Q
+					copy(radarBuf[basis+rx*2+int(p.Radar.RxAnt)*2:basis+rx*2+int(p.Radar.RxAnt)*2+2], oneChirp[j*4+2:j*4+4])
+				}
+			}
 		}
-		radarBufLen += ants * int(p.Radar.ADCPoints) * 4
 	}
+	radarBufLen = int(p.Radar.Chirps) * int(p.Radar.TxAnt) * int(p.Radar.RxAnt) * int(p.Radar.ADCPoints) * 2 * 2
 	fmt.Println("雷达内存占用：", radarBufLen)
 }
