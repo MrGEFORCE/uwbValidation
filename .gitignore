@@ -2,6 +2,7 @@ __pycache__
 .idea
 *.toml.user
 
+CMakeFiles
 cmake-*
 build
 .analytics

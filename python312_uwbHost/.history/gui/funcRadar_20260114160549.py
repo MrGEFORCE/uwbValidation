@@ -82,7 +82,8 @@ class FuncRadar(funcABC.FuncABC):
             b = b[const.cfg.TL_SIZE:]
             if t == const.DataTypes.RADAR_IF.value:
                 try:
-                    unpack_res = struct.unpack("<" + "h" * self.cp.chirpLoops * self.cp.rx * self.cp.antTDM * self.cp.ADCPoints * 2, b[:l])
+                    # 改为32位有符号整数，数据量扩大到原来的两倍
+                    unpack_res = struct.unpack("<" + "i" * self.cp.chirpLoops * self.cp.rx * self.cp.antTDM * self.cp.ADCPoints * 2, b[:l])
                     # res = set(list(map(lambda x: x if x not in (1234, 5678) else None, unpack_res)))
                     # res.remove(None)
                     # print(res)

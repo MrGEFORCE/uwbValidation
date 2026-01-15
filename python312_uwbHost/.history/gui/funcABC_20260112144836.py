@@ -17,6 +17,7 @@ class FuncABC:
 
     def unpack_header(self, b: bytes, length: int) -> bool:
         try:
+            # 修改为小端格式，因为发送端是16bit小端模式
             res = struct.unpack("<BBBBIHH", b)
         except struct.error:
             print("in func abc: unpack error")

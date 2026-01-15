@@ -61,6 +61,10 @@ class Widget(QWidget):
         self.interMark.setLabel("")
         self.plotWidget_interSpec.addItem(self.interMark)
 
+        # debug
+        self.plotWidget_IF, self.plotDataItem_IF = graph.init_plot(self.ui.verticalLayout_IF)
+        graph.init_plot_axis(self.plotWidget_IF)
+
         # widget signals and slots
         self.ui.horizontalSlider_freq.valueChanged.connect(self.horizontal_slider_freq_value_changed_cb)
         self.ui.pushButton_consoleClear.clicked.connect(self.ui.listWidget_console.clear)
@@ -381,6 +385,8 @@ class Widget(QWidget):
             self.ui.label_radarFrameDelay.setText("延迟 {} 帧".format(self.funcRadar.header.delay))
             self.ui.label_radarDt.setText("帧间隔 {}".format(self.socketThread.dt))
             self.funcRadar.process()
+            # debug
+            self.plotDataItem_IF.setData(self.funcRadar.raw[0, 0, :].real)
             # range profile
             self.plotDataItem_rangeProfile.setData(self.funcRadar.rangeAxis, np.abs(self.funcRadar.rangeProfile[0, :]))
             argmax = np.argmax(np.abs(self.funcRadar.rangeProfile[0, :]))

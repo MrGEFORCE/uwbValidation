@@ -44,7 +44,6 @@ class SocketThread(QThread):
         except OSError:
             self.establishSig.emit(False)
             print("debug: UDP建立失败")
-
     def try_recv(self) -> bool:
         try:
             self.d, addr = self.udp_socket.recvfrom(const.UDP_ETH_BUFFER_LEN)
@@ -65,6 +64,11 @@ class SocketThread(QThread):
             while True:
                 if self.try_recv():
                     continue
+                received_magic = self.d[:const.cfg.MW_SIZE]
+                print(f"理论包头值 (CTRL_HEAD): {const.cfg.CTRL_HEAD!r} 十六进制: {' '.join(f'{b:02x}' for b in const.cfg.CTRL_HEAD)}")
+                print(f"接收到的包头值: {received_magic!r} 十六进制: {' '.join(f'{b:02x}' for b in received_magic)}")
+                print(f"START_MAGIC_WORD: {const.cfg.START_MAGIC_WORD!r}")
+                print(f"包头校验结果: {received_magic == const.cfg.START_MAGIC_WORD}")
                 if self.d[:const.cfg.MW_SIZE] == const.cfg.START_MAGIC_WORD:
                     self.main_thread.bytesData = self.d
                     self.cpltSig.emit(True)
