@@ -98,9 +98,9 @@ func (p *Protocol) Init(buffer []byte) {
 	p.Comm.buf = make([]byte, 2048)
 }
 
-func u32(b []byte) uint32 { return binary.BigEndian.Uint32(b) }
+func u32(b []byte) uint32 { return binary.LittleEndian.Uint32(b) }
 
-func f32(b []byte) float32 { return math.Float32frombits(binary.BigEndian.Uint32(b)) }
+func f32(b []byte) float32 { return math.Float32frombits(binary.LittleEndian.Uint32(b)) }
 
 func (p *Protocol) classT(id uint8, ptr []byte) {
 	p.TxRegs[id-5] = u32(ptr)

@@ -63,7 +63,7 @@ class FuncComm(QWidget, funcABC.FuncABC):
         self.rPicIdPrev = -1
 
         # plot
-        self.rPicCanvas = Image
+        self.rPicCanvas = Image.new("RGBA", (2, 2))
 
     def timer_send_timeout_cb(self) -> None:
         self.tPicPointer += 1
@@ -106,7 +106,7 @@ class FuncComm(QWidget, funcABC.FuncABC):
             t = desc + struct.pack("<HHH", i, self.sendPackNums, y0) + png_bytes
             # [u16类别 0->文 1->图] + [u16长度] + [具体内容]
             t = struct.pack("<HH", 1, len(t)) + t  # 0->txt, 1->img 这部分也给上位机用，放最后再打包是因为后面长度不一样，算好后最后加入
-            b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack(const.GLOBAL_PROTO_ENDIAN + "BI", 0, len(t)) + t
+            b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack('<' + "BI", 0, len(t)) + t
             self.sendPacks.append(b)
             # print("debug: pack len", len(b))
 
@@ -118,7 +118,7 @@ class FuncComm(QWidget, funcABC.FuncABC):
             return b''
         t = self.tText.encode(encoding='utf-8')
         t = struct.pack("<HH", 0, len(t)) + t  # 0->txt, 1->img
-        b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack(const.GLOBAL_PROTO_ENDIAN + "BI", 0, len(t))
+        b = const.CMD_OUTER_CLASS_FUNC_COMM + struct.pack('<' + "BI", 0, len(t))
         b += t
         return b
 

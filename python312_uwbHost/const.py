@@ -4,9 +4,6 @@ import numpy as np
 
 import p312.pConfig as pConfig
 
-# [C -> little] [GO -> big] [RF Soc -> big]
-GLOBAL_PROTO_ENDIAN = '<'
-
 
 class FuncMode(enum.Enum):
     ModeComm = 0
@@ -27,13 +24,13 @@ cfg.DARK_THEME = True
 cfg.HEADER_SIZE = 20
 cfg.TL_SIZE = 8
 
-cfg.CTRL_HEAD = struct.pack(GLOBAL_PROTO_ENDIAN + "I", 0x12345678)
-cfg.CTRL_TAIL = struct.pack(GLOBAL_PROTO_ENDIAN + "I", 0x87654321)
+cfg.CTRL_HEAD = struct.pack('<' + "I", 0x12345678)
+cfg.CTRL_TAIL = struct.pack('<' + "I", 0x87654321)
 
 UDP_ETH_BUFFER_LEN = 4096
 UDP_LOCAL_HOST = "192.168.1.1"
-UDP_LOCAL_PORT = 1
 UDP_REMOTE_HOST = "192.168.1.10"
+UDP_LOCAL_PORT = 1
 UDP_REMOTE_PORT = 10
 
 REG_TX_NUMS = 7
@@ -41,13 +38,13 @@ REG_RX_NUMS = 16
 
 HB_LB_FREQ = 6e9
 
-CMD_OUTER_CLASS_T = b'\x00'
-CMD_OUTER_CLASS_R = b'\x01'
-CMD_OUTER_CLASS_CLK = b'\x02'
-CMD_OUTER_CLASS_FUNC_COMM = b'\x03'
-CMD_OUTER_CLASS_FUNC_RADAR = b'\x04'
-CMD_OUTER_CLASS_FUNC_INTER = b'\x05'
-CMD_OUTER_CLASS_STOP = b'\x06'
+CMD_OUTER_CLASS_T: bytes = b'\x00'
+CMD_OUTER_CLASS_R: bytes = b'\x01'
+CMD_OUTER_CLASS_CLK: bytes = b'\x02'
+CMD_OUTER_CLASS_FUNC_COMM: bytes = b'\x03'
+CMD_OUTER_CLASS_FUNC_RADAR: bytes = b'\x04'
+CMD_OUTER_CLASS_FUNC_INTER: bytes = b'\x05'
+CMD_OUTER_CLASS_STOP: bytes = b'\x06'
 
 ANT_TX_NUMS = 2
 ANT_RX_NUMS = 2

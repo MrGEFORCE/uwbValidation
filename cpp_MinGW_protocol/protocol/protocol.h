@@ -47,6 +47,7 @@ enum chirpParamsID {
     radarPoints = 0x08,
     radarSampleInterval = 0x09,
     radarFreq = 0x0A,
+    radarMixerDelay = 0x0B,
 };
 
 enum interParamsID {
@@ -59,7 +60,7 @@ enum interParamsID {
 
 typedef struct comm_t {
     uint32_t packLen;
-    uint8_t buf[2048];
+    uint8_t buf[4096];
 } comm_t;
 
 typedef struct inter_t {
@@ -78,6 +79,7 @@ typedef struct protocol_t {
     uint8_t currentMode;
     uint8_t *buf;
     int bufSize;
+    int16_t mixerDelay[2];
     uint32_t txRegs[7], rxRegs[16], lmxRegs[120];  // regs
 } protocol_t;
 

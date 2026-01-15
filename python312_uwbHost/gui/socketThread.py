@@ -22,10 +22,10 @@ class SocketThread(QThread):
         self.errorWord = r""
         self.dt = 0
         self.d = b''
-        self.udp_local_addr = (const.UDP_LOCAL_HOST, const.UDP_LOCAL_PORT)
-        self.udp_remote_addr = (const.UDP_REMOTE_HOST, const.UDP_REMOTE_PORT)
-        # self.udp_local_addr = ("127.0.0.1", const.UDP_LOCAL_PORT)
-        # self.udp_remote_addr = ("127.0.0.1", const.UDP_REMOTE_PORT)
+        # self.udp_local_addr = (const.UDP_LOCAL_HOST, const.UDP_LOCAL_PORT)
+        # self.udp_remote_addr = (const.UDP_REMOTE_HOST, const.UDP_REMOTE_PORT)
+        self.udp_local_addr = ("127.0.0.1", const.UDP_LOCAL_PORT)
+        self.udp_remote_addr = ("127.0.0.1", const.UDP_REMOTE_PORT)
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udp_socket.settimeout(None)
         self.receiving = False

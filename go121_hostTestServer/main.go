@@ -5,14 +5,14 @@ import (
 	"net"
 )
 
-var proBuf = make([]byte, 2048)
+var proBuf = make([]byte, 4096)
 var pro = Protocol{}
 
 func main() {
 	pro.Init(proBuf)
 	tlv.Tlv_init()
 	addr := net.UDPAddr{
-		Port: 5011,
+		Port: 10,
 		IP:   net.ParseIP("127.0.0.1"),
 	}
 	conn, err := net.ListenUDP("udp", &addr)
