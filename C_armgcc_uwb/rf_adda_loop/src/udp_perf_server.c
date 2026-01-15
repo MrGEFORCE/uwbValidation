@@ -1,50 +1,18 @@
-/*
- * Copyright (C) 2017 - 2019 Xilinx, Inc.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
- * OF SUCH DAMAGE.
- *
- */
-
-/** Connection handle for a UDP Server session */
-
 #include "udp_perf_server.h"
 
 extern struct netif server_netif;
 static struct udp_pcb *pcb;
 static struct perf_stats server;
+struct udp_pcb *connected_pcb = NULL;
+static struct pbuf *pbuf_to_be_sent = NULL;
 
 /* Report interval in ms */
 #define REPORT_INTERVAL_TIME (INTERIM_REPORT_INTERVAL * 1000)
 
 void print_app_header(void)
 {
-	xil_printf("UDP server listening on port %d\r\n",
-			UDP_CONN_PORT);
-	xil_printf("On Host: Run $iperf -c %s -i %d -t 300 -u -b <bandwidth>\r\n",
-			inet_ntoa(server_netif.ip_addr),
-			INTERIM_REPORT_INTERVAL);
-
+	xil_printf("UDP server listening on port %d\r\n", UDP_CONN_PORT);
+	xil_printf("On Host: Run $iperf -c %s -i %d -t 300 -u -b <bandwidth>\r\n", inet_ntoa(server_netif.ip_addr), INTERIM_REPORT_INTERVAL);
 }
 
 static void print_udp_conn_stats(void)
@@ -135,6 +103,7 @@ static void udp_conn_report(u64_t diff,
 		xil_printf("[%3d] %s  %u datagrams received out-of-order\n\r",
 				server.client_id, time,
 				cnt_out_of_order_datagrams);
+
 	}
 }
 
@@ -163,7 +132,7 @@ protocol_t pro;
 
 static int handle_reg_packet(struct pbuf *p)
 {
-	u8_t buf[1024];
+	u8_t buf[4096];
 
 	size_t copy_len = p->tot_len;
 	size_t len = copy_len - 42;
@@ -171,7 +140,7 @@ static int handle_reg_packet(struct pbuf *p)
 	if (pbuf_copy_partial(p, buf, copy_len, 0) != copy_len) {
 		return 0;
 	}
-	for (size_t i = 0; i < 982; i++)
+	for (size_t i = 0; i < 4054; i++)
 		protocol_buf[i] = buf[i + 42];
 //	for (size_t i = 0; i < 128; i++)
 //		xil_printf("%02X ", protocol_buf[i]);
@@ -294,6 +263,7 @@ static void udp_recv_perf_traffic(void *arg, struct udp_pcb *tpcb,
 void start_application(void)
 {
 	err_t err;
+	ip_addr_t ipaddr;
 
 	/* Create Server PCB */
 	pcb = udp_new();
@@ -310,8 +280,68 @@ void start_application(void)
 		return;
 	}
 
+	IP4_ADDR(&ipaddr,  192, 168,  1, 1);
+	err = udp_connect(pcb, &ipaddr, 1);
+	if (err != ERR_OK)
+		xil_printf("error on udp_connect: %x\n\r", err);
+
 	/* specify callback to use for incoming connections */
 	udp_recv(pcb, udp_recv_perf_traffic, NULL);
 
+	connected_pcb = pcb;
+
 	return;
 }
+
+void udp_transmit(const char8 *ctrl1,uint32_t length)
+{
+	err_t err;
+	struct udp_pcb *tpcb = connected_pcb;
+
+	if (!tpcb)
+	{
+		xil_printf("error return\r\n");
+		return;
+	}
+    /*make sure the shortest data is 18 bytes(because shortest ip packet is 46 bytes)*/
+	if(length < 18)
+	{
+		pbuf_to_be_sent = pbuf_alloc(PBUF_TRANSPORT, 18, PBUF_POOL);
+		memset(pbuf_to_be_sent->payload, 0, 18);
+	}
+	else
+	{
+		pbuf_to_be_sent = pbuf_alloc(PBUF_TRANSPORT, length, PBUF_POOL);
+	}
+
+	memcpy(pbuf_to_be_sent->payload, (u8 *)ctrl1, length);
+
+//	uint32_t *src_ptr = (uint32_t*)ctrl1;
+//	uint8_t *dest_ptr = (uint8_t*)(pbuf_to_be_sent->payload);
+//	size_t word_count = length;
+//
+//	for(size_t i = 0; i < word_count; i++) {
+//		dest_ptr[i] = (uint8_t)(src_ptr[i] & 0xFF);
+//	}
+
+	err = udp_send(tpcb, pbuf_to_be_sent);
+	if (err != ERR_OK)
+	{
+		xil_printf("Error on udp_send: %d\r\n", err);
+		pbuf_free(pbuf_to_be_sent);
+		return;
+	}
+	pbuf_free(pbuf_to_be_sent);
+
+}
+
+void udp_transmit_Large(const char8 *Addr,uint32_t Len)
+{
+	u32 Index = 0;
+	while (ETH_MAX_SIZE + Index < Len) {
+		udp_transmit(Addr + Index, ETH_MAX_SIZE);
+		Index += ETH_MAX_SIZE;
+	}
+	udp_transmit(Addr + Index, Len - Index);
+}
+

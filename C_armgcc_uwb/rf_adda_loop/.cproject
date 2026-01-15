@@ -51,7 +51,11 @@
                                 								
                                 <option id="xilinx.gnu.compiler.option.debugging.level.1460734034" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.651299342" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" useByScannerDiscovery="false"/>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.651299342" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" useByScannerDiscovery="false" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=rf_adda_loop,fileType=bspInclude}"/>
+                                    								
+                                </option>
                                 								
                                 <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1492992917" name="Software Platform Inferred Flags" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="  -D __BAREMETAL__" valueType="string"/>
                                 								

@@ -1,11 +1,15 @@
+#ifndef __UWB_PROTOCOL_H__
+#define __UWB_PROTOCOL_H__
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <chirpParameters.h>
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define SAMPLE_RATE_MAX_MSPS (153.6)
 
 enum MajorType {
     CMD_OUTER_CLASS_T,
@@ -18,17 +22,17 @@ enum MajorType {
 };
 
 enum WorkMode {
-    ModeComm = 0,
-    ModeRadar = 1,
-    ModeInter = 2,
-    ModeCount = 3,
-    ModeStop = 4,
+    ModeCommT,
+    ModeCommR,
+    ModeRadar,
+    ModeInterScan,
+    ModeInterJamming,
+    ModeStop,
 };
 
 enum commParamsID {
-    COMM_IMG = 0x00,
-    COMM_TXT = 0x01,
-    COMM_IMG_SIZE = 0x02,
+    commPack = 0x00,
+    commRecv = 0x01,
 };
 
 enum chirpParamsID {
@@ -42,26 +46,28 @@ enum chirpParamsID {
     radarPeriodicity = 0x07,
     radarPoints = 0x08,
     radarSampleInterval = 0x09,
+    radarFreq = 0x0A,
 };
 
 enum interParamsID {
-    interFreqMHz = 0x00,
-    interSpanMHz = 0x01,
-    interSpanPoints = 0x02,
+    interScanFreqMHz = 0x00,
+    interScanSpanMHz = 0x01,
+    interScanPoints = 0x02,
+    interJammingFreqMHz = 0x03,
+    interJammingSpanMHz = 0x04,
 };
 
 typedef struct comm_t {
-    uint32_t picID;
-    uint16_t picH;
-    uint16_t picW;
-    uint32_t len;
+    uint32_t packLen;
     uint8_t buf[2048];
 } comm_t;
 
 typedef struct inter_t {
-    float freqMHz;
-    float spanMHz;
+    float scanFreqMHz;
+    float scanSpanMHz;
     int spanPoints;
+    float jammingFreqMHz;
+    float jammingSpanMHz;
 } inter_t;
 
 typedef struct protocol_t {
@@ -75,15 +81,17 @@ typedef struct protocol_t {
     uint32_t txRegs[7], rxRegs[16], lmxRegs[120];  // regs
 } protocol_t;
 
-extern uint8_t protocol_buf[1024];
+extern uint8_t protocol_buf[4096];
 extern protocol_t pro;
 extern uint8_t flag;
 
-void protocol_init(protocol_t *p);
+void protocol_init(protocol_t *p, uint8_t *buf, int bufSize);
 
 bool protocol_process(protocol_t *p, int size);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 

@@ -25,3 +25,20 @@ platform generate
 domain active {zynqmp_pmufw}
 bsp reload
 platform generate -domains 
+platform generate -domains standalone_psu_cortexa53_0,zynqmp_fsbl,zynqmp_pmufw 
+platform generate -domains standalone_psu_cortexa53_0,zynqmp_fsbl,zynqmp_pmufw 
+platform active {adc_dac_ddsloop}
+platform config -updatehw {E:/A_FPGA/RFSOC/rf27dr_adda_vitis/adc_dac_ddsloop.xsa}
+platform generate -domains 
+platform config -updatehw {E:/A_FPGA/RFSOC/rf27dr_adda_vitis/adc_dac_ddsloop.xsa}
+platform config -updatehw {E:/A_FPGA/RFSOC/rf27dr_adda_vitis/adc_dac_ddsloop.xsa}
+platform generate -domains 
+platform clean
+platform generate
+platform clean
+platform generate
+platform active {adc_dac_ddsloop}
+platform config -updatehw {E:/A_FPGA/RFSOC/rf27dr_adda_vitis/adc_dac_ddsloop.xsa}
+platform generate -domains 
+platform generate -domains standalone_psu_cortexa53_0 
+platform generate

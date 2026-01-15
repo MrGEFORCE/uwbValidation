@@ -1,22 +1,17 @@
-
 #include "xparameters.h"
-#include "rfsoc.h"
-#include "axi_lite.h"
-#include "platform.h"
 #include "platform_config.h"
-#include "lmk04828.h"
 #include "xtime_l.h"
-#include "xrfdc.h"
 #include "xsdps.h"
-#include "xadc.h"
 #include "lwip/priv/tcp_priv.h"
 #include "lwip/init.h"
-#include "lwip/inet.h"
-#include "protocol.h"
 #include "xparameters.h"
 #include "xil_io.h"
 #include "sleep.h"
 #include "netif/xadapter.h"
+#include "Init_Config.h"
+#include "math.h"
+#include "Fmcw_IF_Config.h"
+#include "Basic_Config.h"
 
 #if LWIP_DHCP==1
 #include "lwip/dhcp.h"
@@ -30,29 +25,25 @@ extern volatile int TcpSlowTmrFlag;
 #define DEFAULT_IP_MASK		"255.255.255.0"
 #define DEFAULT_GW_ADDRESS	"192.168.1.1"
 
-#define My_SPI_Bank 0x80040000
+#define axi_lite_ctrl_DacFMCW 0x80000000
+#define axi_lite_ctrl_SpiControl 0x80010000
+#define rf_data_converter 0x80040000
 
 //base define
 #define RFDC_DEVICE_ID 	XPAR_XRFDC_0_DEVICE_ID
-#define AXI_LITE_CTRL_BASE_ADDR 	XPAR_AXI_LITE_CTRL_0_BASEADDR
 
 #define AXI_LITE_CTRL_DDS_RESET_N  0
 #define AXI_LITE_CTRL_INIT_READY   4
 #define AXI_LITE_CTRL_PHASE_INC1   8
 
-//clock frq
-#define DAC_AUX 1600
-#define REF_CLK_FREQ   245.76e6
-#define SAMPLERATE	   REF_CLK_FREQ
-//global varible
-extern spi_device spi_lmk04828;
-XRFdc RFdcInstPtr;
-uint64_t FS;
-
 void platform_enable_interrupts(void);
 void start_application(void);
 void print_app_header(void);
-void udp_send_123_default(void);
+void udp_send_123_default(void)
+{
+	char test_data[] = "123456";
+	udp_transmit(test_data, strlen(test_data));
+}
 
 #if defined (__arm__) && !defined (ARMR5)
 #if XPAR_GIGE_PCS_PMA_SGMII_CORE_PRESENT == 1 || \
@@ -103,23 +94,23 @@ static void assign_default_ip(ip_addr_t *ip, ip_addr_t *mask, ip_addr_t *gw)
 		xil_printf("Invalid default gateway address: %d\r\n", err);
 }
 
+
 uint8_t flag;
+uint32_t FMCW_R;				//锟斤拷锟斤拷锟斤拷扫频斜锟斤拷
+uint32_t FMCW_S;				//锟斤拷锟斤拷锟斤拷扫频锟斤拷始频锟斤拷
+uint32_t FMCW_N;				//DDS锟斤拷锟斤拷
+uint32_t FMCW_fc = 1.2288e9;
+uint32_t FMCW_f0 = 0;
+uint8_t  PHASE_NUM = 8;
+uint8_t FMCW_DDS_L = 32;
 
 int main(void)
 {
-	int Status;
-
-	int32_t lock_pll1 = -1;
-	int32_t lock_pll2 = -1;
-	int config_lmkpll_timeout = 0;
-	uint32_t val_out;
-
 	struct netif *netif;
 	/* the mac address of the board. this should be unique per board */
 	unsigned char mac_ethernet_address[] = {
 		0x00, 0x0a, 0x35, 0x00, 0x01, 0x02 };
 	int output;
-	int i;
 	netif = &server_netif;
 
 	#if defined (__arm__) && !defined (ARMR5)
@@ -137,11 +128,14 @@ int main(void)
 		IicPhyReset();
 	#endif
 
-	print("RF27DR_Lite init start......\n\r");
 	//platform init
 	Platform_Init();
 	lwip_init();
-	protocol_init(&pro);
+	protocol_init(&pro,protocol_buf,4096);
+	Basic_Config_Init(&ScuGic);					//锟叫断匡拷锟斤拷锟斤拷锟斤拷始锟斤拷
+	AXI_GPIO_init();							//AXI GPIO锟斤拷始锟斤拷
+	PL_PS_Intr_Init(&ScuGic);					//锟叫断筹拷始锟斤拷
+
 	/* Add network interface to the netif_list, and set it as default */
 	if (!xemac_add(netif, NULL, NULL, NULL, mac_ethernet_address,
 				PLATFORM_EMAC_BASEADDR)) {
@@ -167,96 +161,22 @@ int main(void)
 	/* start the application*/
 	start_application();
 	xil_printf("\r\n");
-
-	//lmk04828 reset
-	Lmk04828_reset();
-	//lmk04828 ref clk set
-	Gpio_Value_Set(LMK_REF_SELECT0, 1); //CLKIN1 EXTERNAL
-	Gpio_Value_Set(LMK_REF_SELECT1, 0);
-	Gpio_Value_Set(LMK_SYNC, 0);
-	//lmk04828 init
-	Lmk04828_Init(&spi_lmk04828);
-	Lmk04828_Update_Man_DAC(&spi_lmk04828, DAC_AUX);
-	//wait pll locked
-	while ((lock_pll1 != 0)||lock_pll2 != 1)
-	{
-		lock_pll1 = Lmk04828_Spi_Read(&spi_lmk04828, 0X182) >> 1 & 0x1;
-		lock_pll2 = Lmk04828_Spi_Read(&spi_lmk04828, 0X183) >> 1 & 0x1;
-		config_lmkpll_timeout++;
-		ms_delay(1);
-		if(config_lmkpll_timeout>=100)
-		{
-			config_lmkpll_timeout=0;
-			printf("LMK pllconfig faild!,timeout=100.\r\n");
-			break;
-		}
-	}
-	printf("LMK pll1_lock=0x%x, pll2_lock=0x%x,try=%d,init Done\r\n", lock_pll1,lock_pll2,config_lmkpll_timeout);
-	//LMK SYNC
-	Gpio_Value_Set(LMK_SYNC, 1);
-	ms_delay(1);
-	Gpio_Value_Set(LMK_SYNC, 0);
-	//update sysref
-	Lmk04828_Update_Sysref(&spi_lmk04828);
-	Lmk04828_Set_Sysref_Shots(&spi_lmk04828, 0);
-	ms_delay(100);
-	//RF Init
-	Status = AXI_REG_READ(0XFF5E0000, 0X00000200U);
-	printf("CRL_APB_BOOT_MODE_SET=%x\r\n", Status);
-
-	RF_init(&RFdcInstPtr, RFDC_DEVICE_ID);
-
-	for (i = 0; i < 2; i++)
-	{
-		XRFdc_Reset(&RFdcInstPtr, XRFDC_DAC_TILE, i);
-	}
-	for (i = 0; i < 4; i++)
-	{
-		XRFdc_Reset(&RFdcInstPtr, XRFDC_ADC_TILE, i);
-	}
-
-	Status = AXI_REG_READ(XPAR_XRFDC_0_BASEADDR, XRFDC_ADC_PATHS_ENABLED_OFFSET);
-	printf("ADC Path Enabled=%x\r\n", Status);
-	Status = AXI_REG_READ(XPAR_XRFDC_0_BASEADDR, XRFDC_DAC_PATHS_ENABLED_OFFSET);
-	printf("DAC Path Enabled=%x\r\n", Status);
-
-	val_out = AXI_REG_READ(XPAR_XRFDC_0_BASEADDR, 0);
-	printf("IP Revision=%x\r\n", val_out);
-
-	FS = RFdcInstPtr.ADC_Tile[0].PLL_Settings.SampleRate * 1e9;
-	printf("ADC Samplerate is%ld Hz\r\n", FS);
-	FS = RFdcInstPtr.DAC_Tile[0].PLL_Settings.SampleRate * 1e9;
-	printf("DAC Samplerate is%ld Hz\r\n", FS);
-
-	printf("RF init done.\r\n");
-
-	//DDS START UP
-	AXI_REG_WRITE(AXI_LITE_CTRL_BASE_ADDR,AXI_LITE_CTRL_INIT_READY,	 0);// dds phase increment
-	AXI_REG_WRITE(AXI_LITE_CTRL_BASE_ADDR,AXI_LITE_CTRL_PHASE_INC1, 512);
-	AXI_REG_WRITE(AXI_LITE_CTRL_BASE_ADDR,AXI_LITE_CTRL_DDS_RESET_N, 0);
-	ms_delay(10);
-	AXI_REG_WRITE(AXI_LITE_CTRL_BASE_ADDR,AXI_LITE_CTRL_DDS_RESET_N, 1);
-
-	Status = Xadc_Init(XPAR_PSU_AMS_DEVICE_ID);
-	if (Status == 0) printf("Xadc Setup Complete......\r\n");
-
-	printf("Start rfsoc xadc read......\r\n");
+	LMK04828_Clock_Init();
+	RFSoc_Init();
+//	udp_send_123_default();
 	while(1)
 	{
-//		soc_tempture=Xadc_Read_Tempture();
-//		printf("Rfsoc Temperature=%lf\n",soc_tempture);
-//		sleep(1);
-		if (TcpFastTmrFlag) {
-			tcp_fasttmr();
-			TcpFastTmrFlag = 0;
-		}
-		if (TcpSlowTmrFlag) {
-			tcp_slowtmr();
-			TcpSlowTmrFlag = 0;
-		}
+//		if (TcpFastTmrFlag) {
+//			tcp_fasttmr();
+//			TcpFastTmrFlag = 0;
+//		}
+//		if (TcpSlowTmrFlag) {
+//			tcp_slowtmr();
+//			TcpSlowTmrFlag = 0;
+//		}
 		xemacif_input(netif);
 
-		output = Xil_In32(My_SPI_Bank + 4 * 17) & 0x3;
+		output = Xil_In32(axi_lite_ctrl_SpiControl + 4 * 17) & 0x3;
 
 		if(flag != 0)
 		{
@@ -264,27 +184,67 @@ int main(void)
 			{
 				if(flag == 1)
 				{
-					for(int i = 0;i < 8;i++)
+					for(int i = 0;i < 7;i++)
 					{
-						Xil_Out32(My_SPI_Bank + 4 * (i + 5),pro.txRegs[i]);
+						Xil_Out32(axi_lite_ctrl_SpiControl + 4 * (i + 5),pro.txRegs[i]);
 						//	printf("%u\r\n",pro.txRegs[i]);
 					}
+					Xil_Out32(axi_lite_ctrl_SpiControl + 4 * 16, 1);
 				}
 				if(flag == 2)
 				{
 					for(int i = 0;i < 16;i++)
 					{
-						Xil_Out32(My_SPI_Bank + 4 *i,pro.rxRegs[i]);
+						Xil_Out32(axi_lite_ctrl_SpiControl + 4 *i,pro.rxRegs[i]);
 					    //	printf("%u\r\n",pro.rxRegs[i]);
 					}
+					Xil_Out32(axi_lite_ctrl_SpiControl + 4 * 16, 1);
 				}
-				Xil_Out32(My_SPI_Bank + 4 * 16, 1);
+				if(flag == 4)
+				{
+					// 0-FMCW_R,1-FMCW_S,2-FMCW_N,3-FMCW_IDX(8)\FS_Div(8)\FS_Number(16),4-USER_RST_N,5-FMCW_Chirp_Cycle_us\FMCW_Chirp_Number,6-FMCW_Frame_Cycle_ms\FMCW_Adc_Delay_us,7-cal_delay_num
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,16,0);
+					usleep(10000);
+					FMCW_R = (double)pow(2,FMCW_DDS_L) * (pro.cp.data.floatData.t.bandWidth_MHz * 1e12) / pro.cp.data.floatData.t.rampTime_us / FMCW_fc / FMCW_fc;
+					FMCW_S = (double)pow(2,FMCW_DDS_L) * FMCW_f0 / FMCW_fc + FMCW_R /2 ;
+					FMCW_N = (double)pro.cp.data.floatData.t.rampTime_us * FMCW_fc / PHASE_NUM / 1e6;
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,0,FMCW_R);
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,4,FMCW_S);
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,8,FMCW_N);
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,12,pro.cp.data.intData.t.antTDM + (pro.cp.data.intData.t.ADCPoints << 16) + (pro.sampleInterval << 8));
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,20,pro.cp.data.floatData.t.Tc_us + (pro.cp.data.intData.t.chirpLoops << 16) );
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,24,pro.cp.data.floatData.t.periodicity_ms * 1000 + ((uint16_t)(pro.cp.data.floatData.t.ADCDelay_us) << 16));
+					printf("FMCW_R:%u\r\n",FMCW_R);
+					printf("FMCW_S:%u\r\n",FMCW_S);
+					printf("FMCW_N:%u\r\n",FMCW_N);
+					printf("%u\r\n",(u32)(pro.cp.data.intData.t.antTDM + (pro.cp.data.intData.t.ADCPoints << 16) + (pro.sampleInterval << 8)));
+					printf("%u\r\n",(u32)(pro.cp.data.floatData.t.Tc_us + (pro.cp.data.intData.t.chirpLoops << 16)));
+					printf("%u\r\n",(u32)(pro.cp.data.floatData.t.periodicity_ms + ((uint16_t)(pro.cp.data.floatData.t.ADCDelay_us) << 16)));
+
+					usleep(100000);
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,16,1);
+					flag = 0;
+				}
 			}
 			if(output == 2)
 			{
-				Xil_Out32(My_SPI_Bank + 4 * 16, 0);
+				Xil_Out32(axi_lite_ctrl_SpiControl + 4 * 16, 0);
 				flag = 0;
 			}
+		}
+
+		if(SMP_Done_Flag)
+		{
+			char* BASE_ADDR;
+			if(PL_Addr_Flag_Read())
+				BASE_ADDR = (char*)P_BASE1_DDR;
+			else
+				BASE_ADDR = (char*)P_BASE0_DDR;
+			printf("udp start\r\n");
+			//锟斤拷锟斤拷锟斤拷锟�
+			Transer_Header();
+			udp_transmit_Large(BASE_ADDR, tl.L);
+			SMP_Done_Flag = 0;
 		}
 	}
 	/* never reached */
