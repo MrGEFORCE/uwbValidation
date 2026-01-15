@@ -10,15 +10,15 @@ protocol_t pro;
 uint8_t protocol_buf[2048];
 
 int main() {
-    protocol_init(&pro, protocol_buf, 2048);
+    protocol_init(&pro, protocol_buf, 4096);
     // 该c++工程不做tlv，这里只是参考一下内存大小以便和go对照
     // tlv_init();
 
     try {
         asio::io_context io;
-        udp::socket sock(io, udp::endpoint(udp::v4(), 5011));
+        udp::socket sock(io, udp::endpoint(udp::v4(), 10));
 
-        std::printf("UDP listening on port 5011...\n");
+        std::printf("UDP listening on port 10...\n");
 
         udp::endpoint remote;
 
