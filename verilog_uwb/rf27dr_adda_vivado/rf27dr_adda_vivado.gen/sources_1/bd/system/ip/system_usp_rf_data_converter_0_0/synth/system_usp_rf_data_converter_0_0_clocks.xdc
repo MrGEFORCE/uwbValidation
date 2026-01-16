@@ -52,9 +52,9 @@
 ###############################################################################
 
 #Generated clocks on internal nodes inside IP
-create_clock -period 4.069 -name RFADC0_CLK [get_pins -hier rx0_u_adc/INTERNAL_FBRC_DIV2_MUX*]
+create_clock -period 6.510 -name RFADC0_CLK [get_pins -hier rx0_u_adc/INTERNAL_FBRC_DIV2_MUX*]
 set RFADC0_CLK  [get_clocks -of_objects [get_pins -hier rx0_u_adc/INTERNAL_FBRC_DIV2_MUX*]]
-create_clock -period 4.069 -name RFADC0_CLK_dummy [get_pins -hier rx0_u_adc/INTERNAL_FBRC_DIV1_MUX*]
+create_clock -period 6.510 -name RFADC0_CLK_dummy [get_pins -hier rx0_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 set RFADC0_CLK_dummy  [get_clocks -of_objects [get_pins -hier rx0_u_adc/INTERNAL_FBRC_DIV1_MUX*]]
 set_clock_sense -stop_propagation [get_pins -hier rx*_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 
@@ -65,9 +65,9 @@ set_false_path -from $RFADC0_CLK_dummy -to [get_pins -filter {REF_PIN_NAME == D}
 
 
 #Generated clocks on internal nodes inside IP
-create_clock -period 4.069 -name RFADC1_CLK [get_pins -hier rx1_u_adc/INTERNAL_FBRC_DIV2_MUX*]
+create_clock -period 6.510 -name RFADC1_CLK [get_pins -hier rx1_u_adc/INTERNAL_FBRC_DIV2_MUX*]
 set RFADC1_CLK  [get_clocks -of_objects [get_pins -hier rx1_u_adc/INTERNAL_FBRC_DIV2_MUX*]]
-create_clock -period 4.069 -name RFADC1_CLK_dummy [get_pins -hier rx1_u_adc/INTERNAL_FBRC_DIV1_MUX*]
+create_clock -period 6.510 -name RFADC1_CLK_dummy [get_pins -hier rx1_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 set RFADC1_CLK_dummy  [get_clocks -of_objects [get_pins -hier rx1_u_adc/INTERNAL_FBRC_DIV1_MUX*]]
 set_clock_sense -stop_propagation [get_pins -hier rx*_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 
@@ -78,9 +78,9 @@ set_false_path -from $RFADC1_CLK_dummy -to [get_pins -filter {REF_PIN_NAME == D}
 
 
 #Generated clocks on internal nodes inside IP
-create_clock -period 4.069 -name RFADC2_CLK [get_pins -hier rx2_u_adc/INTERNAL_FBRC_DIV2_MUX*]
+create_clock -period 6.510 -name RFADC2_CLK [get_pins -hier rx2_u_adc/INTERNAL_FBRC_DIV2_MUX*]
 set RFADC2_CLK  [get_clocks -of_objects [get_pins -hier rx2_u_adc/INTERNAL_FBRC_DIV2_MUX*]]
-create_clock -period 4.069 -name RFADC2_CLK_dummy [get_pins -hier rx2_u_adc/INTERNAL_FBRC_DIV1_MUX*]
+create_clock -period 6.510 -name RFADC2_CLK_dummy [get_pins -hier rx2_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 set RFADC2_CLK_dummy  [get_clocks -of_objects [get_pins -hier rx2_u_adc/INTERNAL_FBRC_DIV1_MUX*]]
 set_clock_sense -stop_propagation [get_pins -hier rx*_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 
@@ -91,9 +91,9 @@ set_false_path -from $RFADC2_CLK_dummy -to [get_pins -filter {REF_PIN_NAME == D}
 
 
 #Generated clocks on internal nodes inside IP
-create_clock -period 4.069 -name RFADC3_CLK [get_pins -hier rx3_u_adc/INTERNAL_FBRC_DIV2_MUX*]
+create_clock -period 6.510 -name RFADC3_CLK [get_pins -hier rx3_u_adc/INTERNAL_FBRC_DIV2_MUX*]
 set RFADC3_CLK  [get_clocks -of_objects [get_pins -hier rx3_u_adc/INTERNAL_FBRC_DIV2_MUX*]]
-create_clock -period 4.069 -name RFADC3_CLK_dummy [get_pins -hier rx3_u_adc/INTERNAL_FBRC_DIV1_MUX*]
+create_clock -period 6.510 -name RFADC3_CLK_dummy [get_pins -hier rx3_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 set RFADC3_CLK_dummy  [get_clocks -of_objects [get_pins -hier rx3_u_adc/INTERNAL_FBRC_DIV1_MUX*]]
 set_clock_sense -stop_propagation [get_pins -hier rx*_u_adc/INTERNAL_FBRC_DIV1_MUX*]
 
@@ -103,13 +103,13 @@ set_false_path -from $RFADC3_CLK_dummy -to [get_pins -filter {REF_PIN_NAME == D}
 
 
 #Generated clocks on internal nodes inside IP
-create_clock -period 4.069 -name RFDAC0_CLK [get_pins -hier tx0_u_dac/INTERNAL_FBRC_MUX*]
+create_clock -period 6.510 -name RFDAC0_CLK [get_pins -hier tx0_u_dac/INTERNAL_FBRC_MUX*]
 set RFDAC0_CLK  [get_clocks -of_objects [get_pins -hier tx0_u_dac/INTERNAL_FBRC_MUX*]]
 
 # Exclude paths from the fabric clock to the status registers
 set_false_path -from $RFDAC0_CLK -to [get_pins -filter {REF_PIN_NAME == D} -of [get_cells -hier IP2Bus_Data_reg[*]]]
 #Generated clocks on internal nodes inside IP
-create_clock -period 4.069 -name RFDAC1_CLK [get_pins -hier tx1_u_dac/INTERNAL_FBRC_MUX*]
+create_clock -period 6.510 -name RFDAC1_CLK [get_pins -hier tx1_u_dac/INTERNAL_FBRC_MUX*]
 set RFDAC1_CLK  [get_clocks -of_objects [get_pins -hier tx1_u_dac/INTERNAL_FBRC_MUX*]]
 
 # Exclude paths from the fabric clock to the status registers

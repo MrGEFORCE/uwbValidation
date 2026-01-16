@@ -93,6 +93,10 @@ static void protocol_class_radar(protocol_t *p, uint8_t id, void *ptr) {
         case radarFreq:
             p->cp.data.floatData.t.startFrequency_MHz = *((float *) ptr);
             break;
+        case radarMixerDelay:
+                    p->mixerDelay[0] = *((int16_t *) ptr);
+                    p->mixerDelay[1] = *((int16_t *) ptr + 1);
+                    break;
         default:
             break;
     }

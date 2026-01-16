@@ -158,6 +158,7 @@ int32_t Spi_Write(spi_device *spi, uint32_t data)
 	buf[2] = cmd & 0xFF;
 	return Spi_Read_Write(spi, buf, 3);
 }
+
 //lmk04828 init
 int32_t Lmk04828_Init(spi_device *spi)
 {

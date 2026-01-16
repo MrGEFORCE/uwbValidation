@@ -398,16 +398,33 @@ class Widget(QWidget):
             self.ui.label_radarFrameCount.setText("帧计数 {}".format(self.funcRadar.header.frame))
             self.ui.label_radarFrameDelay.setText("延迟 {} 帧".format(self.funcRadar.header.delay))
             self.ui.label_radarDt.setText("帧间隔 {}".format(self.socketThread.dt))
-            self.funcRadar.process()
-            # debug
-            self.plotDataItem_IF1.setData(self.funcRadar.raw[0, 0, :].real)
-            if self.funcRadar.cp.rx > 1:
-                self.plotDataItem_IF2.setData(self.funcRadar.raw[0, 1, :].real)
             # range profile
-            self.plotDataItem_rangeProfile.setData(self.funcRadar.rangeAxis, np.abs(self.funcRadar.rangeProfile[0, :]))
-            argmax = np.argmax(np.abs(self.funcRadar.rangeProfile[0, :]))
+            if self.ui.comboBox_chShow.currentIndex() == 0:
+                show_t = 1
+                show_r = 1
+            elif self.ui.comboBox_chShow.currentIndex() == 1:
+                show_t = 1
+                show_r = 2
+            elif self.ui.comboBox_chShow.currentIndex() == 2:
+                show_t = 2
+                show_r = 1
+            else:
+                show_t = 2
+                show_r = 2
+            if self.funcRadar.cp.antTDM < show_t:
+                show_t = self.funcRadar.cp.antTDM
+            if self.funcRadar.cp.rx < show_r:
+                show_r = self.funcRadar.cp.rx
+            show_tr = (show_t - 1) * show_r + (show_r - 1)
+            self.funcRadar.process(target_tr=show_tr)
+            # debug
+            self.plotDataItem_IF1.setData(self.funcRadar.raw[0, 0 + show_r * (show_t - 1), :].real)
+            if self.funcRadar.cp.rx > 1:
+                self.plotDataItem_IF2.setData(self.funcRadar.raw[0, 1 + show_r * (show_t - 1), :].real)
+            self.plotDataItem_rangeProfile.setData(self.funcRadar.rangeAxis, np.abs(self.funcRadar.rangeProfile[show_tr, :]))
+            argmax = np.argmax(np.abs(self.funcRadar.rangeProfile[show_tr, :]))
             self.rangeMark.setLabel("range: {:.2f}m".format(self.funcRadar.rangeAxis[argmax]))
-            self.rangeMark.setPos(self.funcRadar.rangeAxis[argmax], np.abs(self.funcRadar.rangeProfile[0, argmax]))
+            self.rangeMark.setPos(self.funcRadar.rangeAxis[argmax], np.abs(self.funcRadar.rangeProfile[show_tr, argmax]))
             # rd map
             self.imageItem_rdMap.setImage(self.funcRadar.rdMap.T)
             self.imageItem_rdMap.setRect(QtCore.QRectF(0, -self.funcRadar.cp.vMax_m_s, self.funcRadar.cp.dMax_m, 2 * self.funcRadar.cp.vMax_m_s))

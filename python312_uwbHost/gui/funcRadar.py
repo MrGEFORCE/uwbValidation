@@ -118,7 +118,7 @@ class FuncRadar(funcABC.FuncABC):
         self.rdMap = np.ndarray([self.cp.dopplerFFTSize, self.cp.rangeFFTSize], dtype=float)
         const.cfg.WIN_HAMMING = get_window('hamming', self.cp.ADCPoints)
 
-    def process(self) -> None:
+    def process(self, target_tr: int) -> None:
         self.radarCube = copy.deepcopy(self.raw)
         self.radarCube -= np.broadcast_to(np.expand_dims(self.radarCube.mean(-1), -1), [self.cp.chirpLoops, self.cp.rx * self.cp.antTDM, self.cp.ADCPoints])
         self.radarCube *= const.cfg.WIN_HAMMING
@@ -127,7 +127,7 @@ class FuncRadar(funcABC.FuncABC):
         if self.cp.staticClutterRemoval:
             self.radarCube -= self.radarCube.mean(0)
         self.rangeProfile = self.radarCube[0, :, :]
-        self.rdMap = np.abs(np.fft.fftshift(np.fft.fft(self.radarCube[:, 0, :], n=self.cp.dopplerFFTSize, axis=0), axes=0))
+        self.rdMap = np.abs(np.fft.fftshift(np.fft.fft(self.radarCube[:, target_tr, :], n=self.cp.dopplerFFTSize, axis=0), axes=0))
 
 
 if __name__ == '__main__':

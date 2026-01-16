@@ -9,6 +9,7 @@
 #include "xil_printf.h"
 #include "platform.h"
 #include "protocol.h"
+#include "axi_lite.h"
 
 /* used as indices into kLabel[] */
 enum {
@@ -73,6 +74,6 @@ struct perf_stats {
 
 void udp_transmit(const char8 *ctrl1,uint32_t length);
 void udp_transmit_Large(const char8 *Addr,uint32_t Len);
-
+void udp_transmit_Large_ADC(const char8 *Addr,uint32_t Len,int antTDM);
 
 #endif /* __UDP_PERF_SERVER_H_ */

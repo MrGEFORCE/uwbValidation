@@ -2,8 +2,7 @@
 
 XGpio AXI_Gpio0; /* The Instance of the GPIO Driver */
 volatile uint8_t SMP_Done_Flag = 0;
-volatile header_t header = {.start_magic_word={0x0102,0x0304,0x0506,0x0708},.delay=0,.OuterClass=0,.tlv_nums=1,.data_len=0,._=0,.frame=0};
-volatile TL tl = {.L=0,.T=0};
+volatile header_t header = {.start_magic_word={0x0102,0x0304,0x0506,0x0708},.delay=0,.OuterClass=0,.tlv_nums=1,.data_len=0,._=0,.frame=0,.placeholder=0,.T=0,.L=0};
 
 
 void AXI_GPIO_init() {
@@ -58,10 +57,9 @@ void PL_PS_Intr_Init(XScuGic *INTCInst) {
 void Transer_Header()
 {
 	header.OuterClass = 4;
-	// 2(ADC数据2个字节) * ADCpoint * TxAnt * RxAnt * chirpLoop
-	header.data_len = 2 * pro.cp.data.intData.t.ADCPoints * pro.cp.data.intData.t.chirpLoops * pro.cp.data.intData.t.antTDM * pro.cp.data.intData.t.rx  + sizeof(header_t) + sizeof(TL);
-	tl.T = 1;
-	tl.L = 2 * pro.cp.data.intData.t.ADCPoints * pro.cp.data.intData.t.chirpLoops * pro.cp.data.intData.t.antTDM * pro.cp.data.intData.t.rx;
+	// 2(取MIX数据高2个字节) * 2(ADC I、Q) * ADCpoint * TxAnt * RxAnt * chirpLoop
+	header.data_len = 2 * 2 * pro.cp.data.intData.t.ADCPoints * pro.cp.data.intData.t.chirpLoops * pro.cp.data.intData.t.antTDM * pro.cp.data.intData.t.rx  + sizeof(header_t);
+	header.T = 1;
+	header.L = 2 * 2 * pro.cp.data.intData.t.ADCPoints * pro.cp.data.intData.t.chirpLoops * pro.cp.data.intData.t.antTDM * pro.cp.data.intData.t.rx;
 	udp_transmit((char*)&header, sizeof(header_t));
-	udp_transmit((char*)&tl, sizeof(TL));
 }

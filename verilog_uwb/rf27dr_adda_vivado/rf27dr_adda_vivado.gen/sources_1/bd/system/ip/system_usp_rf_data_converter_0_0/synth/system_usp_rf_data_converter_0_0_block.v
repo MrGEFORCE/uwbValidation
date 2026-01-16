@@ -79,12 +79,6 @@ module system_usp_rf_data_converter_0_0_block (
   input             sysref_in_p,
   input             sysref_in_n,
 
-  // ADC User SYSREF Input
-  input             user_sysref_adc,
-
-  // DAC User SYSREF Input
-  input             user_sysref_dac,
-
   // ADC Reference Clock for Tile 0
   input             adc0_clk_p,
   input             adc0_clk_n,
@@ -186,82 +180,82 @@ module system_usp_rf_data_converter_0_0_block (
   output            adc32_cal_frozen,
 
   // ADC AXI Streaming Data for ADC00
-  output [63:0]    m00_axis_tdata,
+  output [127:0]    m00_axis_tdata,
   output            m00_axis_tvalid,
   input             m00_axis_tready,
 
   // ADC AXI Streaming Data for ADC01
-  output [63:0]    m01_axis_tdata,
+  output [127:0]    m01_axis_tdata,
   output            m01_axis_tvalid,
   input             m01_axis_tready,
 
   // ADC AXI Streaming Data for ADC02
-  output [63:0]    m02_axis_tdata,
+  output [127:0]    m02_axis_tdata,
   output            m02_axis_tvalid,
   input             m02_axis_tready,
 
   // ADC AXI Streaming Data for ADC03
-  output [63:0]    m03_axis_tdata,
+  output [127:0]    m03_axis_tdata,
   output            m03_axis_tvalid,
   input             m03_axis_tready,
 
   // ADC AXI Streaming Data for ADC10
-  output [63:0]    m10_axis_tdata,
+  output [127:0]    m10_axis_tdata,
   output            m10_axis_tvalid,
   input             m10_axis_tready,
 
   // ADC AXI Streaming Data for ADC11
-  output [63:0]    m11_axis_tdata,
+  output [127:0]    m11_axis_tdata,
   output            m11_axis_tvalid,
   input             m11_axis_tready,
 
   // ADC AXI Streaming Data for ADC12
-  output [63:0]    m12_axis_tdata,
+  output [127:0]    m12_axis_tdata,
   output            m12_axis_tvalid,
   input             m12_axis_tready,
 
   // ADC AXI Streaming Data for ADC13
-  output [63:0]    m13_axis_tdata,
+  output [127:0]    m13_axis_tdata,
   output            m13_axis_tvalid,
   input             m13_axis_tready,
 
   // ADC AXI Streaming Data for ADC20
-  output [63:0]    m20_axis_tdata,
+  output [127:0]    m20_axis_tdata,
   output            m20_axis_tvalid,
   input             m20_axis_tready,
 
   // ADC AXI Streaming Data for ADC21
-  output [63:0]    m21_axis_tdata,
+  output [127:0]    m21_axis_tdata,
   output            m21_axis_tvalid,
   input             m21_axis_tready,
 
   // ADC AXI Streaming Data for ADC22
-  output [63:0]    m22_axis_tdata,
+  output [127:0]    m22_axis_tdata,
   output            m22_axis_tvalid,
   input             m22_axis_tready,
 
   // ADC AXI Streaming Data for ADC23
-  output [63:0]    m23_axis_tdata,
+  output [127:0]    m23_axis_tdata,
   output            m23_axis_tvalid,
   input             m23_axis_tready,
 
   // ADC AXI Streaming Data for ADC30
-  output [63:0]    m30_axis_tdata,
+  output [127:0]    m30_axis_tdata,
   output            m30_axis_tvalid,
   input             m30_axis_tready,
 
   // ADC AXI Streaming Data for ADC31
-  output [63:0]    m31_axis_tdata,
+  output [127:0]    m31_axis_tdata,
   output            m31_axis_tvalid,
   input             m31_axis_tready,
 
   // ADC AXI Streaming Data for ADC32
-  output [63:0]    m32_axis_tdata,
+  output [127:0]    m32_axis_tdata,
   output            m32_axis_tvalid,
   input             m32_axis_tready,
 
   // ADC AXI Streaming Data for ADC33
-  output [63:0]    m33_axis_tdata,
+  output [127:0]    m33_axis_tdata,
   output            m33_axis_tvalid,
   input             m33_axis_tready,
 
@@ -312,42 +306,42 @@ module system_usp_rf_data_converter_0_0_block (
   output            vout13_n,
 
   // DAC AXI Streaming Data for DAC00
-  input  [127:0]    s00_axis_tdata,
+  input  [255:0]    s00_axis_tdata,
   input             s00_axis_tvalid,
   output            s00_axis_tready,
 
   // DAC AXI Streaming Data for DAC01
-  input  [127:0]    s01_axis_tdata,
+  input  [255:0]    s01_axis_tdata,
   input             s01_axis_tvalid,
   output            s01_axis_tready,
 
   // DAC AXI Streaming Data for DAC02
-  input  [127:0]    s02_axis_tdata,
+  input  [255:0]    s02_axis_tdata,
   input             s02_axis_tvalid,
   output            s02_axis_tready,
 
   // DAC AXI Streaming Data for DAC03
-  input  [127:0]    s03_axis_tdata,
+  input  [255:0]    s03_axis_tdata,
   input             s03_axis_tvalid,
   output            s03_axis_tready,
 
   // DAC AXI Streaming Data for DAC10
-  input  [127:0]    s10_axis_tdata,
+  input  [255:0]    s10_axis_tdata,
   input             s10_axis_tvalid,
   output            s10_axis_tready,
 
   // DAC AXI Streaming Data for DAC11
-  input  [127:0]    s11_axis_tdata,
+  input  [255:0]    s11_axis_tdata,
   input             s11_axis_tvalid,
   output            s11_axis_tready,
 
   // DAC AXI Streaming Data for DAC12
-  input  [127:0]    s12_axis_tdata,
+  input  [255:0]    s12_axis_tdata,
   input             s12_axis_tvalid,
   output            s12_axis_tready,
 
   // DAC AXI Streaming Data for DAC13
-  input  [127:0]    s13_axis_tdata,
+  input  [255:0]    s13_axis_tdata,
   input             s13_axis_tvalid,
   output            s13_axis_tready,
 
@@ -515,118 +509,112 @@ module system_usp_rf_data_converter_0_0_block (
   // NO NOT MODIFY
   localparam       dac00_enable        = 1'b1;
   localparam       dac00_data_type     = 1'b0;
-  localparam [2:0] dac00_interpolation = 3'd4;
+  localparam [2:0] dac00_interpolation = 3'd2;
   localparam [1:0] dac00_mixer         = 2'd0;
-  localparam       dac00_sinc          = 1'b1;
+  localparam       dac00_sinc          = 1'b0;
   localparam       dac01_enable        = 1'b1;
   localparam       dac01_data_type     = 1'b0;
-  localparam [2:0] dac01_interpolation = 3'd4;
+  localparam [2:0] dac01_interpolation = 3'd2;
   localparam [1:0] dac01_mixer         = 2'd0;
-  localparam       dac01_sinc          = 1'b1;
+  localparam       dac01_sinc          = 1'b0;
   localparam       dac02_enable        = 1'b1;
   localparam       dac02_data_type     = 1'b0;
-  localparam [2:0] dac02_interpolation = 3'd4;
+  localparam [2:0] dac02_interpolation = 3'd2;
   localparam [1:0] dac02_mixer         = 2'd0;
-  localparam       dac02_sinc          = 1'b1;
+  localparam       dac02_sinc          = 1'b0;
   localparam       dac03_enable        = 1'b1;
   localparam       dac03_data_type     = 1'b0;
-  localparam [2:0] dac03_interpolation = 3'd4;
+  localparam [2:0] dac03_interpolation = 3'd2;
   localparam [1:0] dac03_mixer         = 2'd0;
-  localparam       dac03_sinc          = 1'b1;
+  localparam       dac03_sinc          = 1'b0;
   localparam       dac10_enable        = 1'b1;
   localparam       dac10_data_type     = 1'b0;
-  localparam [2:0] dac10_interpolation = 3'd4;
+  localparam [2:0] dac10_interpolation = 3'd2;
   localparam [1:0] dac10_mixer         = 2'd0;
-  localparam       dac10_sinc          = 1'b1;
+  localparam       dac10_sinc          = 1'b0;
   localparam       dac11_enable        = 1'b1;
   localparam       dac11_data_type     = 1'b0;
-  localparam [2:0] dac11_interpolation = 3'd4;
+  localparam [2:0] dac11_interpolation = 3'd2;
   localparam [1:0] dac11_mixer         = 2'd0;
-  localparam       dac11_sinc          = 1'b1;
+  localparam       dac11_sinc          = 1'b0;
   localparam       dac12_enable        = 1'b1;
   localparam       dac12_data_type     = 1'b0;
-  localparam [2:0] dac12_interpolation = 3'd4;
+  localparam [2:0] dac12_interpolation = 3'd2;
   localparam [1:0] dac12_mixer         = 2'd0;
-  localparam       dac12_sinc          = 1'b1;
+  localparam       dac12_sinc          = 1'b0;
   localparam       dac13_enable        = 1'b1;
   localparam       dac13_data_type     = 1'b0;
-  localparam [2:0] dac13_interpolation = 3'd4;
+  localparam [2:0] dac13_interpolation = 3'd2;
   localparam [1:0] dac13_mixer         = 2'd0;
-  localparam       dac13_sinc          = 1'b1;
+  localparam       dac13_sinc          = 1'b0;
 
   // ADC Default Configuration Settings
   // NO NOT MODIFY
   localparam       adc00_enable        = 1'b1;
   localparam       adc00_data_type     = 1'b1;
-  localparam [2:0] adc00_decimation    = 3'd4;
+  localparam [2:0] adc00_decimation    = 3'd2;
   localparam [1:0] adc00_mixer         = 2'd0;
   localparam       adc01_enable        = 1'b1;
   localparam       adc01_data_type     = 1'b1;
-  localparam [2:0] adc01_decimation    = 3'd4;
+  localparam [2:0] adc01_decimation    = 3'd2;
   localparam [1:0] adc01_mixer         = 2'd0;
   localparam       adc02_enable        = 1'b1;
   localparam       adc02_data_type     = 1'b1;
-  localparam [2:0] adc02_decimation    = 3'd4;
+  localparam [2:0] adc02_decimation    = 3'd2;
   localparam [1:0] adc02_mixer         = 2'd0;
   localparam       adc03_enable        = 1'b1;
   localparam       adc03_data_type     = 1'b1;
-  localparam [2:0] adc03_decimation    = 3'd4;
+  localparam [2:0] adc03_decimation    = 3'd2;
   localparam [1:0] adc03_mixer         = 2'd0;
   localparam       adc10_enable        = 1'b1;
   localparam       adc10_data_type     = 1'b1;
-  localparam [2:0] adc10_decimation    = 3'd4;
+  localparam [2:0] adc10_decimation    = 3'd2;
   localparam [1:0] adc10_mixer         = 2'd0;
   localparam       adc11_enable        = 1'b1;
   localparam       adc11_data_type     = 1'b1;
-  localparam [2:0] adc11_decimation    = 3'd4;
+  localparam [2:0] adc11_decimation    = 3'd2;
   localparam [1:0] adc11_mixer         = 2'd0;
   localparam       adc12_enable        = 1'b1;
   localparam       adc12_data_type     = 1'b1;
-  localparam [2:0] adc12_decimation    = 3'd4;
+  localparam [2:0] adc12_decimation    = 3'd2;
   localparam [1:0] adc12_mixer         = 2'd0;
   localparam       adc13_enable        = 1'b1;
   localparam       adc13_data_type     = 1'b1;
-  localparam [2:0] adc13_decimation    = 3'd4;
+  localparam [2:0] adc13_decimation    = 3'd2;
   localparam [1:0] adc13_mixer         = 2'd0;
   localparam       adc20_enable        = 1'b1;
   localparam       adc20_data_type     = 1'b1;
-  localparam [2:0] adc20_decimation    = 3'd4;
+  localparam [2:0] adc20_decimation    = 3'd2;
   localparam [1:0] adc20_mixer         = 2'd0;
   localparam       adc21_enable        = 1'b1;
   localparam       adc21_data_type     = 1'b1;
-  localparam [2:0] adc21_decimation    = 3'd4;
+  localparam [2:0] adc21_decimation    = 3'd2;
   localparam [1:0] adc21_mixer         = 2'd0;
   localparam       adc22_enable        = 1'b1;
   localparam       adc22_data_type     = 1'b1;
-  localparam [2:0] adc22_decimation    = 3'd4;
+  localparam [2:0] adc22_decimation    = 3'd2;
   localparam [1:0] adc22_mixer         = 2'd0;
   localparam       adc23_enable        = 1'b1;
   localparam       adc23_data_type     = 1'b1;
-  localparam [2:0] adc23_decimation    = 3'd4;
+  localparam [2:0] adc23_decimation    = 3'd2;
   localparam [1:0] adc23_mixer         = 2'd0;
   localparam       adc30_enable        = 1'b1;
   localparam       adc30_data_type     = 1'b1;
-  localparam [2:0] adc30_decimation    = 3'd4;
+  localparam [2:0] adc30_decimation    = 3'd2;
   localparam [1:0] adc30_mixer         = 2'd0;
   localparam       adc31_enable        = 1'b1;
   localparam       adc31_data_type     = 1'b1;
-  localparam [2:0] adc31_decimation    = 3'd4;
+  localparam [2:0] adc31_decimation    = 3'd2;
   localparam [1:0] adc31_mixer         = 2'd0;
   localparam       adc32_enable        = 1'b1;
   localparam       adc32_data_type     = 1'b1;
-  localparam [2:0] adc32_decimation    = 3'd4;
+  localparam [2:0] adc32_decimation    = 3'd2;
   localparam [1:0] adc32_mixer         = 2'd0;
   localparam       adc33_enable        = 1'b1;
   localparam       adc33_data_type     = 1'b1;
-  localparam [2:0] adc33_decimation    = 3'd4;
+  localparam [2:0] adc33_decimation    = 3'd2;
   localparam [1:0] adc33_mixer         = 2'd0;
 
-  localparam       MAX_ADC_T1_DLY    = 32; // Maximum supported number of ADC data aligner T1 delays
-  localparam       MAX_DAC_T1_DLY    = 32; // Maximum supported number of DAC data aligner T1 delays
-  localparam       MRK_LOC_BITS           = 4;  // Number of bits in marker locations
-  localparam       MRK_CNTR_BITS          = 16; // NUmber of bits in marker counters
-  localparam       MTS_SYSREF_COUNT_NBITS = 8;  // Max count value for the sysref counters
-  localparam       MTS_SYSREF_FREQ_NBITS  = 15; // Max count value for the sysref counters
 
   reg   [11:0]     drp_addr;
   reg   [15:0]     drp_di;
@@ -1333,212 +1321,14 @@ module system_usp_rf_data_converter_0_0_block (
   wire  [127:0]    adc32_data_i;
   wire  [127:0]    adc33_data_i;
 
-  // ADC Multitile Sync Signals
-  reg              mt_adc_fifo_en_ff;      // Retimed before use in the ADCs
-  reg              mt_adc_fifo_src_ff;     // Source of MT ADC FIFO enables: 0 = non-multitile, 1 = multitile
-
-  reg  [10:0]      adc00_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc00_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice00;    // Marker has completed counting
-  wire             mrk_cntr_done_slice00_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice00;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice00;         // Marker counter value
-
-  reg  [10:0]      adc01_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc01_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice01;    // Marker has completed counting
-  wire             mrk_cntr_done_slice01_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice01;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice01;         // Marker counter value
-
-  reg  [10:0]      adc02_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc02_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice02;    // Marker has completed counting
-  wire             mrk_cntr_done_slice02_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice02;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice02;         // Marker counter value
-
-  reg  [10:0]      adc03_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc03_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice03;    // Marker has completed counting
-  wire             mrk_cntr_done_slice03_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice03;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice03;         // Marker counter value
-
-  reg  [10:0]      adc10_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc10_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice10;    // Marker has completed counting
-  wire             mrk_cntr_done_slice10_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice10;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice10;         // Marker counter value
-
-  reg  [10:0]      adc11_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc11_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice11;    // Marker has completed counting
-  wire             mrk_cntr_done_slice11_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice11;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice11;         // Marker counter value
-
-  reg  [10:0]      adc12_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc12_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice12;    // Marker has completed counting
-  wire             mrk_cntr_done_slice12_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice12;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice12;         // Marker counter value
-
-  reg  [10:0]      adc13_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc13_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice13;    // Marker has completed counting
-  wire             mrk_cntr_done_slice13_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice13;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice13;         // Marker counter value
-
-  reg  [10:0]      adc20_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc20_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice20;    // Marker has completed counting
-  wire             mrk_cntr_done_slice20_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice20;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice20;         // Marker counter value
-
-  reg  [10:0]      adc21_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc21_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice21;    // Marker has completed counting
-  wire             mrk_cntr_done_slice21_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice21;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice21;         // Marker counter value
-
-  reg  [10:0]      adc22_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc22_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice22;    // Marker has completed counting
-  wire             mrk_cntr_done_slice22_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice22;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice22;         // Marker counter value
-
-  reg  [10:0]      adc23_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc23_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice23;    // Marker has completed counting
-  wire             mrk_cntr_done_slice23_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice23;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice23;         // Marker counter value
-
-  reg  [10:0]      adc30_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc30_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice30;    // Marker has completed counting
-  wire             mrk_cntr_done_slice30_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice30;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice30;         // Marker counter value
-
-  reg  [10:0]      adc31_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc31_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice31;    // Marker has completed counting
-  wire             mrk_cntr_done_slice31_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice31;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice31;         // Marker counter value
-
-  reg  [10:0]      adc32_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc32_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice32;    // Marker has completed counting
-  wire             mrk_cntr_done_slice32_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice32;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice32;         // Marker counter value
-
-  reg  [10:0]      adc33_data_align_ctrl_ff; // ADC data aligner control signals
-  wire [63:0]     adc33_data_aligned;       // Aligned ADC data
-
-  wire             mrk_cntr_done_slice33;    // Marker has completed counting
-  wire             mrk_cntr_done_slice33_sync;
-  wire [MRK_LOC_BITS-1:0]         mrk_loc_slice33;          // Marker location 0-7; 'hF indicates location has not been captured
-  wire [MRK_CNTR_BITS-1:0]        mrk_cntr_slice33;         // Marker counter value
-
-  reg  [14:0]      adc0_cmn_control_ff;     // ADC common control
-  reg  [14:0]      adc1_cmn_control_ff;     // ADC common control
-  reg  [14:0]      adc2_cmn_control_ff;     // ADC common control
-  reg  [14:0]      adc3_cmn_control_ff;     // ADC common control
-
-  reg              mt_mrk_rst_ff;          // Marker counter synchronous reset
-  wire             mt_mrk_sync_rst;        // mt_mrk_rst_ff resynced to one of the ADC multitile clocks
-
-  wire [MTS_SYSREF_COUNT_NBITS-1:0]            mts_adc_sysref_count;    // SysRef Counter Value
-  wire [MTS_SYSREF_FREQ_NBITS-1:0]             mts_adc_sysref_freq;     // SysRef Frequency Value
-  wire                                         mts_adc_sysref_freq_done;
-
-  // DAC Multitile Sync Signals
-  reg              mt_dac_fifo_en_ff;      // Not retimed before use in the DACs so needs to be synchronized
-  reg              mt_dac_fifo_src_ff;     // Source of MT DAC FIFO enables: 0 = non-multitile, 1 = multitile
-
-  reg  [10:0]      dac00_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac00_data_aligned;           // Aligned DAC data
-
-  reg  [10:0]      dac01_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac01_data_aligned;           // Aligned DAC data
-
-  reg  [10:0]      dac02_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac02_data_aligned;           // Aligned DAC data
-
-  reg  [10:0]      dac03_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac03_data_aligned;           // Aligned DAC data
-
-  reg  [10:0]      dac10_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac10_data_aligned;           // Aligned DAC data
-
-  reg  [10:0]      dac11_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac11_data_aligned;           // Aligned DAC data
-
-  reg  [10:0]      dac12_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac12_data_aligned;           // Aligned DAC data
-
-  reg  [10:0]      dac13_data_align_ctrl_ff; // DAC data aligner control signals
-  wire [127:0]     dac13_data_aligned;           // Aligned DAC data
-
-  reg  [13:0]      dac0_cmn_control_ff;     // DAC common control, [14:1] only
-  reg              sysref_dac0_pedge_ff;
-  reg  [13:0]      dac1_cmn_control_ff;     // DAC common control, [14:1] only
-  reg              sysref_dac1_pedge_ff;
-
-  reg              sysref_dac_ff;          // Registered version of sysref_dac for posedge detection
-  reg              sysref_dac_dly_ff;      // Delayed version of sysref_dac_ff for posedge detection
-  wire             sysref_dac_pedge;       // Pulses high for 1 clock period 1 clock cycle after a posedge on sysref_dac
-  wire             sysref_dac_pedge_dly;   // Optionally delayed version of sysref_dac_pedge
-  reg              sysref_dac_pedge_ff;    // Pipelined version of sysref_dac_pedge_dly for timing purposes
-  reg  [4:0]       dac_mrk_insert_dly_ff;  // Configurable DAC marker insertion delay
-
-  wire [MTS_SYSREF_COUNT_NBITS-1:0]            mts_dac_sysref_count;    // SysRef Counter Value
-  wire [MTS_SYSREF_FREQ_NBITS-1:0]             mts_dac_sysref_freq;     // SysRef Frequency Value
-  wire                                         mts_dac_sysref_freq_done;
-
-  reg  [1:0]      mts_sysref_count_start; // SysRef counter start pulse
-
-  assign  dac00_data_i[255:128]  =  128'b0;
-  assign  dac00_data_i[127:0]    =  dac00_data_aligned;
-  assign  dac01_data_i[255:128]  =  128'b0;
-  assign  dac01_data_i[127:0]    =  dac01_data_aligned;
-  assign  dac02_data_i[255:128]  =  128'b0;
-  assign  dac02_data_i[127:0]    =  dac02_data_aligned;
-  assign  dac03_data_i[255:128]  =  128'b0;
-  assign  dac03_data_i[127:0]    =  dac03_data_aligned;
-  assign  dac10_data_i[255:128]  =  128'b0;
-  assign  dac10_data_i[127:0]    =  dac10_data_aligned;
-  assign  dac11_data_i[255:128]  =  128'b0;
-  assign  dac11_data_i[127:0]    =  dac11_data_aligned;
-  assign  dac12_data_i[255:128]  =  128'b0;
-  assign  dac12_data_i[127:0]    =  dac12_data_aligned;
-  assign  dac13_data_i[255:128]  =  128'b0;
-  assign  dac13_data_i[127:0]    =  dac13_data_aligned;
+  assign  dac00_data_i  =  s00_axis_tdata;
+  assign  dac01_data_i  =  s01_axis_tdata;
+  assign  dac02_data_i  =  s02_axis_tdata;
+  assign  dac03_data_i  =  s03_axis_tdata;
+  assign  dac10_data_i  =  s10_axis_tdata;
+  assign  dac11_data_i  =  s11_axis_tdata;
+  assign  dac12_data_i  =  s12_axis_tdata;
+  assign  dac13_data_i  =  s13_axis_tdata;
 
   system_usp_rf_data_converter_0_0_rf_wrapper
   system_usp_rf_data_converter_0_0_rf_wrapper_i(
@@ -1972,17 +1762,17 @@ module system_usp_rf_data_converter_0_0_block (
     .sysref_in_p            (sysref_in_p),
     .sysref_in_n            (sysref_in_n),
 
-    .user_sysref_adc        (user_sysref_adc),
-    .mt_adc_fifo_en         (mt_adc_fifo_en_ff),
-    .mt_adc_fifo_src        (mt_adc_fifo_src_ff),
+    .user_sysref_adc        (1'b0),
+    .mt_adc_fifo_en         (1'b0),
+    .mt_adc_fifo_src        (1'b0),
 
-    .user_sysref_dac        (user_sysref_dac),
-    .mt_dac_fifo_en         (mt_dac_fifo_en_ff),
-    .mt_dac_fifo_src        (mt_dac_fifo_src_ff),
+    .user_sysref_dac        (1'b0),
+    .mt_dac_fifo_en         (1'b0),
+    .mt_dac_fifo_src        (1'b0),
 
     // DAC Debug Ports
     // DAC0
-    .dac0_cmn_control       ({dac0_cmn_control_ff, sysref_dac0_pedge_ff}),
+    .dac0_cmn_control       (dac0_cmn_control),
     .dac0_sysref_gate       (1'b0),
 
 
@@ -2010,7 +1800,7 @@ module system_usp_rf_data_converter_0_0_block (
     .dac0_powerup_state_interrupt (dac0_powerup_state_interrupt),
 
     // DAC1
-    .dac1_cmn_control       ({dac1_cmn_control_ff, sysref_dac1_pedge_ff}),
+    .dac1_cmn_control       (dac1_cmn_control),
     .dac1_sysref_gate       (1'b0),
 
 
@@ -2075,7 +1865,7 @@ module system_usp_rf_data_converter_0_0_block (
 
   // ADC Debug Ports
     // ADC0
-    .adc0_cmn_control       (adc0_cmn_control_ff[14:0]),
+    .adc0_cmn_control       (adc0_cmn_control[14:0]),
     .adc00_control          (adc00_control_i),
     .adc01_control          (adc01_control_i),
     .adc02_control          (adc02_control_i),
@@ -2095,7 +1885,7 @@ module system_usp_rf_data_converter_0_0_block (
     .adc0_powerup_state_interrupt (adc0_powerup_state_interrupt),
 
     // ADC1
-    .adc1_cmn_control       (adc1_cmn_control_ff[14:0]),
+    .adc1_cmn_control       (adc1_cmn_control[14:0]),
     .adc10_control          (adc10_control_i),
     .adc11_control          (adc11_control_i),
     .adc12_control          (adc12_control_i),
@@ -2115,7 +1905,7 @@ module system_usp_rf_data_converter_0_0_block (
     .adc1_powerup_state_interrupt (adc1_powerup_state_interrupt),
 
     // ADC2
-    .adc2_cmn_control       (adc2_cmn_control_ff[14:0]),
+    .adc2_cmn_control       (adc2_cmn_control[14:0]),
     .adc20_control          (adc20_control_i),
     .adc21_control          (adc21_control_i),
     .adc22_control          (adc22_control_i),
@@ -2135,7 +1925,7 @@ module system_usp_rf_data_converter_0_0_block (
     .adc2_powerup_state_interrupt (adc2_powerup_state_interrupt),
 
     // ADC3
-    .adc3_cmn_control       (adc3_cmn_control_ff[14:0]),
+    .adc3_cmn_control       (adc3_cmn_control[14:0]),
     .adc30_control          (adc30_control_i),
     .adc31_control          (adc31_control_i),
     .adc32_control          (adc32_control_i),
@@ -2164,37 +1954,37 @@ module system_usp_rf_data_converter_0_0_block (
     .reset                  (master_reset)
  );
 
-  assign  m00_axis_tdata  =  adc00_data_aligned;
+  assign  m00_axis_tdata  =  adc00_data_i[127:0];
 
-  assign  m01_axis_tdata  =  adc01_data_aligned;
+  assign  m01_axis_tdata  =  adc01_data_i[127:0];
 
-  assign  m02_axis_tdata  =  adc02_data_aligned;
+  assign  m02_axis_tdata  =  adc02_data_i[127:0];
 
-  assign  m03_axis_tdata  =  adc03_data_aligned;
+  assign  m03_axis_tdata  =  adc03_data_i[127:0];
 
-  assign  m10_axis_tdata  =  adc10_data_aligned;
+  assign  m10_axis_tdata  =  adc10_data_i[127:0];
 
-  assign  m11_axis_tdata  =  adc11_data_aligned;
+  assign  m11_axis_tdata  =  adc11_data_i[127:0];
 
-  assign  m12_axis_tdata  =  adc12_data_aligned;
+  assign  m12_axis_tdata  =  adc12_data_i[127:0];
 
-  assign  m13_axis_tdata  =  adc13_data_aligned;
+  assign  m13_axis_tdata  =  adc13_data_i[127:0];
 
-  assign  m20_axis_tdata  =  adc20_data_aligned;
+  assign  m20_axis_tdata  =  adc20_data_i[127:0];
 
-  assign  m21_axis_tdata  =  adc21_data_aligned;
+  assign  m21_axis_tdata  =  adc21_data_i[127:0];
 
-  assign  m22_axis_tdata  =  adc22_data_aligned;
+  assign  m22_axis_tdata  =  adc22_data_i[127:0];
 
-  assign  m23_axis_tdata  =  adc23_data_aligned;
+  assign  m23_axis_tdata  =  adc23_data_i[127:0];
 
-  assign  m30_axis_tdata  =  adc30_data_aligned;
+  assign  m30_axis_tdata  =  adc30_data_i[127:0];
 
-  assign  m31_axis_tdata  =  adc31_data_aligned;
+  assign  m31_axis_tdata  =  adc31_data_i[127:0];
 
-  assign  m32_axis_tdata  =  adc32_data_aligned;
+  assign  m32_axis_tdata  =  adc32_data_i[127:0];
 
-  assign  m33_axis_tdata  =  adc33_data_aligned;
+  assign  m33_axis_tdata  =  adc33_data_i[127:0];
 
   assign  adc00_status  =  adc00_stat;
   assign  adc01_status  =  adc01_stat;
@@ -2469,73 +2259,6 @@ module system_usp_rf_data_converter_0_0_block (
 
   assign sm_start = 1'b1;
 
-  // 0x010 MT ADC FIFO Enable Control Register
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      mt_adc_fifo_en_ff  <= 1'b0;
-      mt_adc_fifo_src_ff <= 1'b0;
-    end
-    else if (bank0_write[4])
-    begin
-      mt_adc_fifo_en_ff  <= Bus2IP_Data[0];
-      mt_adc_fifo_src_ff <= Bus2IP_Data[1];
-    end
-
-  // 0x014 MT DAC FIFO Enable Control Register
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      mt_dac_fifo_en_ff  <= 1'b0;
-      mt_dac_fifo_src_ff <= 1'b0;
-    end
-    else if (bank0_write[5])
-    begin
-      mt_dac_fifo_en_ff  <= Bus2IP_Data[0];
-      mt_dac_fifo_src_ff <= Bus2IP_Data[1];
-    end
-
-  // Control logic for marker counter asynchronous reset
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      mt_mrk_rst_ff <= 1'b0;
-    end
-    else if (bank0_write[6])
-    begin
-      mt_mrk_rst_ff <= Bus2IP_Data[0];
-    end
-    else
-    begin
-      mt_mrk_rst_ff <= 1'b0;
-    end
-
-  // 0x048 DAC marker insertion programmable delay
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac_mrk_insert_dly_ff <= 5'd10;
-    end
-    else if (bank0_write[18])
-    begin
-      dac_mrk_insert_dly_ff <= Bus2IP_Data[4:0];
-    end
-
-  // 0x04C Multitile SysRef Count Start
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      mts_sysref_count_start   <= 2'b00;
-    end
-    else if (bank0_write[19])
-    begin
-      mts_sysref_count_start   <= Bus2IP_Data[1:0];
-    end
-    else
-    begin
-      mts_sysref_count_start   <= 2'b00;
-    end
-
   // 0x104 Interrupt Enables
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
@@ -2607,58 +2330,6 @@ module system_usp_rf_data_converter_0_0_block (
       dac0_start_stage <= Bus2IP_Data[11:8];
     end
 
-  // 0x024 Common Control
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-      begin
-        dac0_cmn_control_ff <= 15'h0;
-      end
-    else if (bank1_write[9])
-      begin
-        dac0_cmn_control_ff <=  Bus2IP_Data[14:1];
-      end
-
-  // 0x028 Delay Align Control FIFO00
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac00_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank1_write[10])
-    begin
-      dac00_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
-
-  // 0x02C Delay Align Control FIFO01
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac01_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank1_write[11])
-    begin
-      dac01_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
-  // 0x030 Delay Align Control FIFO02
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac02_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank1_write[12])
-    begin
-      dac02_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
-  // 0x034 Delay Align Control FIFO03
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac03_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank1_write[13])
-    begin
-      dac03_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
   // 0x0100 DAC Simulation level
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
@@ -2783,7 +2454,7 @@ module system_usp_rf_data_converter_0_0_block (
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
     begin
-      dac0_sample_rate <= 32'd3932160;
+      dac0_sample_rate <= 32'd2457600;
     end
     else if (bank1_write[193])
     begin
@@ -2849,58 +2520,6 @@ module system_usp_rf_data_converter_0_0_block (
       dac1_start_stage <= Bus2IP_Data[11:8];
     end
 
-  // 0x024 Common Control
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-      begin
-        dac1_cmn_control_ff <= 15'h0;
-      end
-    else if (bank3_write[9])
-      begin
-        dac1_cmn_control_ff <=  Bus2IP_Data[14:1];
-      end
-
-  // 0x028 Delay Align Control FIFO10
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac10_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank3_write[10])
-    begin
-      dac10_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
-
-  // 0x02C Delay Align Control FIFO11
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac11_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank3_write[11])
-    begin
-      dac11_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
-  // 0x030 Delay Align Control FIFO12
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac12_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank3_write[12])
-    begin
-      dac12_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
-  // 0x034 Delay Align Control FIFO13
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      dac13_data_align_ctrl_ff <= {1'b0,5'd16,5'd0};
-    end
-    else if (bank3_write[13])
-    begin
-      dac13_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-    end
   // 0x0100 DAC Simulation level
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
@@ -3025,7 +2644,7 @@ module system_usp_rf_data_converter_0_0_block (
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
     begin
-      dac1_sample_rate <= 32'd3932160;
+      dac1_sample_rate <= 32'd2457600;
     end
     else if (bank3_write[193])
     begin
@@ -3092,60 +2711,6 @@ module system_usp_rf_data_converter_0_0_block (
       adc0_start_stage <= Bus2IP_Data[11:8];
     end
 
-  // 0x024 Common Control Register
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      adc0_cmn_control_ff <= 15'h0;
-    end
-    else if (bank9_write[9])
-    begin
-      adc0_cmn_control_ff <=  Bus2IP_Data[14:0];
-    end
-
-    // 0x028 Delay Align Control FIFO00
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc00_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank9_write[10])
-      begin
-        adc00_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x02C Delay Align Control FIFO01
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc01_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank9_write[11])
-      begin
-        adc01_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x030 Delay Align Control FIFO02
-    always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-      begin
-        adc02_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank9_write[12])
-      begin
-        adc02_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x034 Delay Align Control FIFO03
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc03_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank9_write[13])
-      begin
-        adc03_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
   // 0x0100 ADC Sim level
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
@@ -3279,7 +2844,7 @@ module system_usp_rf_data_converter_0_0_block (
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
     begin
-      adc0_sample_rate <= 32'd3932160;
+      adc0_sample_rate <= 32'd2457600;
     end
     else if (bank9_write[193])
     begin
@@ -3399,60 +2964,6 @@ module system_usp_rf_data_converter_0_0_block (
       adc1_start_stage <= Bus2IP_Data[11:8];
     end
 
-  // 0x024 Common Control Register
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      adc1_cmn_control_ff <= 15'h0;
-    end
-    else if (bank11_write[9])
-    begin
-      adc1_cmn_control_ff <=  Bus2IP_Data[14:0];
-    end
-
-    // 0x028 Delay Align Control FIFO10
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc10_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank11_write[10])
-      begin
-        adc10_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x02C Delay Align Control FIFO11
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc11_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank11_write[11])
-      begin
-        adc11_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x030 Delay Align Control FIFO12
-    always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-      begin
-        adc12_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank11_write[12])
-      begin
-        adc12_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x034 Delay Align Control FIFO13
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc13_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank11_write[13])
-      begin
-        adc13_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
   // 0x0100 ADC Sim level
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
@@ -3586,7 +3097,7 @@ module system_usp_rf_data_converter_0_0_block (
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
     begin
-      adc1_sample_rate <= 32'd3932160;
+      adc1_sample_rate <= 32'd2457600;
     end
     else if (bank11_write[193])
     begin
@@ -3706,60 +3217,6 @@ module system_usp_rf_data_converter_0_0_block (
       adc2_start_stage <= Bus2IP_Data[11:8];
     end
 
-  // 0x024 Common Control Register
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      adc2_cmn_control_ff <= 15'h0;
-    end
-    else if (bank13_write[9])
-    begin
-      adc2_cmn_control_ff <=  Bus2IP_Data[14:0];
-    end
-
-    // 0x028 Delay Align Control FIFO20
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc20_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank13_write[10])
-      begin
-        adc20_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x02C Delay Align Control FIFO21
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc21_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank13_write[11])
-      begin
-        adc21_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x030 Delay Align Control FIFO22
-    always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-      begin
-        adc22_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank13_write[12])
-      begin
-        adc22_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x034 Delay Align Control FIFO23
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc23_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank13_write[13])
-      begin
-        adc23_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
   // 0x0100 ADC Sim level
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
@@ -3893,7 +3350,7 @@ module system_usp_rf_data_converter_0_0_block (
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
     begin
-      adc2_sample_rate <= 32'd3932160;
+      adc2_sample_rate <= 32'd2457600;
     end
     else if (bank13_write[193])
     begin
@@ -4013,60 +3470,6 @@ module system_usp_rf_data_converter_0_0_block (
       adc3_start_stage <= Bus2IP_Data[11:8];
     end
 
-  // 0x024 Common Control Register
-  always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-    begin
-      adc3_cmn_control_ff <= 15'h0;
-    end
-    else if (bank15_write[9])
-    begin
-      adc3_cmn_control_ff <=  Bus2IP_Data[14:0];
-    end
-
-    // 0x028 Delay Align Control FIFO30
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc30_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank15_write[10])
-      begin
-        adc30_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x02C Delay Align Control FIFO31
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc31_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank15_write[11])
-      begin
-        adc31_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x030 Delay Align Control FIFO32
-    always @(posedge Bus2IP_Clk)
-    if (~Bus2IP_Resetn)
-      begin
-        adc32_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank15_write[12])
-      begin
-        adc32_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
-
-    // 0x034 Delay Align Control FIFO33
-    always @(posedge Bus2IP_Clk)
-      if (~Bus2IP_Resetn)
-      begin
-        adc33_data_align_ctrl_ff <= {1'b0,5'd8,5'd0};
-      end
-      else if (bank15_write[13])
-      begin
-        adc33_data_align_ctrl_ff <=  Bus2IP_Data[10:0];
-      end
   // 0x0100 ADC Sim level
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
@@ -4200,7 +3603,7 @@ module system_usp_rf_data_converter_0_0_block (
   always @(posedge Bus2IP_Clk)
     if (~Bus2IP_Resetn)
     begin
-      adc3_sample_rate <= 32'd3932160;
+      adc3_sample_rate <= 32'd2457600;
     end
     else if (bank15_write[193])
     begin
@@ -4572,9 +3975,6 @@ module system_usp_rf_data_converter_0_0_block (
   assign IP2Bus_Data_control = bank0_read[0] ? {8'd2, 8'd6, 8'd3, 8'h00} :
                                bank0_read[1] ? {31'b0, master_reset} :
                                bank0_read[2] ? {16'b0, startup_delay} :
-                               bank0_read[4] ? {30'b0, mt_adc_fifo_src_ff, mt_adc_fifo_en_ff} :
-                               bank0_read[5] ? {30'b0, mt_dac_fifo_src_ff, mt_dac_fifo_en_ff} :
-                               bank0_read[6] ? {31'b0, mt_mrk_rst_ff } :
                                bank0_read[8] ? {16'b0, 8'd228, 7'b0, 1'b1} :
                                // DAC Tile Config Bit 0:DAC Tile 0 Enable, Bit 1 Tile 0 PLL Enable Bits 3:2 Reserved, Bit 4: DAC Tile 1 Enabled, Bit 5: Tile 1 PLL Enable Bits 7:6 Reserved...
                                bank0_read[9] ? {4'h0, 2'b00, 1'b0, 1'b0, 2'b00, 1'b0, 1'b0, 2'b00, 1'b1, 1'b1, 2'b00, 1'b1, 1'b1} :
@@ -4582,10 +3982,6 @@ module system_usp_rf_data_converter_0_0_block (
                                bank0_read[11] ? {3'b000, dac03_sinc, 2'b00, dac03_mixer, 1'b0, dac03_interpolation, 2'b00, dac03_data_type, dac03_enable,  3'b000, dac02_sinc, 2'b00, dac02_mixer, 1'b0, dac02_interpolation, 2'b00, dac02_data_type, dac02_enable} :
                                bank0_read[12] ? {3'b000, dac11_sinc, 2'b00, dac11_mixer, 1'b0, dac11_interpolation, 2'b0, dac11_data_type, dac11_enable,  3'b000, dac10_sinc, 2'b00, dac10_mixer, 1'b0, dac10_interpolation, 2'b00, dac10_data_type, dac10_enable} :
                                bank0_read[13] ? {3'b000, dac13_sinc, 2'b00, dac13_mixer, 1'b0, dac13_interpolation, 2'b00, dac13_data_type, dac13_enable,  3'b000, dac12_sinc, 2'b00, dac12_mixer, 1'b0, dac12_interpolation, 2'b00, dac12_data_type, dac12_enable} :
-                               bank0_read[18] ? {27'h0, dac_mrk_insert_dly_ff } :
-                               bank0_read[19] ? {30'h00000000, mts_sysref_count_start} :
-                               bank0_read[20] ? {16'h0000, mts_dac_sysref_count, mts_adc_sysref_count} :
-                               bank0_read[21] ? {mts_dac_sysref_freq, mts_dac_sysref_freq_done, mts_adc_sysref_freq, mts_adc_sysref_freq_done} :
                                // ADC Tile Config Bit 0:ADC Tile 0 Enable, Bit 1 ADC Tile 0 PLL Enable Bits 3:2 Reserved, Bit 4: ADC Tile 1 Enabled, Bit 5: ADC Tile 1 PLL Enable Bits 7:6 Reserved...
                                bank0_read[25] ? {4'h0, 2'b00, 1'b1, 1'b1, 2'b00, 1'b1, 1'b1, 2'b00, 1'b1, 1'b1, 2'b00, 1'b1, 1'b1} :
                                bank0_read[26] ? {6'b0, adc01_mixer, 1'b0, adc01_decimation, 2'b00, adc01_data_type, adc01_enable,  6'b0, adc00_mixer, 1'b0, adc00_decimation, 2'b00, adc00_data_type, adc00_enable} :
@@ -4608,11 +4004,6 @@ module system_usp_rf_data_converter_0_0_block (
                                     bank1_read[1]    ? {31'b0, ~dac0_done_i} :
                                     bank1_read[2]    ? {20'b0, dac0_start_stage, 4'h0, dac0_end_stage} :
                                     bank1_read[3]    ? {28'b0, dac0_current_stage} :
-                                    bank1_read[9]    ? {18'b0, dac0_cmn_control_ff} :
-                                    bank1_read[10]   ? {21'b0, dac00_data_align_ctrl_ff} :
-                                    bank1_read[11]   ? {21'b0, dac01_data_align_ctrl_ff} :
-                                    bank1_read[12]   ? {21'b0, dac02_data_align_ctrl_ff} :
-                                    bank1_read[13]   ? {21'b0, dac03_data_align_ctrl_ff} :
                                     bank1_read[14]   ? {24'b0, dac0_reset_cnt} :
                                     bank1_read[64]   ? {30'b0, dac0_sim_level} :
                                     bank1_read[128]  ? {28'b0, dac0_irq} :
@@ -4642,11 +4033,6 @@ module system_usp_rf_data_converter_0_0_block (
                                     bank3_read[1]    ? {31'b0, ~dac1_done_i} :
                                     bank3_read[2]    ? {20'b0, dac1_start_stage, 4'h0, dac1_end_stage} :
                                     bank3_read[3]    ? {28'b0, dac1_current_stage} :
-                                    bank3_read[9]    ? {18'b0, dac1_cmn_control_ff} :
-                                    bank3_read[10]   ? {21'b0, dac10_data_align_ctrl_ff} :
-                                    bank3_read[11]   ? {21'b0, dac11_data_align_ctrl_ff} :
-                                    bank3_read[12]   ? {21'b0, dac12_data_align_ctrl_ff} :
-                                    bank3_read[13]   ? {21'b0, dac13_data_align_ctrl_ff} :
                                     bank3_read[14]   ? {24'b0, dac1_reset_cnt} :
                                     bank3_read[64]   ? {30'b0, dac1_sim_level} :
                                     bank3_read[128]  ? {28'b0, dac1_irq} :
@@ -4676,15 +4062,6 @@ module system_usp_rf_data_converter_0_0_block (
                                     bank9_read[1]    ? {31'b0, ~adc0_done_i} :
                                     bank9_read[2]    ? {20'b0, adc0_start_stage, 4'h0, adc0_end_stage} :
                                     bank9_read[3]    ? {28'b0, adc0_current_stage} :
-                                    bank9_read[4]    ? {11'b0, mrk_cntr_done_slice00_sync, mrk_loc_slice00, mrk_cntr_slice00} :
-                                    bank9_read[5]    ? {11'b0, mrk_cntr_done_slice01_sync, mrk_loc_slice01, mrk_cntr_slice01} :
-                                    bank9_read[6]    ? {11'b0, mrk_cntr_done_slice02_sync, mrk_loc_slice02, mrk_cntr_slice02} :
-                                    bank9_read[7]    ? {11'b0, mrk_cntr_done_slice03_sync, mrk_loc_slice03, mrk_cntr_slice03} :
-                                    bank9_read[9]    ? {17'b0, adc0_cmn_control_ff} :
-                                    bank9_read[10]   ? {21'b0, adc00_data_align_ctrl_ff} :
-                                    bank9_read[11]   ? {21'b0, adc01_data_align_ctrl_ff} :
-                                    bank9_read[12]   ? {21'b0, adc02_data_align_ctrl_ff} :
-                                    bank9_read[13]   ? {21'b0, adc03_data_align_ctrl_ff} :
                                     bank9_read[14]   ? {24'b0, adc0_reset_cnt} :
                                     bank9_read[64]   ? {30'b0, adc0_sim_level} :
                                     bank9_read[128]  ? {28'b0, adc0_irq} :
@@ -4718,15 +4095,6 @@ module system_usp_rf_data_converter_0_0_block (
                                     bank11_read[1]    ? {31'b0, ~adc1_done_i} :
                                     bank11_read[2]    ? {20'b0, adc1_start_stage, 4'h0, adc1_end_stage} :
                                     bank11_read[3]    ? {28'b0, adc1_current_stage} :
-                                    bank11_read[4]    ? {11'b0, mrk_cntr_done_slice10_sync, mrk_loc_slice10, mrk_cntr_slice10} :
-                                    bank11_read[5]    ? {11'b0, mrk_cntr_done_slice11_sync, mrk_loc_slice11, mrk_cntr_slice11} :
-                                    bank11_read[6]    ? {11'b0, mrk_cntr_done_slice12_sync, mrk_loc_slice12, mrk_cntr_slice12} :
-                                    bank11_read[7]    ? {11'b0, mrk_cntr_done_slice13_sync, mrk_loc_slice13, mrk_cntr_slice13} :
-                                    bank11_read[9]    ? {17'b0, adc1_cmn_control_ff} :
-                                    bank11_read[10]   ? {21'b0, adc10_data_align_ctrl_ff} :
-                                    bank11_read[11]   ? {21'b0, adc11_data_align_ctrl_ff} :
-                                    bank11_read[12]   ? {21'b0, adc12_data_align_ctrl_ff} :
-                                    bank11_read[13]   ? {21'b0, adc13_data_align_ctrl_ff} :
                                     bank11_read[14]   ? {24'b0, adc1_reset_cnt} :
                                     bank11_read[64]   ? {30'b0, adc1_sim_level} :
                                     bank11_read[128]  ? {28'b0, adc1_irq} :
@@ -4760,15 +4128,6 @@ module system_usp_rf_data_converter_0_0_block (
                                     bank13_read[1]    ? {31'b0, ~adc2_done_i} :
                                     bank13_read[2]    ? {20'b0, adc2_start_stage, 4'h0, adc2_end_stage} :
                                     bank13_read[3]    ? {28'b0, adc2_current_stage} :
-                                    bank13_read[4]    ? {11'b0, mrk_cntr_done_slice20_sync, mrk_loc_slice20, mrk_cntr_slice20} :
-                                    bank13_read[5]    ? {11'b0, mrk_cntr_done_slice21_sync, mrk_loc_slice21, mrk_cntr_slice21} :
-                                    bank13_read[6]    ? {11'b0, mrk_cntr_done_slice22_sync, mrk_loc_slice22, mrk_cntr_slice22} :
-                                    bank13_read[7]    ? {11'b0, mrk_cntr_done_slice23_sync, mrk_loc_slice23, mrk_cntr_slice23} :
-                                    bank13_read[9]    ? {17'b0, adc2_cmn_control_ff} :
-                                    bank13_read[10]   ? {21'b0, adc20_data_align_ctrl_ff} :
-                                    bank13_read[11]   ? {21'b0, adc21_data_align_ctrl_ff} :
-                                    bank13_read[12]   ? {21'b0, adc22_data_align_ctrl_ff} :
-                                    bank13_read[13]   ? {21'b0, adc23_data_align_ctrl_ff} :
                                     bank13_read[14]   ? {24'b0, adc2_reset_cnt} :
                                     bank13_read[64]   ? {30'b0, adc2_sim_level} :
                                     bank13_read[128]  ? {28'b0, adc2_irq} :
@@ -4802,15 +4161,6 @@ module system_usp_rf_data_converter_0_0_block (
                                     bank15_read[1]    ? {31'b0, ~adc3_done_i} :
                                     bank15_read[2]    ? {20'b0, adc3_start_stage, 4'h0, adc3_end_stage} :
                                     bank15_read[3]    ? {28'b0, adc3_current_stage} :
-                                    bank15_read[4]    ? {11'b0, mrk_cntr_done_slice30_sync, mrk_loc_slice30, mrk_cntr_slice30} :
-                                    bank15_read[5]    ? {11'b0, mrk_cntr_done_slice31_sync, mrk_loc_slice31, mrk_cntr_slice31} :
-                                    bank15_read[6]    ? {11'b0, mrk_cntr_done_slice32_sync, mrk_loc_slice32, mrk_cntr_slice32} :
-                                    bank15_read[7]    ? {11'b0, mrk_cntr_done_slice33_sync, mrk_loc_slice33, mrk_cntr_slice33} :
-                                    bank15_read[9]    ? {17'b0, adc3_cmn_control_ff} :
-                                    bank15_read[10]   ? {21'b0, adc30_data_align_ctrl_ff} :
-                                    bank15_read[11]   ? {21'b0, adc31_data_align_ctrl_ff} :
-                                    bank15_read[12]   ? {21'b0, adc32_data_align_ctrl_ff} :
-                                    bank15_read[13]   ? {21'b0, adc33_data_align_ctrl_ff} :
                                     bank15_read[14]   ? {24'b0, adc3_reset_cnt} :
                                     bank15_read[64]   ? {30'b0, adc3_sim_level} :
                                     bank15_read[128]  ? {28'b0, adc3_irq} :
@@ -5226,912 +4576,5 @@ module system_usp_rf_data_converter_0_0_block (
   assign adc3_status         = adc3_current_stage;
   assign adc3_done           = adc3_done_i;
   assign adc3_powerup_state  = adc3_common_stat[2] & adc3_done_i;
-
-  // SysRef Count for ADC
-  system_usp_rf_data_converter_0_0_mt_sysref_count #(
-    .COUNT_NBITS  (MTS_SYSREF_COUNT_NBITS),
-    .FREQ_NBITS   (MTS_SYSREF_FREQ_NBITS)
-  ) i_mts_sysref_count_adc(
-    .clk_fbrc         (m0_axis_aclk              ),
-    .reset_fbrc_b     (m0_axis_aresetn           ),
-    .clk              (Bus2IP_Clk                ),
-    .reset_b          (Bus2IP_Resetn             ),
-    .start_pulse      (mts_sysref_count_start[0] ),
-    .sysref           (user_sysref_adc           ),
-    .sysref_count     (mts_adc_sysref_count      ),
-    .sysref_freq      (mts_adc_sysref_freq       ),
-    .sysref_freq_done (mts_adc_sysref_freq_done  )
-  );
-
-  // Retimer
-  xpm_cdc_async_rst #(
-    .DEST_SYNC_FF     (4),
-    .INIT_SYNC_FF     (0),
-    .RST_ACTIVE_HIGH  (1)
-  )
-  i_xpm_cdc_single_mt_mrk_rst (
-    .dest_arst(mt_mrk_sync_rst),
-    .dest_clk(m0_axis_aclk),
-    .src_arst(mt_mrk_rst_ff)
-  );
-
-  // Marker counter slice00
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc00 (
-    .clk           (m0_axis_aclk          ), // Clock
-    .rst_n         (m0_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc00_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice00 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice00       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice00      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc00_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice00             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice00_sync        )
-  );
-
-  // Data alignment slice00
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc00 (
-    .clk          (m0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc00_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc00_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc00_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc00_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice01
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc01 (
-    .clk           (m0_axis_aclk          ), // Clock
-    .rst_n         (m0_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc01_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice01 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice01       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice01      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc01_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice01             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice01_sync        )
-  );
-
-  // Data alignment slice01
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc01 (
-    .clk          (m0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc01_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc01_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc01_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc01_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice02
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc02 (
-    .clk           (m0_axis_aclk          ), // Clock
-    .rst_n         (m0_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc02_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice02 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice02       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice02      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc02_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice02             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice02_sync        )
-  );
-
-  // Data alignment slice02
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc02 (
-    .clk          (m0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc02_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc02_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc02_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc02_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice03
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc03 (
-    .clk           (m0_axis_aclk          ), // Clock
-    .rst_n         (m0_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc03_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice03 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice03       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice03      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc03_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice03             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice03_sync        )
-  );
-
-  // Data alignment slice03
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc03 (
-    .clk          (m0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc03_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc03_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc03_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc03_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice10
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc10 (
-    .clk           (m1_axis_aclk          ), // Clock
-    .rst_n         (m1_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc10_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice10 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice10       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice10      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc10_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice10             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice10_sync        )
-  );
-
-  // Data alignment slice10
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc10 (
-    .clk          (m1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc10_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc10_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc10_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc10_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice11
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc11 (
-    .clk           (m1_axis_aclk          ), // Clock
-    .rst_n         (m1_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc11_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice11 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice11       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice11      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc11_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice11             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice11_sync        )
-  );
-
-  // Data alignment slice11
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc11 (
-    .clk          (m1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc11_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc11_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc11_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc11_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice12
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc12 (
-    .clk           (m1_axis_aclk          ), // Clock
-    .rst_n         (m1_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc12_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice12 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice12       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice12      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc12_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice12             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice12_sync        )
-  );
-
-  // Data alignment slice12
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc12 (
-    .clk          (m1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc12_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc12_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc12_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc12_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice13
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc13 (
-    .clk           (m1_axis_aclk          ), // Clock
-    .rst_n         (m1_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc13_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice13 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice13       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice13      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc13_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice13             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice13_sync        )
-  );
-
-  // Data alignment slice13
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc13 (
-    .clk          (m1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc13_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc13_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc13_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc13_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice20
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc20 (
-    .clk           (m2_axis_aclk          ), // Clock
-    .rst_n         (m2_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc20_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice20 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice20       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice20      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc20_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice20             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice20_sync        )
-  );
-
-  // Data alignment slice20
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc20 (
-    .clk          (m2_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc20_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc20_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc20_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc20_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice21
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc21 (
-    .clk           (m2_axis_aclk          ), // Clock
-    .rst_n         (m2_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc21_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice21 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice21       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice21      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc21_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice21             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice21_sync        )
-  );
-
-  // Data alignment slice21
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc21 (
-    .clk          (m2_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc21_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc21_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc21_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc21_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice22
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc22 (
-    .clk           (m2_axis_aclk          ), // Clock
-    .rst_n         (m2_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc22_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice22 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice22       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice22      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc22_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice22             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice22_sync        )
-  );
-
-  // Data alignment slice22
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc22 (
-    .clk          (m2_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc22_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc22_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc22_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc22_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice23
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc23 (
-    .clk           (m2_axis_aclk          ), // Clock
-    .rst_n         (m2_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc23_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice23 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice23       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice23      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc23_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice23             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice23_sync        )
-  );
-
-  // Data alignment slice23
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc23 (
-    .clk          (m2_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc23_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc23_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc23_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc23_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice30
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc30 (
-    .clk           (m3_axis_aclk          ), // Clock
-    .rst_n         (m3_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc30_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice30 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice30       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice30      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc30_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice30             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice30_sync        )
-  );
-
-  // Data alignment slice30
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc30 (
-    .clk          (m3_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc30_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc30_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc30_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc30_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice31
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc31 (
-    .clk           (m3_axis_aclk          ), // Clock
-    .rst_n         (m3_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc31_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice31 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice31       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice31      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc31_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice31             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice31_sync        )
-  );
-
-  // Data alignment slice31
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc31 (
-    .clk          (m3_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc31_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc31_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc31_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc31_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice32
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc32 (
-    .clk           (m3_axis_aclk          ), // Clock
-    .rst_n         (m3_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc32_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice32 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice32       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice32      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc32_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice32             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice32_sync        )
-  );
-
-  // Data alignment slice32
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc32 (
-    .clk          (m3_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc32_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc32_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc32_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc32_data_aligned            )  // Aligned output data
-  );
-  // Marker counter slice33
-  system_usp_rf_data_converter_0_0_mt_mrk_counter #(
-    .MRK_LOC_BITS  (MRK_LOC_BITS),
-    .MRK_CNTR_BITS (MRK_CNTR_BITS)
-  ) i_rf_conv_mt_mrk_counter_adc33 (
-    .clk           (m3_axis_aclk          ), // Clock
-    .rst_n         (m3_axis_aresetn       ), // Asynchronous reset
-
-    .sync_rst      (mt_mrk_sync_rst       ), // Synchronous reset
-    .adc_status    (adc33_status          ), // [8] starts the counter, [11:9] marker location
-    .sysref_sync   (user_sysref_adc       ), // Stops the marker counter
-
-    .mrk_cntr_done (mrk_cntr_done_slice33 ), // Marker has completed counting
-    .mrk_loc       (mrk_loc_slice33       ), // Marker location 0-7, 'hF indicates location has not been captured
-    .mrk_cntr      (mrk_cntr_slice33      )  // Marker counter value
-  );
-
-  xpm_cdc_single #(.SRC_INPUT_REG(0))
-  cdc_adc33_mrk_cntr_done_i (
-    .src_clk  (1'b0                              ),
-    .src_in   (mrk_cntr_done_slice33             ),
-    .dest_clk (s_axi_aclk                        ),
-    .dest_out (mrk_cntr_done_slice33_sync        )
-  );
-
-  // Data alignment slice33
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (4),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_ADC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (1)
-  ) i_rf_conv_mt_data_align_adc33 (
-    .clk          (m3_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (adc33_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (adc33_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (adc33_data_i[63:0]           ), // Unaligned input data
-    .data_aligned (adc33_data_aligned            )  // Aligned output data
-  );
-  // SysRef Count for DAC
-  system_usp_rf_data_converter_0_0_mt_sysref_count #(
-    .COUNT_NBITS(MTS_SYSREF_COUNT_NBITS),
-    .FREQ_NBITS(MTS_SYSREF_FREQ_NBITS)
-  ) i_mts_sysref_count_dac(
-    .clk_fbrc         (s0_axis_aclk              ),
-    .reset_fbrc_b     (s0_axis_aresetn           ),
-    .clk              (Bus2IP_Clk                ),
-    .reset_b          (Bus2IP_Resetn             ),
-    .start_pulse      (mts_sysref_count_start[1] ),
-    .sysref           (user_sysref_dac           ),
-    .sysref_count     (mts_dac_sysref_count      ),
-    .sysref_freq      (mts_dac_sysref_freq       ),
-    .sysref_freq_done (mts_dac_sysref_freq_done  )
-  );
-
-  ////////////////////////////////////////////////////////////////
-  // SysRef posedge detection and marker insertion delay unit
-  ////////////////////////////////////////////////////////////////
-
-  // Posedge detection circuit on sysref_dac in case sysref_dac is held high for > 1 clock period e.g. square wave
-  always @(posedge s0_axis_aclk) // Any DAC clock involved in multitile will do
-    if (~s0_axis_aresetn)
-    begin
-      sysref_dac_ff       <= 1'b1; // Reset to 1 to suppress spurious posedge detection
-      sysref_dac_dly_ff   <= 1'b1; // Reset to 1 to suppress spurious posedge detection
-      sysref_dac_pedge_ff <= 1'b0;
-    end
-    else
-    begin
-      sysref_dac_ff       <= user_sysref_dac;      // Registered version of sysref_dac for posedge detection
-      sysref_dac_dly_ff   <= sysref_dac_ff;        // Delayed version of sysref_dac_ff for posedge detection
-      sysref_dac_pedge_ff <= sysref_dac_pedge_dly; // Pipelined version of sysref_dac_pedge_dly for timing purposes
-    end
-
-  assign sysref_dac_pedge = sysref_dac_ff && !sysref_dac_dly_ff; // Pulses high for 1 clock period 1 clock cycle after a posedge on sysref_dac
-
-  // Pipeline sysref_dac_pedge_ff to DAC0 to alleviate timing
-  always @(posedge s0_axis_aclk)
-    if (~s0_axis_aresetn)
-    begin
-      sysref_dac0_pedge_ff <= 1'b0;
-    end
-    else
-    begin
-      sysref_dac0_pedge_ff <= sysref_dac_pedge_ff;
-    end
-
-  // Pipeline sysref_dac_pedge_ff to DAC1 to alleviate timing
-  always @(posedge s1_axis_aclk)
-    if (~s1_axis_aresetn)
-    begin
-      sysref_dac1_pedge_ff <= 1'b0;
-    end
-    else
-    begin
-      sysref_dac1_pedge_ff <= sysref_dac_pedge_ff;
-    end
-
-  // Delay SysRef Pulse
-  SRLC32E #(
-    .INIT(32'h00000000) // Initial Value of Shift Register
-  ) SRLC32E_inst (
-    .Q   (sysref_dac_pedge_dly  ), // SRL data output
-    .Q31 (                      ), // SRL cascade output pin
-    .A   (dac_mrk_insert_dly_ff ), // 5-bit shift depth select input
-    .CE  (1'b1                  ), // Clock enable input
-    .CLK (s0_axis_aclk          ), // Clock input
-    .D   (sysref_dac_pedge      )  // SRL data input
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac00 (
-    .clk          (s0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac00_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac00_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s00_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac00_data_aligned            )  // Aligned output data
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac01 (
-    .clk          (s0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac01_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac01_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s01_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac01_data_aligned            )  // Aligned output data
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac02 (
-    .clk          (s0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac02_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac02_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s02_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac02_data_aligned            )  // Aligned output data
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac03 (
-    .clk          (s0_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac03_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac03_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s03_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac03_data_aligned            )  // Aligned output data
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac10 (
-    .clk          (s1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac10_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac10_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s10_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac10_data_aligned            )  // Aligned output data
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac11 (
-    .clk          (s1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac11_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac11_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s11_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac11_data_aligned            )  // Aligned output data
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac12 (
-    .clk          (s1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac12_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac12_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s12_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac12_data_aligned            )  // Aligned output data
-  );
-
-  system_usp_rf_data_converter_0_0_mt_data_align #(
-    .MAX_WORDS      (8),              // Maximum number of words on the fabric interface
-    .MAX_T1_DLY     (MAX_DAC_T1_DLY), // Maximum supported number of T1 delays
-    .BITS_PER_WORD  (16),
-    .ADC            (0)
-  ) i_rf_conv_mt_data_align_dac13 (
-    .clk          (s1_axis_aclk                  ), // Clock
-    .rst_n        (1'b1                          ), // Reset not required for this stateless block, only creates an additional critical path
-
-    .cfg_dly_data (dac13_data_align_ctrl_ff[4:0] ), // Programmable delay: 0-31 T1 delays
-
-    .bypass       (dac13_data_align_ctrl_ff[10]  ), // Bypass data aligner altogether when set
-
-    .data_in      (s13_axis_tdata                ), // Unaligned input data
-    .data_aligned (dac13_data_aligned            )  // Aligned output data
-  );
 
 endmodule

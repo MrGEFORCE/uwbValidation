@@ -72,15 +72,15 @@ create_clock -period 4.069 -name system_usp_rf_data_converter_0_0_dac1_clk [get_
 
 
 #AXI Streaming Clock for ADC0
-create_clock -period 4.069 -name system_usp_rf_data_converter_0_0_m0_axis_aclk [get_ports m0_axis_aclk]
+create_clock -period 6.510 -name system_usp_rf_data_converter_0_0_m0_axis_aclk [get_ports m0_axis_aclk]
 #AXI Streaming Clock for ADC1
-create_clock -period 4.069 -name system_usp_rf_data_converter_0_0_m1_axis_aclk [get_ports m1_axis_aclk]
+create_clock -period 6.510 -name system_usp_rf_data_converter_0_0_m1_axis_aclk [get_ports m1_axis_aclk]
 #AXI Streaming Clock for ADC2
-create_clock -period 4.069 -name system_usp_rf_data_converter_0_0_m2_axis_aclk [get_ports m2_axis_aclk]
+create_clock -period 6.510 -name system_usp_rf_data_converter_0_0_m2_axis_aclk [get_ports m2_axis_aclk]
 #AXI Streaming Clock for ADC3
-create_clock -period 4.069 -name system_usp_rf_data_converter_0_0_m3_axis_aclk [get_ports m3_axis_aclk]
+create_clock -period 6.510 -name system_usp_rf_data_converter_0_0_m3_axis_aclk [get_ports m3_axis_aclk]
 
 #AXI Streaming Clock for DAC0
-create_clock -period 4.069 -name system_usp_rf_data_converter_0_0_s0_axis_aclk [get_ports s0_axis_aclk]
+create_clock -period 6.510 -name system_usp_rf_data_converter_0_0_s0_axis_aclk [get_ports s0_axis_aclk]
 #AXI Streaming Clock for DAC1
-create_clock -period 4.069 -name system_usp_rf_data_converter_0_0_s1_axis_aclk [get_ports s1_axis_aclk]
+create_clock -period 6.510 -name system_usp_rf_data_converter_0_0_s1_axis_aclk [get_ports s1_axis_aclk]

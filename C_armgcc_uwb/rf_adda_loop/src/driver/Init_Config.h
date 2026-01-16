@@ -10,7 +10,7 @@
 //global varible
 extern spi_device spi_lmk04828;
 
-void RFSoc_Init();
-void LMK04828_Clock_Init();
+void RFSOC_Init();
+void LMK04828_CLOCK_Init();
 
 #endif

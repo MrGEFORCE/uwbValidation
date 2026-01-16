@@ -316,14 +316,6 @@ void udp_transmit(const char8 *ctrl1,uint32_t length)
 
 	memcpy(pbuf_to_be_sent->payload, (u8 *)ctrl1, length);
 
-//	uint32_t *src_ptr = (uint32_t*)ctrl1;
-//	uint8_t *dest_ptr = (uint8_t*)(pbuf_to_be_sent->payload);
-//	size_t word_count = length;
-//
-//	for(size_t i = 0; i < word_count; i++) {
-//		dest_ptr[i] = (uint8_t)(src_ptr[i] & 0xFF);
-//	}
-
 	err = udp_send(tpcb, pbuf_to_be_sent);
 	if (err != ERR_OK)
 	{
@@ -335,13 +327,88 @@ void udp_transmit(const char8 *ctrl1,uint32_t length)
 
 }
 
+void udp_transmit_ADC(const char8 *ctrl1,uint32_t length,int rxAnt)
+{
+	err_t err;
+	struct udp_pcb *tpcb = connected_pcb;
+
+	if (!tpcb)
+	{
+		xil_printf("error return\r\n");
+		return;
+	}
+    /*make sure the shortest data is 18 bytes(because shortest ip packet is 46 bytes)*/
+	if(length < 18)
+	{
+		pbuf_to_be_sent = pbuf_alloc(PBUF_TRANSPORT, 18, PBUF_POOL);
+		memset(pbuf_to_be_sent->payload, 0, 18);
+	}
+	else
+	{
+		pbuf_to_be_sent = pbuf_alloc(PBUF_TRANSPORT, length, PBUF_POOL);
+	}
+	if(rxAnt == 1)
+	{
+		for(uint16_t i = 0;i < length / 4 ;i++)
+		{
+			memcpy((uint8_t*)pbuf_to_be_sent->payload + i * 4, (u8 *)ctrl1+i*32 + 2,2);
+			memcpy((uint8_t*)pbuf_to_be_sent->payload + i * 4 + 2, (u8 *)ctrl1 + 6 + i * 32, 2);
+		}
+	}
+	else if(rxAnt == 2)
+	{
+		for(uint16_t i = 0;i < length / 8;i++)
+		{
+			memcpy((uint8_t*)pbuf_to_be_sent->payload + i * 8, (u8 *)ctrl1+ i * 32 + 2,2);
+			memcpy((uint8_t*)pbuf_to_be_sent->payload + i * 8 + 2, (u8 *)ctrl1 + i * 32 + 6, 2);
+			memcpy((uint8_t*)pbuf_to_be_sent->payload + i * 8 + 4, (u8 *)ctrl1 + i * 32 + 10, 2);
+			memcpy((uint8_t*)pbuf_to_be_sent->payload + i * 8 + 6, (u8 *)ctrl1 + i * 32 + 14, 2);
+		}
+	}
+
+	err = udp_send(tpcb, pbuf_to_be_sent);
+	if (err != ERR_OK)
+	{
+		xil_printf("Error on udp_send: %d\r\n", err);
+		pbuf_free(pbuf_to_be_sent);
+		return;
+	}
+	pbuf_free(pbuf_to_be_sent);
+}
+
+
 void udp_transmit_Large(const char8 *Addr,uint32_t Len)
 {
 	u32 Index = 0;
+//	u8 i;
 	while (ETH_MAX_SIZE + Index < Len) {
 		udp_transmit(Addr + Index, ETH_MAX_SIZE);
 		Index += ETH_MAX_SIZE;
+//		printf("%u,%u,%u,%u\r\n",i,Index,ETH_MAX_SIZE,Len);
+//		i++;
 	}
 	udp_transmit(Addr + Index, Len - Index);
+}
+
+
+void udp_transmit_Large_ADC(const char8 *Addr,uint32_t Len,int rxAnt)
+{
+	u32 Index = 0;
+	// 停止PL端数据写入，防止在传输过程中被覆盖
+//	AXI_REG_WRITE(0x80000000,16,0);
+	while (ETH_MAX_SIZE + Index < Len) {
+		if(rxAnt == 1)
+			udp_transmit_ADC(Addr + Index * 8, ETH_MAX_SIZE,rxAnt);
+		else if(rxAnt == 2)
+			udp_transmit_ADC(Addr + Index * 4, ETH_MAX_SIZE,rxAnt);
+		Index += ETH_MAX_SIZE;
+//		printf("%u,%u,%u,%u\r\n",i,Index,ETH_MAX_SIZE,Len);
+	}
+	if(rxAnt == 1)
+		udp_transmit_ADC(Addr + Index * 8, Len - Index,rxAnt);
+	else if(rxAnt == 2)
+		udp_transmit_ADC(Addr + Index * 4, Len - Index,rxAnt);
+	// 数据传输完成后重新启动PL端数据写入
+//	AXI_REG_WRITE(0x80000000,16,1);
 }
 

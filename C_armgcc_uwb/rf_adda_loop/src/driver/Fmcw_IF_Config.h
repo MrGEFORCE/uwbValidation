@@ -20,25 +20,27 @@
 #pragma pack(1)
 typedef struct {
     uint16_t start_magic_word[4];
-    uint16_t delay;
-    uint16_t tlv_nums;
+    uint8_t delay;
+    uint8_t tlv_nums;
     uint8_t  OuterClass;
     uint8_t  _;
     uint32_t data_len;
     uint16_t frame;
+    uint16_t placeholder;
+    uint32_t T;
+    uint32_t L;
 } header_t;
 
-typedef struct {
-	uint32_t T;
-	uint32_t L;
-}TL;
+//typedef struct {
+//	uint32_t T;
+//	uint32_t L;
+//}TL;
 
 
 #pragma pack ()
 
 
 extern volatile header_t header;
-extern volatile TL tl;
 extern volatile uint8_t SMP_Done_Flag;
 extern volatile struct FMCW_Parameter FMCW_Parameter;
 

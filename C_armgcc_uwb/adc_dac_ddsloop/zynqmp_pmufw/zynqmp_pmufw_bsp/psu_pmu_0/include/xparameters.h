@@ -712,14 +712,14 @@
 #define XPAR_PSU_USB_0_S_AXI_HIGHADDR 0xFF9DFFFF
 
 
-/* Peripheral Definitions for peripheral AXI_LITE_CTRL_DACFMCW_0 */
-#define XPAR_AXI_LITE_CTRL_DACFMCW_0_BASEADDR 0x80000000
-#define XPAR_AXI_LITE_CTRL_DACFMCW_0_HIGHADDR 0x8000FFFF
-
-
 /* Peripheral Definitions for peripheral AXI_LITE_CTRL_SPICON_0 */
 #define XPAR_AXI_LITE_CTRL_SPICON_0_S00_AXI_BASEADDR 0x80010000
 #define XPAR_AXI_LITE_CTRL_SPICON_0_S00_AXI_HIGHADDR 0x8001FFFF
+
+
+/* Peripheral Definitions for peripheral AXI_LITE_CTRL_DACFMCW_0 */
+#define XPAR_AXI_LITE_CTRL_DACFMCW_0_BASEADDR 0x80000000
+#define XPAR_AXI_LITE_CTRL_DACFMCW_0_HIGHADDR 0x8000FFFF
 
 
 /******************************************************************/
@@ -968,11 +968,11 @@
 
 
 
-
-
 /* Canonical Definitions for peripheral AXI_LITE_CTRL_SPICON_0 */
 #define XPAR_AXI_LITE_CTRL_SPICONTROL_0_S00_AXI_BASEADDR 0x80010000
 #define XPAR_AXI_LITE_CTRL_SPICONTROL_0_S00_AXI_HIGHADDR 0x8001FFFF
+
+
 
 
 /******************************************************************/

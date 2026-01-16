@@ -1,8 +1,8 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2022.2 (win64) Build 3671981 Fri Oct 14 05:00:03 MDT 2022
--- Date        : Tue Jun 17 09:57:50 2025
--- Host        : yang running 64-bit major release  (build 9200)
+-- Date        : Mon Jan  5 15:24:20 2026
+-- Host        : LAPTOP-0CVSEQS8 running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode synth_stub -rename_top system_auto_cc_0 -prefix
 --               system_auto_cc_0_ system_auto_cc_0_stub.vhdl
 -- Design      : system_auto_cc_0

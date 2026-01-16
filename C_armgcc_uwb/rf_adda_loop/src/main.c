@@ -12,6 +12,7 @@
 #include "math.h"
 #include "Fmcw_IF_Config.h"
 #include "Basic_Config.h"
+#include "xil_cache.h"
 
 #if LWIP_DHCP==1
 #include "lwip/dhcp.h"
@@ -39,11 +40,6 @@ extern volatile int TcpSlowTmrFlag;
 void platform_enable_interrupts(void);
 void start_application(void);
 void print_app_header(void);
-void udp_send_123_default(void)
-{
-	char test_data[] = "123456";
-	udp_transmit(test_data, strlen(test_data));
-}
 
 #if defined (__arm__) && !defined (ARMR5)
 #if XPAR_GIGE_PCS_PMA_SGMII_CORE_PRESENT == 1 || \
@@ -106,6 +102,8 @@ uint8_t FMCW_DDS_L = 32;
 
 int main(void)
 {
+	Xil_DCacheDisable();
+	Xil_ICacheDisable();
 	struct netif *netif;
 	/* the mac address of the board. this should be unique per board */
 	unsigned char mac_ethernet_address[] = {
@@ -161,19 +159,10 @@ int main(void)
 	/* start the application*/
 	start_application();
 	xil_printf("\r\n");
-	LMK04828_Clock_Init();
-	RFSoc_Init();
-//	udp_send_123_default();
+	LMK04828_CLOCK_Init();
+	RFSOC_Init();
 	while(1)
 	{
-//		if (TcpFastTmrFlag) {
-//			tcp_fasttmr();
-//			TcpFastTmrFlag = 0;
-//		}
-//		if (TcpSlowTmrFlag) {
-//			tcp_slowtmr();
-//			TcpSlowTmrFlag = 0;
-//		}
 		xemacif_input(netif);
 
 		output = Xil_In32(axi_lite_ctrl_SpiControl + 4 * 17) & 0x3;
@@ -202,7 +191,8 @@ int main(void)
 				}
 				if(flag == 4)
 				{
-					// 0-FMCW_R,1-FMCW_S,2-FMCW_N,3-FMCW_IDX(8)\FS_Div(8)\FS_Number(16),4-USER_RST_N,5-FMCW_Chirp_Cycle_us\FMCW_Chirp_Number,6-FMCW_Frame_Cycle_ms\FMCW_Adc_Delay_us,7-cal_delay_num
+					// 0-FMCW_R,1-FMCW_S,2-FMCW_N,3-FMCW_IDX(8)\FS_Div(8)\FS_Number(16),4-USER_RST_N,
+					// 5-FMCW_Chirp_Cycle_us\FMCW_Chirp_Number,6-FMCW_Frame_Cycle_ms\FMCW_Adc_Delay_us,7-cal_delay_num
 					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,16,0);
 					usleep(10000);
 					FMCW_R = (double)pow(2,FMCW_DDS_L) * (pro.cp.data.floatData.t.bandWidth_MHz * 1e12) / pro.cp.data.floatData.t.rampTime_us / FMCW_fc / FMCW_fc;
@@ -212,15 +202,17 @@ int main(void)
 					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,4,FMCW_S);
 					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,8,FMCW_N);
 					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,12,pro.cp.data.intData.t.antTDM + (pro.cp.data.intData.t.ADCPoints << 16) + (pro.sampleInterval << 8));
-					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,20,pro.cp.data.floatData.t.Tc_us + (pro.cp.data.intData.t.chirpLoops << 16) );
-					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,24,pro.cp.data.floatData.t.periodicity_ms * 1000 + ((uint16_t)(pro.cp.data.floatData.t.ADCDelay_us) << 16));
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,20,pro.cp.data.floatData.t.Tc_us + ((pro.cp.data.intData.t.chirpLoops * pro.cp.data.intData.t.antTDM) << 16) );
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,24,pro.cp.data.floatData.t.periodicity_ms + ((uint16_t)(pro.cp.data.floatData.t.ADCDelay_us) << 16));
+					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,28,pro.mixerDelay[0] + (pro.mixerDelay[1] << 16));
 					printf("FMCW_R:%u\r\n",FMCW_R);
 					printf("FMCW_S:%u\r\n",FMCW_S);
 					printf("FMCW_N:%u\r\n",FMCW_N);
-					printf("%u\r\n",(u32)(pro.cp.data.intData.t.antTDM + (pro.cp.data.intData.t.ADCPoints << 16) + (pro.sampleInterval << 8)));
-					printf("%u\r\n",(u32)(pro.cp.data.floatData.t.Tc_us + (pro.cp.data.intData.t.chirpLoops << 16)));
-					printf("%u\r\n",(u32)(pro.cp.data.floatData.t.periodicity_ms + ((uint16_t)(pro.cp.data.floatData.t.ADCDelay_us) << 16)));
-
+					printf("rxAnt:%u",pro.cp.data.intData.t.rx);
+					printf("antTDM:%u,ADCPoints:%u,sampleInterval:%u\r\n",(u32)(pro.cp.data.intData.t.antTDM),(u32)(pro.cp.data.intData.t.ADCPoints),(u32)(pro.sampleInterval));
+					printf("Tc_us:%u,chirpLoops:%u\r\n",(u32)(pro.cp.data.floatData.t.Tc_us),(u32)(pro.cp.data.intData.t.chirpLoops));
+					printf("periodicity_ms:%u,ADCDelay_us:%u\r\n",(u32)(pro.cp.data.floatData.t.periodicity_ms),(u32)(pro.cp.data.floatData.t.ADCDelay_us));
+					printf("SystemDelay1:%u,SystemDelay1:%u\r\n",pro.mixerDelay[0],pro.mixerDelay[1]);
 					usleep(100000);
 					AXI_REG_WRITE(axi_lite_ctrl_DacFMCW,16,1);
 					flag = 0;
@@ -240,10 +232,10 @@ int main(void)
 				BASE_ADDR = (char*)P_BASE1_DDR;
 			else
 				BASE_ADDR = (char*)P_BASE0_DDR;
-			printf("udp start\r\n");
-			//锟斤拷锟斤拷锟斤拷锟�
+			printf("udp Test\r\n");
+
 			Transer_Header();
-			udp_transmit_Large(BASE_ADDR, tl.L);
+			udp_transmit_Large_ADC(BASE_ADDR, header.L,pro.cp.data.intData.t.rx);
 			SMP_Done_Flag = 0;
 		}
 	}

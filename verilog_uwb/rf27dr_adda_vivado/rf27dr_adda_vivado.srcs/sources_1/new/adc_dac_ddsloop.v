@@ -65,84 +65,116 @@ module adc_dac_ddsloop(
     output wire     CSN1P8_TX,
     input  wire     MISO1P8_TX
 );
-
-    wire [1:0] control_in;
-    wire [1:0] control_out;
-    wire [16*32-1:0] data_in;
-
-    wire [63:0]     m00_axis_tdata;
+    //ps-pl-user
+    wire                data_clk               ;
+    wire                pl_clk                 ;
+    wire                pl_sysref              ;
+    wire                pl_reset_n             ;
+     
+    // SPI-Control
+    wire [1:0]          control_in             ;
+    wire [1:0]          control_out            ;
+    wire [16*32-1:0]    data_in                ;
+    
+    // mode-radar
+    wire                Chirp_clk              ;
+    wire [7:0]          FMCW_IDX               ;
+    wire [31:0]         FMCW_N                 ;
+    wire [31:0]         FMCW_R                 ;
+    wire [31:0]         FMCW_S                 ;
+    wire [31:0]         cal_delay_num          ;
+    
+    wire [127:0]    m00_axis_tdata;
     wire            m00_axis_tvalid;
-    wire [63:0]     m01_axis_tdata;
+    wire [127:0]    m01_axis_tdata;
     wire            m01_axis_tvalid;
-    wire [63:0]     m02_axis_tdata;
+    wire [127:0]    m02_axis_tdata;
     wire            m02_axis_tvalid;
-    wire [63:0]     m03_axis_tdata;
+    wire [127:0]    m03_axis_tdata;
     wire            m03_axis_tvalid;
-    wire [63:0]     m10_axis_tdata;
+    wire [127:0]    m10_axis_tdata;
     wire            m10_axis_tvalid;
-    wire [63:0]     m11_axis_tdata;
+    wire [127:0]    m11_axis_tdata;
     wire            m11_axis_tvalid;
-    wire [63:0]     m12_axis_tdata;
+    wire [127:0]    m12_axis_tdata;
     wire            m12_axis_tvalid;
-    wire [63:0]     m13_axis_tdata;
+    wire [127:0]    m13_axis_tdata;
     wire            m13_axis_tvalid;
-    wire [63:0]     m20_axis_tdata;
+    wire [127:0]    m20_axis_tdata;
     wire            m20_axis_tvalid;
-    wire [63:0]     m21_axis_tdata;
+    wire [127:0]    m21_axis_tdata;
     wire            m21_axis_tvalid;
-    wire [63:0]     m22_axis_tdata;
+    wire [127:0]    m22_axis_tdata;
     wire            m22_axis_tvalid;
-    wire [63:0]     m23_axis_tdata;
+    wire [127:0]    m23_axis_tdata;
     wire            m23_axis_tvalid;
-    wire [63:0]     m30_axis_tdata;
+    wire [127:0]    m30_axis_tdata;
     wire            m30_axis_tvalid;
-    wire [63:0]     m31_axis_tdata;
+    wire [127:0]    m31_axis_tdata;
     wire            m31_axis_tvalid;
-    wire [63:0]     m32_axis_tdata;
+    wire [127:0]    m32_axis_tdata;
     wire            m32_axis_tvalid;
-    wire [63:0]     m33_axis_tdata;
+    wire [127:0]    m33_axis_tdata;
     wire            m33_axis_tvalid;
     
-    wire [127:0]    s00_axis_tdata;
+    wire [255:0]    s00_axis_tdata;
     wire            s00_axis_tready;
-    wire [127:0]    s01_axis_tdata;
+    wire [255:0]    s01_axis_tdata;
     wire            s01_axis_tready;
-    wire [127:0]    s02_axis_tdata;
+    wire [255:0]    s02_axis_tdata;
     wire            s02_axis_tready;
-    wire [127:0]    s03_axis_tdata;
+    wire [255:0]    s03_axis_tdata;
     wire            s03_axis_tready;
-    wire [127:0]    s10_axis_tdata;
+    wire [255:0]    s10_axis_tdata;
     wire            s10_axis_tready;
-    wire [127:0]    s11_axis_tdata;
+    wire [255:0]    s11_axis_tdata;
     wire            s11_axis_tready;
-    wire [127:0]    s12_axis_tdata;
+    wire [255:0]    s12_axis_tdata;
     wire            s12_axis_tready;
-    wire [127:0]    s13_axis_tdata;
+    wire [255:0]    s13_axis_tdata;
     wire            s13_axis_tready;
 
-(*mark_debug="true"*)wire [127:0] dds_data;
+    wire [31:0]     mixed_datax_q_channel1;
+    wire [31:0]     mixed_datax_i_channel1;
+    wire [31:0]     mixed_datax_q_channel2;
+    wire [31:0]     mixed_datax_i_channel2;
+    wire [31:0]     mixed_datax_q_channel3;
+    wire [31:0]     mixed_datax_i_channel3;
+    wire [31:0]     mixed_datax_q_channel4;
+    wire [31:0]     mixed_datax_i_channel4;
+    wire [31:0]     mixed_datax_q_channel5;
+    wire [31:0]     mixed_datax_i_channel5;
+    wire [31:0]     mixed_datax_q_channel6;
+    wire [31:0]     mixed_datax_i_channel6;
+    wire [31:0]     mixed_datax_q_channel7;
+    wire [31:0]     mixed_datax_i_channel7;
+    wire [31:0]     mixed_datax_q_channel8;
+    wire [31:0]     mixed_datax_i_channel8;
+
 // Local Parameters derived from user selection
 localparam C_NUM_CHNL         = 8;
-(*mark_debug="true"*)wire [C_NUM_CHNL-1:0]     dac_tready;
-(*mark_debug="true"*)wire [C_NUM_CHNL*2-1:0]   adc_tvalid;
+localparam P_NUM_CHNL         = 8;
+
+wire [C_NUM_CHNL-1:0]     dac_tready;
+wire [C_NUM_CHNL*2-1:0]   adc_tvalid;
 /*********************************************************/
 //ADC result get
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch1;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch1;
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch2;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch2;
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch3;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch3;
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch4;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch4;
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch5;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch5;
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch6;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch6;
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch7;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch7;
-(*mark_debug="true"*)wire [15:0]adc_data_i_ch8;
-(*mark_debug="true"*)wire [15:0]adc_data_q_ch8;
+wire [15:0]adc_data_i_ch1;
+wire [15:0]adc_data_q_ch1;
+wire [15:0]adc_data_i_ch2;
+wire [15:0]adc_data_q_ch2;
+wire [15:0]adc_data_i_ch3;
+wire [15:0]adc_data_q_ch3;
+wire [15:0]adc_data_i_ch4;
+wire [15:0]adc_data_q_ch4;
+wire [15:0]adc_data_i_ch5;
+wire [15:0]adc_data_q_ch5;
+wire [15:0]adc_data_i_ch6;
+wire [15:0]adc_data_q_ch6;
+wire [15:0]adc_data_i_ch7;
+wire [15:0]adc_data_q_ch7;
+wire [15:0]adc_data_i_ch8;
+wire [15:0]adc_data_q_ch8;
 
 assign adc_data_i_ch1 = m00_axis_tdata[15:0];
 assign adc_data_q_ch1 = m01_axis_tdata[15:0];
@@ -160,55 +192,12 @@ assign adc_data_i_ch7 = m30_axis_tdata[15:0];
 assign adc_data_q_ch7 = m31_axis_tdata[15:0];
 assign adc_data_i_ch8 = m32_axis_tdata[15:0];
 assign adc_data_q_ch8 = m33_axis_tdata[15:0];
-//DAC output
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch1;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch1;
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch2;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch2;
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch3;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch3;
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch4;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch4;
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch5;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch5;
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch6;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch6;
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch7;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch7;
-(*mark_debug="true"*)wire [15:0]dac_data_i_ch8;
-(*mark_debug="true"*)wire [15:0]dac_data_q_ch8;
-
-assign dac_data_i_ch1 = s00_axis_tdata[15:0];
-assign dac_data_q_ch1 = s00_axis_tdata[31:16];
-assign dac_data_i_ch2 = s01_axis_tdata[15:0];
-assign dac_data_q_ch2 = s01_axis_tdata[31:16];
-assign dac_data_i_ch3 = s02_axis_tdata[15:0];
-assign dac_data_q_ch3 = s02_axis_tdata[31:16];
-assign dac_data_i_ch4 = s03_axis_tdata[15:0];
-assign dac_data_q_ch4 = s03_axis_tdata[31:16];
-assign dac_data_i_ch5 = s10_axis_tdata[15:0];
-assign dac_data_q_ch5 = s10_axis_tdata[31:16];
-assign dac_data_i_ch6 = s11_axis_tdata[15:0];
-assign dac_data_q_ch6 = s11_axis_tdata[31:16];
-assign dac_data_i_ch7 = s12_axis_tdata[15:0];
-assign dac_data_q_ch7 = s12_axis_tdata[31:16];
-assign dac_data_i_ch8 = s13_axis_tdata[15:0];
-assign dac_data_q_ch8 = s13_axis_tdata[31:16];
 /****************************************************************/
 
 assign adc_tvalid[ 3:0]  = {m03_axis_tvalid,m02_axis_tvalid,m01_axis_tvalid,m00_axis_tvalid};
 assign adc_tvalid[ 7:4]  = {m13_axis_tvalid,m12_axis_tvalid,m11_axis_tvalid,m10_axis_tvalid};
 assign adc_tvalid[11:8]  = {m23_axis_tvalid,m22_axis_tvalid,m21_axis_tvalid,m20_axis_tvalid};
 assign adc_tvalid[15:12] = {m33_axis_tvalid,m32_axis_tvalid,m31_axis_tvalid,m30_axis_tvalid};
-
-assign s00_axis_tdata =dds_data;
-assign s01_axis_tdata =dds_data;
-assign s02_axis_tdata =dds_data;
-assign s03_axis_tdata =dds_data;
-assign s10_axis_tdata =dds_data;
-assign s11_axis_tdata =dds_data;
-assign s12_axis_tdata =dds_data;
-assign s13_axis_tdata =dds_data;
 
 assign dac_tready[0] = s00_axis_tready;
 assign dac_tready[1] = s01_axis_tready;
@@ -219,13 +208,29 @@ assign dac_tready[5] = s11_axis_tready;
 assign dac_tready[6] = s12_axis_tready;
 assign dac_tready[7] = s13_axis_tready;
 
+wire [8*32-1:0]  dds_data;
+wire USER_RST_N;
 reg            user_sysref_adc;
 reg            user_sysref_dac;
-wire init_ready;
-wire reset_n_dds;
-wire [31:0]phase_inc;
-system system_i
+wire           init_ready;
+wire           reset_n_dds;
+wire           [31:0]phase_inc;
+
+system_wrapper system_wrapper_i
 (
+    // mode_radar
+    .Chirp_clk           (chirp_clk),
+    .FMCW_IDX            (FMCW_IDX),
+    .FMCW_N              (FMCW_N),
+    .FMCW_R              (FMCW_R),
+    .FMCW_S              (FMCW_S),
+    .cal_delay_num       (cal_delay_num),
+    .USER_RST_N          (USER_RST_N),
+    //ps-pl-user
+    .data_clk           (data_clk),
+    .lmk_sync           (lmk_sync),
+    .pl_resetn0         (pl_reset_n),
+    
     .adc0_clk_clk_n     (adc0_clk_n),
     .adc0_clk_clk_p     (adc0_clk_p),
     .adc1_clk_clk_n     (adc1_clk_n),
@@ -238,10 +243,6 @@ system system_i
     .dac0_clk_clk_p     (dac0_clk_p),   
     .dac1_clk_clk_n     (dac1_clk_n),
     .dac1_clk_clk_p     (dac1_clk_p),
-    
-    .data_clk           (data_clk),
-    .init_ready         (init_ready),
-    .lmk_sync           (lmk_sync),
     
     .m00_axis_tdata     (m00_axis_tdata),
     .m00_axis_tready    (1'b1),
@@ -291,10 +292,6 @@ system system_i
     .m33_axis_tdata     (m33_axis_tdata),
     .m33_axis_tready    (1'b1),
     .m33_axis_tvalid    (m33_axis_tvalid),
-    
-    .phase_inc          (phase_inc),     
-    .pl_resetn0         (fclk_reset0),
-    .reset_n_dds        (reset_n_dds),
     
     .s00_axis_tdata     (s00_axis_tdata),
     .s00_axis_tready    (s00_axis_tready),
@@ -359,9 +356,22 @@ system system_i
     .vout12_v_p         (vout12_p),
     .vout13_v_n         (vout13_n),
     .vout13_v_p         (vout13_p),
+    
+    // SPI RegControl
     .control_in         (control_in),
     .control_out        (control_out),
-    .data_in            (data_in)
+    .data_in            (data_in),
+    
+   // Mix_Data
+    .mixed_datax_q_channel1(mixed_datax_q_channel1),
+    .mixed_datax_i_channel1(mixed_datax_i_channel1),
+    .mixed_datax_q_channel2(mixed_datax_q_channel2),
+    .mixed_datax_i_channel2(mixed_datax_i_channel2),
+    .mixed_datax_q_channel3(mixed_datax_q_channel3),
+    .mixed_datax_i_channel3(mixed_datax_i_channel3),
+    .mixed_datax_q_channel4(mixed_datax_q_channel4),
+    .mixed_datax_i_channel4(mixed_datax_i_channel4)
+    
 );
 
 // Multi-tile sync logic
@@ -381,7 +391,7 @@ system system_i
     
    spi_driver u_spi_driver(
     .clk(pl_clk),
-    .rst_n(rst_n),
+    .rst_n(pl_reset_n),
     .control_in(control_in),
     .control_out(control_out),
     .data_in(data_in),
@@ -392,46 +402,70 @@ system system_i
     .MISO1P8_TX(MISO1P8_TX)
    );
    
-reg pl_sysref_reg;  
-always @(posedge pl_clk)pl_sysref_reg <= pl_sysref;
-always @(posedge pl_clk)user_sysref_adc <= pl_sysref_reg;
-always @(posedge pl_clk)user_sysref_dac <= pl_sysref_reg;
-//tx dds
-(*mark_debug="true"*)reg [63:0] phase_dds_in;
-(*mark_debug="true"*)reg [15:0] phase_inc_reg;
-always @ (posedge data_clk)begin
-    if(!reset_n_dds)begin
-        phase_inc_reg<=phase_inc;
-        phase_dds_in[16*0 +:16]<=16'd0;//point 1
-        phase_dds_in[16*1 +:16]<=phase_inc_reg;//point 2
-        phase_dds_in[16*2 +:16]<=phase_inc_reg+phase_inc_reg;//point 3
-        phase_dds_in[16*3 +:16]<=phase_inc_reg+phase_inc_reg+phase_inc_reg;//point 4 
-    end
-    else begin
-        phase_dds_in[16*0 +:16]<=phase_dds_in[16*0 +:16]+{phase_inc_reg,2'd0};//point 1
-        phase_dds_in[16*1 +:16]<=phase_dds_in[16*1 +:16]+{phase_inc_reg,2'd0};//point 2
-        phase_dds_in[16*2 +:16]<=phase_dds_in[16*2 +:16]+{phase_inc_reg,2'd0};//point 3
-        phase_dds_in[16*3 +:16]<=phase_dds_in[16*3 +:16]+{phase_inc_reg,2'd0};//point 4
-  end
-end
+   DacData_Mixing #
+    (
+        .PHASE_NUM              (P_NUM_CHNL       )
+    )
+   u_DacData_Mixing(
+        .data_clk               (data_clk         ),
+        .i_rst                  (~pl_reset_n      ),
+        .adc_tvalid             (adc_tvalid       ),
+        .dac_tready             (dac_tready       ),
+        //fmcw param
+        .chirp_clk              (chirp_clk        ),
+        .FMCW_R                 (FMCW_R           ),
+        .FMCW_S                 (FMCW_S           ),
+        .FMCW_N                 (FMCW_N           ),
+        .FMCW_IDX               (FMCW_IDX         ),
+        .cal_delay_num          (cal_delay_num    ),
+        //dac
+        .dac_datax_qi_channel1  (s00_axis_tdata   ),   
+        .dac_datax_qi_channel2  (s01_axis_tdata   ), 
+        .dac_datax_qi_channel3  (s02_axis_tdata   ),   
+        .dac_datax_qi_channel4  (s03_axis_tdata   ), 
+        .dac_datax_qi_channel5  (s10_axis_tdata   ),   
+        .dac_datax_qi_channel6  (s11_axis_tdata   ), 
+        .dac_datax_qi_channel7  (s12_axis_tdata   ),   
+        .dac_datax_qi_channel8  (s13_axis_tdata   ), 
+        //adc
+        .adc_datax_i_channel1   (m00_axis_tdata   ),
+        .adc_datax_q_channel1   (m01_axis_tdata   ),
+        .adc_datax_i_channel2   (m02_axis_tdata   ),
+        .adc_datax_q_channel2   (m03_axis_tdata   ),
+        .adc_datax_i_channel3   (m10_axis_tdata   ),
+        .adc_datax_q_channel3   (m11_axis_tdata   ),
+        .adc_datax_i_channel4   (m12_axis_tdata   ),
+        .adc_datax_q_channel4   (m13_axis_tdata   ),
+        .adc_datax_i_channel5   (m20_axis_tdata   ),
+        .adc_datax_q_channel5   (m21_axis_tdata   ),
+        .adc_datax_i_channel6   (m22_axis_tdata   ),
+        .adc_datax_q_channel6   (m23_axis_tdata   ),
+        .adc_datax_i_channel7   (m30_axis_tdata   ),
+        .adc_datax_q_channel7   (m31_axis_tdata   ),
+        .adc_datax_i_channel8   (m32_axis_tdata   ),
+        .adc_datax_q_channel8   (m33_axis_tdata   ),
+        //if 
+        .mixed_datax_q_channel1 (mixed_datax_q_channel1),
+        .mixed_datax_i_channel1 (mixed_datax_i_channel1),
+        .mixed_datax_q_channel2 (mixed_datax_q_channel2),
+        .mixed_datax_i_channel2 (mixed_datax_i_channel2),
+        .mixed_datax_q_channel3 (mixed_datax_q_channel3),
+        .mixed_datax_i_channel3 (mixed_datax_i_channel3),
+        .mixed_datax_q_channel4 (mixed_datax_q_channel4),
+        .mixed_datax_i_channel4 (mixed_datax_i_channel4),
+        .mixed_datax_q_channel5 (mixed_datax_q_channel5),
+        .mixed_datax_i_channel5 (mixed_datax_i_channel5),
+        .mixed_datax_q_channel6 (mixed_datax_q_channel6),
+        .mixed_datax_i_channel6 (mixed_datax_i_channel6),
+        .mixed_datax_q_channel7 (mixed_datax_q_channel7),
+        .mixed_datax_i_channel7 (mixed_datax_i_channel7),
+        .mixed_datax_q_channel8 (mixed_datax_q_channel8),
+        .mixed_datax_i_channel8 (mixed_datax_i_channel8)
+    );
 
-genvar ch;
-generate
-    for (ch = 0; ch < 4; ch = ch + 1) begin
-        dds_compiler_0 dds_compiler_0 
-        (
-            .aclk                 (data_clk            ),// input wire aclk
-            .aresetn              (reset_n_dds          ),// input wire aresetn
-            .s_axis_phase_tvalid  (1'b1                 ),// input wire s_axis_phase_tvalid
-            .s_axis_phase_tdata   (phase_dds_in[16*ch +:16] ),// input wire [7 : 0] s_axis_phase_tdata
-            .m_axis_data_tvalid   ( ),  // output wire m_axis_data_tvalid
-            .m_axis_data_tdata    (dds_data[32*ch +:32])// output wire [31 : 0] m_axis_data_tdata
-        );
-    end
-endgenerate
-//led
-//assign led[0]=1'b0;
-//assign led[1]=1'b0;
-//assign led[2]=init_ready;
+    reg pl_sysref_reg;  
+    always @(posedge pl_clk)pl_sysref_reg <= pl_sysref;
+    always @(posedge pl_clk)user_sysref_adc <= pl_sysref_reg;
+    always @(posedge pl_clk)user_sysref_dac <= pl_sysref_reg;
 
 endmodule

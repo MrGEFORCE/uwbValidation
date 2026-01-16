@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2025 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2026 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -166,7 +166,7 @@ void system_auto_cc_0::before_end_of_elaboration()
   // 'M_AXI' transactor parameters
     xsc::common_cpp::properties M_AXI_transactor_param_props;
     M_AXI_transactor_param_props.addLong("DATA_WIDTH", "32");
-    M_AXI_transactor_param_props.addLong("FREQ_HZ", "245760000");
+    M_AXI_transactor_param_props.addLong("FREQ_HZ", "153600000");
     M_AXI_transactor_param_props.addLong("ID_WIDTH", "0");
     M_AXI_transactor_param_props.addLong("ADDR_WIDTH", "6");
     M_AXI_transactor_param_props.addLong("AWUSER_WIDTH", "0");
@@ -196,7 +196,7 @@ void system_auto_cc_0::before_end_of_elaboration()
     M_AXI_transactor_param_props.addFloat("PHASE", "0.0");
     M_AXI_transactor_param_props.addString("PROTOCOL", "AXI4LITE");
     M_AXI_transactor_param_props.addString("READ_WRITE_MODE", "READ_WRITE");
-    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "system_usp_rf_data_converter_0_0_clk_adc0");
+    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "/clk_wiz_0_clk_out1");
 
     mp_M_AXI_transactor = new xtlm::xaximm_xtlm2pin_t<32,6,1,1,1,1,1,1>("M_AXI_transactor", M_AXI_transactor_param_props);
 
@@ -347,7 +347,7 @@ void system_auto_cc_0::before_end_of_elaboration()
   // 'M_AXI' transactor parameters
     xsc::common_cpp::properties M_AXI_transactor_param_props;
     M_AXI_transactor_param_props.addLong("DATA_WIDTH", "32");
-    M_AXI_transactor_param_props.addLong("FREQ_HZ", "245760000");
+    M_AXI_transactor_param_props.addLong("FREQ_HZ", "153600000");
     M_AXI_transactor_param_props.addLong("ID_WIDTH", "0");
     M_AXI_transactor_param_props.addLong("ADDR_WIDTH", "6");
     M_AXI_transactor_param_props.addLong("AWUSER_WIDTH", "0");
@@ -377,7 +377,7 @@ void system_auto_cc_0::before_end_of_elaboration()
     M_AXI_transactor_param_props.addFloat("PHASE", "0.0");
     M_AXI_transactor_param_props.addString("PROTOCOL", "AXI4LITE");
     M_AXI_transactor_param_props.addString("READ_WRITE_MODE", "READ_WRITE");
-    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "system_usp_rf_data_converter_0_0_clk_adc0");
+    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "/clk_wiz_0_clk_out1");
 
     mp_M_AXI_transactor = new xtlm::xaximm_xtlm2pin_t<32,6,1,1,1,1,1,1>("M_AXI_transactor", M_AXI_transactor_param_props);
 
@@ -528,7 +528,7 @@ void system_auto_cc_0::before_end_of_elaboration()
   // 'M_AXI' transactor parameters
     xsc::common_cpp::properties M_AXI_transactor_param_props;
     M_AXI_transactor_param_props.addLong("DATA_WIDTH", "32");
-    M_AXI_transactor_param_props.addLong("FREQ_HZ", "245760000");
+    M_AXI_transactor_param_props.addLong("FREQ_HZ", "153600000");
     M_AXI_transactor_param_props.addLong("ID_WIDTH", "0");
     M_AXI_transactor_param_props.addLong("ADDR_WIDTH", "6");
     M_AXI_transactor_param_props.addLong("AWUSER_WIDTH", "0");
@@ -558,7 +558,7 @@ void system_auto_cc_0::before_end_of_elaboration()
     M_AXI_transactor_param_props.addFloat("PHASE", "0.0");
     M_AXI_transactor_param_props.addString("PROTOCOL", "AXI4LITE");
     M_AXI_transactor_param_props.addString("READ_WRITE_MODE", "READ_WRITE");
-    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "system_usp_rf_data_converter_0_0_clk_adc0");
+    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "/clk_wiz_0_clk_out1");
 
     mp_M_AXI_transactor = new xtlm::xaximm_xtlm2pin_t<32,6,1,1,1,1,1,1>("M_AXI_transactor", M_AXI_transactor_param_props);
 
@@ -679,7 +679,7 @@ system_auto_cc_0::system_auto_cc_0(const sc_core::sc_module_name& nm) : system_a
   // configure M_AXI_transactor
     xsc::common_cpp::properties M_AXI_transactor_param_props;
     M_AXI_transactor_param_props.addLong("DATA_WIDTH", "32");
-    M_AXI_transactor_param_props.addLong("FREQ_HZ", "245760000");
+    M_AXI_transactor_param_props.addLong("FREQ_HZ", "153600000");
     M_AXI_transactor_param_props.addLong("ID_WIDTH", "0");
     M_AXI_transactor_param_props.addLong("ADDR_WIDTH", "6");
     M_AXI_transactor_param_props.addLong("AWUSER_WIDTH", "0");
@@ -709,7 +709,7 @@ system_auto_cc_0::system_auto_cc_0(const sc_core::sc_module_name& nm) : system_a
     M_AXI_transactor_param_props.addFloat("PHASE", "0.0");
     M_AXI_transactor_param_props.addString("PROTOCOL", "AXI4LITE");
     M_AXI_transactor_param_props.addString("READ_WRITE_MODE", "READ_WRITE");
-    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "system_usp_rf_data_converter_0_0_clk_adc0");
+    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "/clk_wiz_0_clk_out1");
 
     mp_M_AXI_transactor = new xtlm::xaximm_xtlm2pin_t<32,6,1,1,1,1,1,1>("M_AXI_transactor", M_AXI_transactor_param_props);
   mp_M_AXI_transactor->AWADDR(m_axi_awaddr);
@@ -860,7 +860,7 @@ system_auto_cc_0::system_auto_cc_0(const sc_core::sc_module_name& nm) : system_a
   // configure M_AXI_transactor
     xsc::common_cpp::properties M_AXI_transactor_param_props;
     M_AXI_transactor_param_props.addLong("DATA_WIDTH", "32");
-    M_AXI_transactor_param_props.addLong("FREQ_HZ", "245760000");
+    M_AXI_transactor_param_props.addLong("FREQ_HZ", "153600000");
     M_AXI_transactor_param_props.addLong("ID_WIDTH", "0");
     M_AXI_transactor_param_props.addLong("ADDR_WIDTH", "6");
     M_AXI_transactor_param_props.addLong("AWUSER_WIDTH", "0");
@@ -890,7 +890,7 @@ system_auto_cc_0::system_auto_cc_0(const sc_core::sc_module_name& nm) : system_a
     M_AXI_transactor_param_props.addFloat("PHASE", "0.0");
     M_AXI_transactor_param_props.addString("PROTOCOL", "AXI4LITE");
     M_AXI_transactor_param_props.addString("READ_WRITE_MODE", "READ_WRITE");
-    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "system_usp_rf_data_converter_0_0_clk_adc0");
+    M_AXI_transactor_param_props.addString("CLK_DOMAIN", "/clk_wiz_0_clk_out1");
 
     mp_M_AXI_transactor = new xtlm::xaximm_xtlm2pin_t<32,6,1,1,1,1,1,1>("M_AXI_transactor", M_AXI_transactor_param_props);
   mp_M_AXI_transactor->AWADDR(m_axi_awaddr);

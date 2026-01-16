@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2025 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2026 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -106,11 +106,49 @@ module system_zynq_ultra_ps_e_0_0 (
   output bit_as_bool maxigp2_rready,
   output bit [3 : 0] maxigp2_awqos,
   output bit [3 : 0] maxigp2_arqos,
+  input bit_as_bool saxihp1_fpd_aclk,
+  input bit_as_bool saxigp3_aruser,
+  input bit_as_bool saxigp3_awuser,
+  input bit [5 : 0] saxigp3_awid,
+  input bit [48 : 0] saxigp3_awaddr,
+  input bit [7 : 0] saxigp3_awlen,
+  input bit [2 : 0] saxigp3_awsize,
+  input bit [1 : 0] saxigp3_awburst,
+  input bit_as_bool saxigp3_awlock,
+  input bit [3 : 0] saxigp3_awcache,
+  input bit [2 : 0] saxigp3_awprot,
+  input bit_as_bool saxigp3_awvalid,
+  output bit_as_bool saxigp3_awready,
+  input bit [127 : 0] saxigp3_wdata,
+  input bit [15 : 0] saxigp3_wstrb,
+  input bit_as_bool saxigp3_wlast,
+  input bit_as_bool saxigp3_wvalid,
+  output bit_as_bool saxigp3_wready,
+  output bit [5 : 0] saxigp3_bid,
+  output bit [1 : 0] saxigp3_bresp,
+  output bit_as_bool saxigp3_bvalid,
+  input bit_as_bool saxigp3_bready,
+  input bit [5 : 0] saxigp3_arid,
+  input bit [48 : 0] saxigp3_araddr,
+  input bit [7 : 0] saxigp3_arlen,
+  input bit [2 : 0] saxigp3_arsize,
+  input bit [1 : 0] saxigp3_arburst,
+  input bit_as_bool saxigp3_arlock,
+  input bit [3 : 0] saxigp3_arcache,
+  input bit [2 : 0] saxigp3_arprot,
+  input bit_as_bool saxigp3_arvalid,
+  output bit_as_bool saxigp3_arready,
+  output bit [5 : 0] saxigp3_rid,
+  output bit [127 : 0] saxigp3_rdata,
+  output bit [1 : 0] saxigp3_rresp,
+  output bit_as_bool saxigp3_rlast,
+  output bit_as_bool saxigp3_rvalid,
+  input bit_as_bool saxigp3_rready,
+  input bit [3 : 0] saxigp3_awqos,
+  input bit [3 : 0] saxigp3_arqos,
   input bit [0 : 0] emio_gpio_i,
   output bit [0 : 0] emio_gpio_o,
   output bit [0 : 0] emio_gpio_t,
-  output bit_as_bool emio_uart1_txd,
-  input bit_as_bool emio_uart1_rxd,
   input bit [0 : 0] pl_ps_irq0,
   output bit_as_bool pl_resetn0,
   output bit_as_bool pl_clk0
@@ -120,7 +158,7 @@ endmodule
 
 `ifdef XCELIUM
 (* XMSC_MODULE_EXPORT *)
-module system_zynq_ultra_ps_e_0_0 (maxihpm0_lpd_aclk,maxigp2_awid,maxigp2_awaddr,maxigp2_awlen,maxigp2_awsize,maxigp2_awburst,maxigp2_awlock,maxigp2_awcache,maxigp2_awprot,maxigp2_awvalid,maxigp2_awuser,maxigp2_awready,maxigp2_wdata,maxigp2_wstrb,maxigp2_wlast,maxigp2_wvalid,maxigp2_wready,maxigp2_bid,maxigp2_bresp,maxigp2_bvalid,maxigp2_bready,maxigp2_arid,maxigp2_araddr,maxigp2_arlen,maxigp2_arsize,maxigp2_arburst,maxigp2_arlock,maxigp2_arcache,maxigp2_arprot,maxigp2_arvalid,maxigp2_aruser,maxigp2_arready,maxigp2_rid,maxigp2_rdata,maxigp2_rresp,maxigp2_rlast,maxigp2_rvalid,maxigp2_rready,maxigp2_awqos,maxigp2_arqos,emio_gpio_i,emio_gpio_o,emio_gpio_t,emio_uart1_txd,emio_uart1_rxd,pl_ps_irq0,pl_resetn0,pl_clk0)
+module system_zynq_ultra_ps_e_0_0 (maxihpm0_lpd_aclk,maxigp2_awid,maxigp2_awaddr,maxigp2_awlen,maxigp2_awsize,maxigp2_awburst,maxigp2_awlock,maxigp2_awcache,maxigp2_awprot,maxigp2_awvalid,maxigp2_awuser,maxigp2_awready,maxigp2_wdata,maxigp2_wstrb,maxigp2_wlast,maxigp2_wvalid,maxigp2_wready,maxigp2_bid,maxigp2_bresp,maxigp2_bvalid,maxigp2_bready,maxigp2_arid,maxigp2_araddr,maxigp2_arlen,maxigp2_arsize,maxigp2_arburst,maxigp2_arlock,maxigp2_arcache,maxigp2_arprot,maxigp2_arvalid,maxigp2_aruser,maxigp2_arready,maxigp2_rid,maxigp2_rdata,maxigp2_rresp,maxigp2_rlast,maxigp2_rvalid,maxigp2_rready,maxigp2_awqos,maxigp2_arqos,saxihp1_fpd_aclk,saxigp3_aruser,saxigp3_awuser,saxigp3_awid,saxigp3_awaddr,saxigp3_awlen,saxigp3_awsize,saxigp3_awburst,saxigp3_awlock,saxigp3_awcache,saxigp3_awprot,saxigp3_awvalid,saxigp3_awready,saxigp3_wdata,saxigp3_wstrb,saxigp3_wlast,saxigp3_wvalid,saxigp3_wready,saxigp3_bid,saxigp3_bresp,saxigp3_bvalid,saxigp3_bready,saxigp3_arid,saxigp3_araddr,saxigp3_arlen,saxigp3_arsize,saxigp3_arburst,saxigp3_arlock,saxigp3_arcache,saxigp3_arprot,saxigp3_arvalid,saxigp3_arready,saxigp3_rid,saxigp3_rdata,saxigp3_rresp,saxigp3_rlast,saxigp3_rvalid,saxigp3_rready,saxigp3_awqos,saxigp3_arqos,emio_gpio_i,emio_gpio_o,emio_gpio_t,pl_ps_irq0,pl_resetn0,pl_clk0)
 (* integer foreign = "SystemC";
 *);
   input bit maxihpm0_lpd_aclk;
@@ -163,11 +201,49 @@ module system_zynq_ultra_ps_e_0_0 (maxihpm0_lpd_aclk,maxigp2_awid,maxigp2_awaddr
   output wire maxigp2_rready;
   output wire [3 : 0] maxigp2_awqos;
   output wire [3 : 0] maxigp2_arqos;
+  input bit saxihp1_fpd_aclk;
+  input bit saxigp3_aruser;
+  input bit saxigp3_awuser;
+  input bit [5 : 0] saxigp3_awid;
+  input bit [48 : 0] saxigp3_awaddr;
+  input bit [7 : 0] saxigp3_awlen;
+  input bit [2 : 0] saxigp3_awsize;
+  input bit [1 : 0] saxigp3_awburst;
+  input bit saxigp3_awlock;
+  input bit [3 : 0] saxigp3_awcache;
+  input bit [2 : 0] saxigp3_awprot;
+  input bit saxigp3_awvalid;
+  output wire saxigp3_awready;
+  input bit [127 : 0] saxigp3_wdata;
+  input bit [15 : 0] saxigp3_wstrb;
+  input bit saxigp3_wlast;
+  input bit saxigp3_wvalid;
+  output wire saxigp3_wready;
+  output wire [5 : 0] saxigp3_bid;
+  output wire [1 : 0] saxigp3_bresp;
+  output wire saxigp3_bvalid;
+  input bit saxigp3_bready;
+  input bit [5 : 0] saxigp3_arid;
+  input bit [48 : 0] saxigp3_araddr;
+  input bit [7 : 0] saxigp3_arlen;
+  input bit [2 : 0] saxigp3_arsize;
+  input bit [1 : 0] saxigp3_arburst;
+  input bit saxigp3_arlock;
+  input bit [3 : 0] saxigp3_arcache;
+  input bit [2 : 0] saxigp3_arprot;
+  input bit saxigp3_arvalid;
+  output wire saxigp3_arready;
+  output wire [5 : 0] saxigp3_rid;
+  output wire [127 : 0] saxigp3_rdata;
+  output wire [1 : 0] saxigp3_rresp;
+  output wire saxigp3_rlast;
+  output wire saxigp3_rvalid;
+  input bit saxigp3_rready;
+  input bit [3 : 0] saxigp3_awqos;
+  input bit [3 : 0] saxigp3_arqos;
   input bit [0 : 0] emio_gpio_i;
   output wire [0 : 0] emio_gpio_o;
   output wire [0 : 0] emio_gpio_t;
-  output wire emio_uart1_txd;
-  input bit emio_uart1_rxd;
   input bit [0 : 0] pl_ps_irq0;
   output wire pl_resetn0;
   output wire pl_clk0;

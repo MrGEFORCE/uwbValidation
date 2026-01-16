@@ -859,10 +859,6 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
   reg                             por_sm_reset;
 
 
-  wire [1:0] dac_fifo_en;
-  wire [1:0] dac_mt_common_ctrl;
-  wire [3:0] adc_fifo_en;
-  wire [3:0] adc_mt_common_ctrl;
 
   assign clk_dac0     = clk_dac[0];
   assign clk_dac1     = clk_dac[1];
@@ -873,8 +869,6 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
   assign dac_drpaddr      = {dac1_drp_addr, dac0_drp_addr};
   assign dac_drpdi        = {dac1_drpdi, dac0_drpdi};
   assign dac_common_ctrl  = {dac1_done_sync, dac0_done_sync};
-  assign dac_mt_common_ctrl[0]  = dac0_done_sync;
-  assign dac_mt_common_ctrl[1]  = dac1_done_sync;
 
   // Synchronize common control bus onto the fabric clock for input
   // to the common control bus of the converters
@@ -940,14 +934,14 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
   assign data_dac2    = {dac12_data_in, dac02_data_in};
   // Data from Slice 3 in all Tiles
   assign data_dac3    = {dac13_data_in, dac03_data_in};
-  assign dac00_ready_out = dac_fifo_en[0];
-  assign dac01_ready_out = dac_fifo_en[0];
-  assign dac02_ready_out = dac_fifo_en[0];
-  assign dac03_ready_out = dac_fifo_en[0];
-  assign dac10_ready_out = dac_fifo_en[1];
-  assign dac11_ready_out = dac_fifo_en[1];
-  assign dac12_ready_out = dac_fifo_en[1];
-  assign dac13_ready_out = dac_fifo_en[1];
+  assign dac00_ready_out = dac0_done_sync;
+  assign dac01_ready_out = dac0_done_sync;
+  assign dac02_ready_out = dac0_done_sync;
+  assign dac03_ready_out = dac0_done_sync;
+  assign dac10_ready_out = dac1_done_sync;
+  assign dac11_ready_out = dac1_done_sync;
+  assign dac12_ready_out = dac1_done_sync;
+  assign dac13_ready_out = dac1_done_sync;
 
   // Assign ADC signals
   assign adc_drpen       = {adc3_drp_en_i, adc2_drp_en_i, adc1_drp_en_i, adc0_drp_en_i};
@@ -955,10 +949,6 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
   assign adc_drpaddr     = {adc3_drp_addr, adc2_drp_addr, adc1_drp_addr, adc0_drp_addr};
   assign adc_drpdi       = {adc3_drpdi, adc2_drpdi, adc1_drpdi, adc0_drpdi};
   assign adc_common_ctrl = {adc3_done_sync, adc2_done_sync, adc1_done_sync, adc0_done_sync};
-  assign adc_mt_common_ctrl[0]  = adc0_done_sync;
-  assign adc_mt_common_ctrl[1]  = adc1_done_sync;
-  assign adc_mt_common_ctrl[2]  = adc2_done_sync;
-  assign adc_mt_common_ctrl[3]  = adc3_done_sync;
 
   // Synchronize common control bus onto the fabric clock for input
   // to the common control bus of the converters
@@ -1089,22 +1079,22 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
   assign adc32_data_out  = data_adc2[511 :384];
   assign adc33_data_out  = data_adc3[511 :384];
 
-  assign adc00_valid_out = adc_fifo_en[0];
-  assign adc01_valid_out = adc_fifo_en[0];
-  assign adc02_valid_out = adc_fifo_en[0];
-  assign adc03_valid_out = adc_fifo_en[0];
-  assign adc10_valid_out = adc_fifo_en[1];
-  assign adc11_valid_out = adc_fifo_en[1];
-  assign adc12_valid_out = adc_fifo_en[1];
-  assign adc13_valid_out = adc_fifo_en[1];
-  assign adc20_valid_out = adc_fifo_en[2];
-  assign adc21_valid_out = adc_fifo_en[2];
-  assign adc22_valid_out = adc_fifo_en[2];
-  assign adc23_valid_out = adc_fifo_en[2];
-  assign adc30_valid_out = adc_fifo_en[3];
-  assign adc31_valid_out = adc_fifo_en[3];
-  assign adc32_valid_out = adc_fifo_en[3];
-  assign adc33_valid_out = adc_fifo_en[3];
+  assign adc00_valid_out = adc0_done_sync;
+  assign adc01_valid_out = adc0_done_sync;
+  assign adc02_valid_out = adc0_done_sync;
+  assign adc03_valid_out = adc0_done_sync;
+  assign adc10_valid_out = adc1_done_sync;
+  assign adc11_valid_out = adc1_done_sync;
+  assign adc12_valid_out = adc1_done_sync;
+  assign adc13_valid_out = adc1_done_sync;
+  assign adc20_valid_out = adc2_done_sync;
+  assign adc21_valid_out = adc2_done_sync;
+  assign adc22_valid_out = adc2_done_sync;
+  assign adc23_valid_out = adc2_done_sync;
+  assign adc30_valid_out = adc3_done_sync;
+  assign adc31_valid_out = adc3_done_sync;
+  assign adc32_valid_out = adc3_done_sync;
+  assign adc33_valid_out = adc3_done_sync;
 
   assign adc00_stat = adc0_stat[15:0];
   assign adc01_stat = adc1_stat[15:0];
@@ -1587,40 +1577,16 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
     por_sm_reset <= por_sm_reset_i;
   end
 
-  system_usp_rf_data_converter_0_0_mt_fifo_ctrl #(
-    .MTS_NUM_TILES(2)
-  )
-  i_fifo_ctrl_dac(
-    .ip_startup_done  (dac_mt_common_ctrl),
-    .clk              (dac_fabric_clk[0] ),
-    .mts_fifo_en      (mt_dac_fifo_en    ),
-    .mts_fifo_src     (mt_dac_fifo_src   ),
-    .reset_b          (1'b1              ), // TODO - do we need a reset?
-    .fifo_en          (dac_fifo_en       )
-  );
-
-  system_usp_rf_data_converter_0_0_mt_fifo_ctrl #(
-    .MTS_NUM_TILES(4)
-  )
-  i_fifo_ctrl_adc(
-    .ip_startup_done  (adc_mt_common_ctrl),
-    .clk              (adc_fabric_clk[0] ),
-    .mts_fifo_en      (mt_adc_fifo_en    ),
-    .mts_fifo_src     (mt_adc_fifo_src   ),
-    .reset_b          (1'b1              ), // TODO - do we need a reset?
-    .fifo_en          (adc_fifo_en       )
-  );
-
   HSDAC #(
     .SIM_DEVICE           ("ULTRASCALE_PLUS"),
-    .XPA_SAMPLE_RATE_MSPS (3932.1600000000003),
+    .XPA_SAMPLE_RATE_MSPS (2457.6),
     .XPA_NUM_DACS         (4),
     .XPA_PLL_USED         ("Yes"),
     .XPA_NUM_DUCS         (4),
     .XPA_CFG0             (1),
     .XPA_CFG1             (1)
   ) tx0_u_dac (
-    .CONTROL_COMMON     ( {dac_fifo_en[0], dac0_cmn_control[14:0]} ),  // input  [15:0]
+    .CONTROL_COMMON     ( {dac_common_ctrl[0], dac0_cmn_control[14:0]} ),  // input  [15:0]
     .CONTROL_DAC0       ( dac00_control ),                // input  [15:0]
     .CONTROL_DAC1       ( dac01_control ),                // input  [15:0]
     .CONTROL_DAC2       ( dac02_control ),                // input  [15:0]
@@ -1676,14 +1642,14 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
 
   HSDAC #(
     .SIM_DEVICE           ("ULTRASCALE_PLUS"),
-    .XPA_SAMPLE_RATE_MSPS (3932.1600000000003),
+    .XPA_SAMPLE_RATE_MSPS (2457.6),
     .XPA_NUM_DACS         (4),
     .XPA_PLL_USED         ("Yes"),
     .XPA_NUM_DUCS         (4),
     .XPA_CFG0             (1),
     .XPA_CFG1             (1)
   ) tx1_u_dac (
-    .CONTROL_COMMON     ( {dac_fifo_en[1], dac1_cmn_control[14:0]} ),  // input  [15:0]
+    .CONTROL_COMMON     ( {dac_common_ctrl[1], dac1_cmn_control[14:0]} ),  // input  [15:0]
     .CONTROL_DAC0       ( dac10_control ),                // input  [15:0]
     .CONTROL_DAC1       ( dac11_control ),                // input  [15:0]
     .CONTROL_DAC2       ( dac12_control ),                // input  [15:0]
@@ -1739,14 +1705,14 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
 
   HSADC #(
     .SIM_DEVICE           ("ULTRASCALE_PLUS"),
-    .XPA_SAMPLE_RATE_MSPS (3932.1600000000003),
+    .XPA_SAMPLE_RATE_MSPS (2457.6),
     .XPA_NUM_ADCS         ("2I"),
     .XPA_PLL_USED         ("Yes"),
     .XPA_NUM_DDCS         (2),
     .XPA_CFG0             (1),
     .XPA_CFG1             (1)
   ) rx0_u_adc (
-    .CONTROL_COMMON       ( {adc_fifo_en[0], adc0_cmn_control[14:0]} ),   // input  [15:0]
+    .CONTROL_COMMON       ( {adc_common_ctrl[0], adc0_cmn_control[14:0]} ),   // input  [15:0]
     .CONTROL_ADC0         ( adc00_control ),                         // input  [15:0]
     .CONTROL_ADC1         ( adc01_control ),                         // input  [15:0]
     .CONTROL_ADC2         ( adc02_control ),                         // input  [15:0]
@@ -1810,14 +1776,14 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
 
   HSADC #(
     .SIM_DEVICE           ("ULTRASCALE_PLUS"),
-    .XPA_SAMPLE_RATE_MSPS (3932.1600000000003),
+    .XPA_SAMPLE_RATE_MSPS (2457.6),
     .XPA_NUM_ADCS         ("2I"),
     .XPA_PLL_USED         ("Yes"),
     .XPA_NUM_DDCS         (2),
     .XPA_CFG0             (1),
     .XPA_CFG1             (1)
   ) rx1_u_adc (
-    .CONTROL_COMMON       ( {adc_fifo_en[1], adc1_cmn_control[14:0]} ),   // input  [15:0]
+    .CONTROL_COMMON       ( {adc_common_ctrl[1], adc1_cmn_control[14:0]} ),   // input  [15:0]
     .CONTROL_ADC0         ( adc10_control ),                         // input  [15:0]
     .CONTROL_ADC1         ( adc11_control ),                         // input  [15:0]
     .CONTROL_ADC2         ( adc12_control ),                         // input  [15:0]
@@ -1881,14 +1847,14 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
 
   HSADC #(
     .SIM_DEVICE           ("ULTRASCALE_PLUS"),
-    .XPA_SAMPLE_RATE_MSPS (3932.1600000000003),
+    .XPA_SAMPLE_RATE_MSPS (2457.6),
     .XPA_NUM_ADCS         ("2I"),
     .XPA_PLL_USED         ("Yes"),
     .XPA_NUM_DDCS         (2),
     .XPA_CFG0             (1),
     .XPA_CFG1             (1)
   ) rx2_u_adc (
-    .CONTROL_COMMON       ( {adc_fifo_en[2], adc2_cmn_control[14:0]} ),   // input  [15:0]
+    .CONTROL_COMMON       ( {adc_common_ctrl[2], adc2_cmn_control[14:0]} ),   // input  [15:0]
     .CONTROL_ADC0         ( adc20_control ),                         // input  [15:0]
     .CONTROL_ADC1         ( adc21_control ),                         // input  [15:0]
     .CONTROL_ADC2         ( adc22_control ),                         // input  [15:0]
@@ -1952,14 +1918,14 @@ module system_usp_rf_data_converter_0_0_rf_wrapper (
 
   HSADC #(
     .SIM_DEVICE           ("ULTRASCALE_PLUS"),
-    .XPA_SAMPLE_RATE_MSPS (3932.1600000000003),
+    .XPA_SAMPLE_RATE_MSPS (2457.6),
     .XPA_NUM_ADCS         ("2I"),
     .XPA_PLL_USED         ("Yes"),
     .XPA_NUM_DDCS         (2),
     .XPA_CFG0             (1),
     .XPA_CFG1             (1)
   ) rx3_u_adc (
-    .CONTROL_COMMON       ( {adc_fifo_en[3], adc3_cmn_control[14:0]} ),   // input  [15:0]
+    .CONTROL_COMMON       ( {adc_common_ctrl[3], adc3_cmn_control[14:0]} ),   // input  [15:0]
     .CONTROL_ADC0         ( adc30_control ),                         // input  [15:0]
     .CONTROL_ADC1         ( adc31_control ),                         // input  [15:0]
     .CONTROL_ADC2         ( adc32_control ),                         // input  [15:0]
