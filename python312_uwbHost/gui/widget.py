@@ -1,10 +1,10 @@
-import functools
 import os
 import sys
 import time
 import copy
 import struct
 import platform
+import functools
 import numpy as np
 import pyqtgraph as pg
 
@@ -63,8 +63,10 @@ class Widget(QWidget):
         self.plotWidget_interSpec.addItem(self.interMark)
 
         # debug
-        self.plotWidget_IF, self.plotDataItem_IF = graph.init_plot(self.ui.verticalLayout_IF)
-        graph.init_plot_axis(self.plotWidget_IF)
+        self.plotWidget_IF1, self.plotDataItem_IF1 = graph.init_plot(self.ui.verticalLayout_IF1)
+        graph.init_plot_axis(self.plotWidget_IF1)
+        self.plotWidget_IF2, self.plotDataItem_IF2 = graph.init_plot(self.ui.verticalLayout_IF2)
+        graph.init_plot_axis(self.plotWidget_IF2)
 
         # widget signals and slots
         self.ui.horizontalSlider_freq.valueChanged.connect(self.horizontal_slider_freq_value_changed_cb)
@@ -398,7 +400,9 @@ class Widget(QWidget):
             self.ui.label_radarDt.setText("帧间隔 {}".format(self.socketThread.dt))
             self.funcRadar.process()
             # debug
-            self.plotDataItem_IF.setData(self.funcRadar.raw[0, 0, :].real)
+            self.plotDataItem_IF1.setData(self.funcRadar.raw[0, 0, :].real)
+            if self.funcRadar.cp.rx > 1:
+                self.plotDataItem_IF2.setData(self.funcRadar.raw[0, 1, :].real)
             # range profile
             self.plotDataItem_rangeProfile.setData(self.funcRadar.rangeAxis, np.abs(self.funcRadar.rangeProfile[0, :]))
             argmax = np.argmax(np.abs(self.funcRadar.rangeProfile[0, :]))

@@ -26,10 +26,6 @@ class FuncABC:
         self.header.outerClass = res[2]
         self.header.dataLen = res[4]
         self.header.frame = res[5]
-        print(self.header.delay)
-        print(self.header.tlvNums)
-        print(self.header.outerClass)
-        print(f"{length:x} {self.header.dataLen:x}")
         if length != self.header.dataLen:
             print(length, self.header.dataLen)
             print("in unpacking header: in-consistence of data len")
