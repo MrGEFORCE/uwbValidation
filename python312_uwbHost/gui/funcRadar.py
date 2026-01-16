@@ -99,10 +99,9 @@ class FuncRadar(funcABC.FuncABC):
                     for tx in range(self.cp.antTDM):
                         bias_t = bias_c + tx * self.cp.ADCPoints * 2 * self.cp.rx
                         for r in range(self.cp.rx):
-                            bias_r = bias_t + r
-                            part = unpack_res[bias_r:bias_r + self.cp.ADCPoints * 2 * self.cp.rx: self.cp.rx]
-                            self.raw[c, tx * self.cp.rx + r, :].real = part[0::2]
-                            self.raw[c, tx * self.cp.rx + r, :].imag = part[1::2]
+                            bias_r = bias_t + r * 2
+                            self.raw[c, tx * self.cp.rx + r, :].real = unpack_res[bias_r + 0:bias_r + self.cp.ADCPoints * 2 * self.cp.rx: self.cp.rx * 2]
+                            self.raw[c, tx * self.cp.rx + r, :].imag = unpack_res[bias_r + 1:bias_r + self.cp.ADCPoints * 2 * self.cp.rx: self.cp.rx * 2]
             else:
                 print("in radar: unknown tlv")
                 return True

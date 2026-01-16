@@ -1,10 +1,10 @@
-import functools
 import os
 import sys
 import time
 import copy
 import struct
 import platform
+import functools
 import numpy as np
 import pyqtgraph as pg
 

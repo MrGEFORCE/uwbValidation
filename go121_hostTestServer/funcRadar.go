@@ -147,10 +147,7 @@ func radarProcessOnce(p *Protocol) {
 			for j := 0; j < int(p.Radar.ADCPoints); j++ {
 				basis := chirpStart + 2*2*int(p.Radar.RxAnt)*j
 				for rx := 0; rx < int(p.Radar.RxAnt); rx++ {
-					// copy I
-					copy(radarBuf[basis+rx*2:basis+rx*2+2], oneChirp[j*4:j*4+2]) // once u16
-					// copy Q
-					copy(radarBuf[basis+rx*2+int(p.Radar.RxAnt)*2:basis+rx*2+int(p.Radar.RxAnt)*2+2], oneChirp[j*4+2:j*4+4])
+					copy(radarBuf[basis+rx*4:basis+rx*4+4], oneChirp[j*4:(j+1)*4]) // once u16 * 2 (I/Q)
 				}
 			}
 		}
